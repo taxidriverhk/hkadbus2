@@ -29,7 +29,7 @@ public class GetCategoriesFunction {
             final HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context
     ) {
-        log.info("Java HTTP trigger processed a request.");
+        log.info("Getting categories.");
         return request.createResponseBuilder(HttpStatus.OK)
                 .body(GetCategoriesResponse.builder()
                         .categories(Lists.newArrayList(

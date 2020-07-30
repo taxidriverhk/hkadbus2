@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration>
     <Appenders>
-        <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%-6r [%15.15t] %-5p %30.30c %x - %m%n" />
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n"/>
         </Console>
+        <File name="FILE" fileName="logs/application.log">
+            <PatternLayout pattern="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n"/>
+        </File>
+        <ApplicationInsightsAppender name="aiAppender" instrumentationKey="9146cf14-22f6-40a9-bea5-6af9b2fde48f" />
     </Appenders>
     <Loggers>
-        <Logger name="com.taxidriverhk.hkadbus2" level="error" additivity="true">
-            <appender-ref ref="console" />
+        <Logger name="com.taxidriverhk.hkadbus2" level="info">
+            <AppenderRef ref="STDOUT" />
+            <AppenderRef ref="FILE" />
+            <AppenderRef ref="aiAppender" />
         </Logger>
-        <Root level="info" additivity="false">
-            <appender-ref ref="console" />
+        <Root level="info">
+            <AppenderRef ref="STDOUT" />
+            <AppenderRef ref="FILE" />
+            <AppenderRef ref="aiAppender" />
         </Root>
     </Loggers>
 </Configuration>
