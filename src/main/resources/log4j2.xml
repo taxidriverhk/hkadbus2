@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%-6r [%15.15t] %-5p %30.30c %x - %m%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.taxidriverhk.hkadbus2" level="error" additivity="true">
+            <appender-ref ref="console" />
+        </Logger>
+        <Root level="info" additivity="false">
+            <appender-ref ref="console" />
+        </Root>
+    </Loggers>
+</Configuration>
