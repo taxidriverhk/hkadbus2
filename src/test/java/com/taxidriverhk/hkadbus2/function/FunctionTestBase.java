@@ -23,7 +23,7 @@ public class FunctionTestBase {
     protected HttpRequestMessage<Optional<String>> request;
 
     @BeforeEach
-    public void setup() {
+    public void setupBase() {
         doAnswer(new Answer<HttpResponseMessage.Builder>() {
 
             @Override
