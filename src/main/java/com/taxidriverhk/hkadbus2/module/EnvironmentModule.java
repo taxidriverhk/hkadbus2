@@ -1,6 +1,8 @@
 package com.taxidriverhk.hkadbus2.module;
 
 import lombok.extern.log4j.Log4j2;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.properties.EncryptableProperties;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,7 +13,12 @@ import java.util.Properties;
 public class EnvironmentModule {
 
     public Properties applicationProperties() {
-        final Properties properties = new Properties();
+        final StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        encryptor.setPassword(System.getenv("encryptorPassword"));
+        encryptor.setAlgorithm("PBEWithSHA1AndDESEDE");
+
+        final Properties properties = new EncryptableProperties(encryptor);
+
         try {
             final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("application.properties");
             properties.load(inputStream);
