@@ -3,12 +3,17 @@ package com.taxidriverhk.hkadbus2.module;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategorySqlRepository;
+import dagger.Module;
+import dagger.Provides;
 import org.hibernate.SessionFactory;
 
+import javax.inject.Singleton;
 import java.util.Properties;
 
+@Module
 public class DataAccessModule {
 
+    @Provides
     public SessionFactory sessionFactory(final Properties applicationProperties) {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.connection.url", applicationProperties.getProperty("datasource.sql.url"));
@@ -23,6 +28,9 @@ public class DataAccessModule {
                 .buildSessionFactory();
     }
 
+
+    @Provides
+    @Singleton
     public CategoryRepository categoryRepository(final SessionFactory sessionFactory) {
         return new CategorySqlRepository(sessionFactory);
     }

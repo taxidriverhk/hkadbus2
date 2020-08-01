@@ -10,7 +10,7 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 import com.taxidriverhk.hkadbus2.component.CoreApiComponent;
-import com.taxidriverhk.hkadbus2.component.impl.CoreApiComponentImpl;
+import com.taxidriverhk.hkadbus2.component.DaggerCoreApiComponent;
 import com.taxidriverhk.hkadbus2.model.api.GetCategoriesResponse;
 import com.taxidriverhk.hkadbus2.model.domain.Category;
 import com.taxidriverhk.hkadbus2.service.CategoryService;
@@ -53,7 +53,7 @@ public class GetCategoriesFunction {
 
     private CoreApiComponent getCoreApiComponent() {
         if (Objects.isNull(coreApiComponent)) {
-            coreApiComponent = CoreApiComponentImpl.create();
+            coreApiComponent = DaggerCoreApiComponent.builder().build();
         }
         return coreApiComponent;
     }

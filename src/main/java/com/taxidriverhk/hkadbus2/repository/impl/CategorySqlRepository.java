@@ -7,9 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import javax.inject.Inject;
 import java.util.List;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class CategorySqlRepository implements CategoryRepository {
 
     private final SessionFactory sessionFactory;

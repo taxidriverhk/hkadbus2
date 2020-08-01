@@ -7,9 +7,10 @@ import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 import com.taxidriverhk.hkadbus2.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 
+import javax.inject.Inject;
 import java.util.List;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;

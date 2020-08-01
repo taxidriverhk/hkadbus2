@@ -1,17 +1,23 @@
 package com.taxidriverhk.hkadbus2.module;
 
+import dagger.Module;
+import dagger.Provides;
 import lombok.extern.log4j.Log4j2;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.properties.EncryptableProperties;
 
+import javax.inject.Singleton;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 @Log4j2
+@Module
 public class EnvironmentModule {
 
+    @Provides
+    @Singleton
     public Properties applicationProperties() {
         final StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
         encryptor.setPassword(System.getenv("encryptorPassword"));
