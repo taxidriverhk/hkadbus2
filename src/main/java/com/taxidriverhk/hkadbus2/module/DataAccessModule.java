@@ -1,11 +1,17 @@
 package com.taxidriverhk.hkadbus2.module;
 
-import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
-import com.taxidriverhk.hkadbus2.repository.impl.CategorySqlRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.CategoryMongoDBRepository;
 import dagger.Module;
 import dagger.Provides;
-import org.hibernate.SessionFactory;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 
 import javax.inject.Singleton;
 import java.util.Properties;
@@ -14,24 +20,26 @@ import java.util.Properties;
 public class DataAccessModule {
 
     @Provides
-    public SessionFactory sessionFactory(final Properties applicationProperties) {
-        final Properties properties = new Properties();
-        properties.setProperty("hibernate.connection.url", applicationProperties.getProperty("datasource.sql.url"));
-        properties.setProperty("hibernate.connection.username", applicationProperties.getProperty("datasource.sql.username"));
-        properties.setProperty("hibernate.connection.password", applicationProperties.getProperty("datasource.sql.password"));
-        properties.setProperty("dialect", applicationProperties.getProperty("datasource.sql.dialect"));
-        properties.setProperty("hibernate.connection.driver_class", applicationProperties.getProperty("datasource.sql.driverClass"));
+    public MongoDatabase mongoDatabase(final Properties applicationProperties) {
+        final ConnectionString connectionString = new ConnectionString(
+                applicationProperties.getProperty("datasource.mongodb.connectionString"));
 
-        return new org.hibernate.cfg.Configuration()
-                .addAnnotatedClass(CategoryEntity.class)
-                .addProperties(properties)
-                .buildSessionFactory();
+        final CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(PojoCodecProvider.builder()
+                .automatic(true)
+                .build());
+        final CodecRegistry codecRegistry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
+
+        final MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .codecRegistry(codecRegistry)
+                .build();
+        final MongoClient mongoClient = MongoClients.create(mongoClientSettings);
+        return mongoClient.getDatabase("hkadbus2");
     }
-
 
     @Provides
     @Singleton
-    public CategoryRepository categoryRepository(final SessionFactory sessionFactory) {
-        return new CategorySqlRepository(sessionFactory);
+    public CategoryRepository categoryRepository(final MongoDatabase mongoDatabase) {
+        return new CategoryMongoDBRepository(mongoDatabase);
     }
 }

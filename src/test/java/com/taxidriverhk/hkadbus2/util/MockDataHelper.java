@@ -12,9 +12,8 @@ public final class MockDataHelper {
             .build();
 
     public static final CategoryEntity CATEGORY_ENTITY = CategoryEntity.builder()
-            .id(1)
-            .nameTranslationId(1)
-            .sku("test-category")
+            .name("Test Category")
+            .hashKey("test-category")
             .thumbnail("http://thunbnail.jpg")
             .build();
 }
