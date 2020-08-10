@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class CategoryServiceImpl implements CategoryService {
@@ -16,8 +17,10 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> getCategories() {
+    public List<Category> getCategories(final String language) {
         final List<CategoryEntity> categoryEntities = categoryRepository.getCategories();
-        return EntityMapper.INSTANCE.categoryEntitiesToCategories(categoryEntities);
+        return categoryEntities.stream()
+                .map(categoryEntity -> EntityMapper.INSTANCE.categoryEntityToCategory(categoryEntity, language))
+                .collect(Collectors.toList());
     }
 }

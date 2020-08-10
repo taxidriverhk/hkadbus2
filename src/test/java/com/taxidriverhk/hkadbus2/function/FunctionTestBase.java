@@ -17,10 +17,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 
 @ExtendWith(MockitoExtension.class)
-public class FunctionTestBase {
+public class FunctionTestBase<T> {
 
     @Mock
-    protected HttpRequestMessage<Optional<String>> request;
+    protected HttpRequestMessage<T> request;
 
     @BeforeEach
     public void setupBase() {

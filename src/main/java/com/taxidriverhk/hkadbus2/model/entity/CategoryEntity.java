@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
@@ -16,6 +18,6 @@ public class CategoryEntity {
     public static final String THUMBNAIL = "thumbnail";
 
     private String hashKey;
-    private String name;
+    private Map<String, String> name;
     private String thumbnail;
 }

@@ -11,6 +11,7 @@ import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 import com.taxidriverhk.hkadbus2.component.CoreApiComponent;
 import com.taxidriverhk.hkadbus2.component.DaggerCoreApiComponent;
+import com.taxidriverhk.hkadbus2.model.api.GetCategoriesRequest;
 import com.taxidriverhk.hkadbus2.model.api.GetCategoriesResponse;
 import com.taxidriverhk.hkadbus2.model.domain.Category;
 import com.taxidriverhk.hkadbus2.service.CategoryService;
@@ -31,14 +32,16 @@ public class GetCategoriesFunction {
     public HttpResponseMessage run(
             @HttpTrigger(
                 name = "req",
-                methods = {HttpMethod.GET},
+                methods = {HttpMethod.POST},
                 authLevel = AuthorizationLevel.ANONYMOUS)
-            final HttpRequestMessage<Optional<String>> request,
+            final HttpRequestMessage<GetCategoriesRequest> request,
             final ExecutionContext context
     ) {
-        log.info("Getting categories.");
+        final String language = request.getBody().getLanguage();
+        log.info("Getting all categories with language {}.", language);
+
         final CategoryService categoryService = getCoreApiComponent().categoryService();
-        final List<Category> categories = categoryService.getCategories();
+        final List<Category> categories = categoryService.getCategories(language);
         return request.createResponseBuilder(HttpStatus.OK)
                 .body(GetCategoriesResponse.builder()
                         .categories(categories)

@@ -6,15 +6,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-
 @Mapper
 public interface EntityMapper {
 
     EntityMapper INSTANCE = Mappers.getMapper(EntityMapper.class);
 
-    List<Category> categoryEntitiesToCategories(List<CategoryEntity> categoryEntities);
-
-    @Mapping(source = "hashKey", target = "id")
-    Category categoryEntityToCategory(CategoryEntity categoryEntity);
+    @Mapping(target = "id", expression = "java(categoryEntity.getHashKey())")
+    @Mapping(target = "name", expression = "java(categoryEntity.getName().get(language))")
+    Category categoryEntityToCategory(CategoryEntity categoryEntity, String language);
 }

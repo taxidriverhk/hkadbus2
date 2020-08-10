@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_ENTITY;
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.LANGUAGE_EN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
@@ -28,7 +29,7 @@ public class CategoryServiceImplTest {
     @Test
     public void WHEN_getAllCategories_THEN_shouldGetEntitiesFromRepository() {
         when(categoryRepository.getCategories()).thenReturn(Lists.newArrayList(CATEGORY_ENTITY));
-        final List<Category> categories = categoryService.getCategories();
+        final List<Category> categories = categoryService.getCategories(LANGUAGE_EN);
         assertThat(categories, hasSize(1));
     }
 }
