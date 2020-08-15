@@ -11,10 +11,10 @@ import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 import com.taxidriverhk.hkadbus2.component.CoreApiComponent;
 import com.taxidriverhk.hkadbus2.component.DaggerCoreApiComponent;
-import com.taxidriverhk.hkadbus2.model.api.GetCategoriesRequest;
-import com.taxidriverhk.hkadbus2.model.api.GetCategoriesResponse;
-import com.taxidriverhk.hkadbus2.model.domain.Category;
-import com.taxidriverhk.hkadbus2.service.CategoryService;
+import com.taxidriverhk.hkadbus2.model.api.GetAdvertisementsRequest;
+import com.taxidriverhk.hkadbus2.model.api.GetAdvertisementsResponse;
+import com.taxidriverhk.hkadbus2.model.domain.Advertisement;
+import com.taxidriverhk.hkadbus2.service.AdvertisementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -23,27 +23,28 @@ import java.util.Objects;
 
 @Log4j2
 @RequiredArgsConstructor
-public class GetCategoriesFunction {
+public class GetAdvertisementsFunction {
 
     private CoreApiComponent coreApiComponent;
 
-    @FunctionName("get-categories")
+    @FunctionName("get-advertisements")
     public HttpResponseMessage run(
             @HttpTrigger(
                 name = "req",
                 methods = {HttpMethod.POST},
                 authLevel = AuthorizationLevel.ANONYMOUS)
-            final HttpRequestMessage<GetCategoriesRequest> request,
+            final HttpRequestMessage<GetAdvertisementsRequest> request,
             final ExecutionContext context
     ) {
+        final String categoryId = request.getBody().getCategoryId();
         final String language = request.getBody().getLanguage();
-        log.info("Getting all categories with language {}.", language);
+        log.info("Getting all advertisements under category hash key {} and language {}.", categoryId, language);
 
-        final CategoryService categoryService = getCoreApiComponent().categoryService();
-        final List<Category> categories = categoryService.getCategories(language);
+        final AdvertisementService advertisementService = getCoreApiComponent().advertisementService();
+        final List<Advertisement> advertisements = advertisementService.getAdvertisements(categoryId, language);
         return request.createResponseBuilder(HttpStatus.OK)
-                .body(GetCategoriesResponse.builder()
-                        .categories(categories)
+                .body(GetAdvertisementsResponse.builder()
+                        .advertisements(advertisements)
                         .build())
                 .build();
     }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
 
 import java.util.Map;
 
@@ -12,13 +11,10 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryEntity {
-
-    public static final String NAME = "name";
-    public static final String HASH_KEY = "hashKey";
-    public static final String THUMBNAIL = "thumbnail";
+public class AdvertisementEntity {
 
     private String hashKey;
     private Map<String, String> name;
+    private String categoryId;
     private String thumbnail;
 }

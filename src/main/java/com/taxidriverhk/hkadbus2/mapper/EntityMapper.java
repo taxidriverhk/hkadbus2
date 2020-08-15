@@ -1,6 +1,8 @@
 package com.taxidriverhk.hkadbus2.mapper;
 
+import com.taxidriverhk.hkadbus2.model.domain.Advertisement;
 import com.taxidriverhk.hkadbus2.model.domain.Category;
+import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,4 +16,10 @@ public interface EntityMapper {
     @Mapping(target = "id", expression = "java(categoryEntity.getHashKey())")
     @Mapping(target = "name", expression = "java(categoryEntity.getName().get(language))")
     Category categoryEntityToCategory(CategoryEntity categoryEntity, String language);
+
+    @Mapping(target = "id", expression = "java(advertisementEntity.getHashKey())")
+    @Mapping(target = "name", expression = "java(advertisementEntity.getName().get(language))")
+    @Mapping(target = "categoryId", source = "categoryId")
+    Advertisement advertisementEntityToAdvertisement(
+            AdvertisementEntity advertisementEntity, String categoryId, String language);
 }

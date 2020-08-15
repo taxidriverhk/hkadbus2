@@ -5,7 +5,9 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.AdvertisementMongoDBRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategoryMongoDBRepository;
 import dagger.Module;
 import dagger.Provides;
@@ -38,7 +40,11 @@ public class DataAccessModule {
     }
 
     @Provides
-    @Singleton
+    public AdvertisementRepository advertisementRepository(final MongoDatabase mongoDatabase) {
+        return new AdvertisementMongoDBRepository(mongoDatabase);
+    }
+
+    @Provides
     public CategoryRepository categoryRepository(final MongoDatabase mongoDatabase) {
         return new CategoryMongoDBRepository(mongoDatabase);
     }

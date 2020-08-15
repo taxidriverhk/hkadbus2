@@ -7,8 +7,11 @@ import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class CategoryMongoDBRepository implements CategoryRepository {
 
@@ -23,5 +26,10 @@ public class CategoryMongoDBRepository implements CategoryRepository {
     public List<CategoryEntity> getCategories() {
         return StreamSupport.stream(mongoCollection.find().spliterator(), false)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<CategoryEntity> getCategoryByHashKey(String hashKey) {
+        return Optional.ofNullable(mongoCollection.find(eq("hashKey", hashKey)).first());
     }
 }

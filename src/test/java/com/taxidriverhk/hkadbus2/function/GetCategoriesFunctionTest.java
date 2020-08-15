@@ -49,7 +49,7 @@ public class GetCategoriesFunctionTest extends FunctionTestBase<GetCategoriesReq
     }
 
     @Test
-    public void GIVEN_noRequestBody_WHEN_getCategories_THEN_returnListOfCategories() {
+    public void GIVEN_requestBody_WHEN_getCategories_THEN_returnListOfCategories() {
         when(getCategoriesRequest.getLanguage()).thenReturn(LANGUAGE_EN);
         when(request.getBody()).thenReturn(getCategoriesRequest);
         when(categoryService.getCategories(anyString())).thenReturn(Lists.newArrayList(CATEGORY));
