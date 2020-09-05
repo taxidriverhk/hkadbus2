@@ -1,6 +1,6 @@
 package com.taxidriverhk.hkadbus2.model.api;
 
-import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
+import com.taxidriverhk.hkadbus2.model.domain.Photo;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +11,6 @@ import java.util.List;
 public class SearchPhotosResponse {
 
     private long total;
-    private List<SearchPhotoResult> results;
-    private int nextPage;
+    private List<Photo> results;
+    private String nextPageCursor;
 }

@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 public class SearchPhotosRequest {
 
-    private int pageNumber;
     private SearchPhotoFilter filter;
+    private String nextPageCursor;
 }

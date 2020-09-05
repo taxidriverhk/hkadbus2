@@ -7,15 +7,16 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
+import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.AdvertisementMongoDBRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategoryMongoDBRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.PhotoMongoDBRepository;
 import dagger.Module;
 import dagger.Provides;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import javax.inject.Singleton;
 import java.util.Properties;
 
 @Module
@@ -47,5 +48,10 @@ public class DataAccessModule {
     @Provides
     public CategoryRepository categoryRepository(final MongoDatabase mongoDatabase) {
         return new CategoryMongoDBRepository(mongoDatabase);
+    }
+
+    @Provides
+    public PhotoRepository photoRepository(final MongoDatabase mongoDatabase) {
+        return new PhotoMongoDBRepository(mongoDatabase);
     }
 }

@@ -10,7 +10,9 @@ import com.taxidriverhk.hkadbus2.exception.BadRequestException;
 import com.taxidriverhk.hkadbus2.exception.InternalErrorException;
 import com.taxidriverhk.hkadbus2.exception.ItemNotFoundException;
 import com.taxidriverhk.hkadbus2.exception.UnauthorizedAccessException;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -18,6 +20,8 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public abstract class CoreApiFunctionBase<T, R> {
 
+    @Setter(value = AccessLevel.PROTECTED)
+    @VisibleForTesting
     private CoreApiComponent coreApiComponent;
 
     protected HttpResponseMessage executeFunction(final HttpRequestMessage request, final Function<T, R> func) {
@@ -44,11 +48,6 @@ public abstract class CoreApiFunctionBase<T, R> {
                     .body(ex.getMessage())
                     .build();
         }
-    }
-
-    @VisibleForTesting
-    protected void setCoreApiComponent(final CoreApiComponent coreApiComponent) {
-        this.coreApiComponent = coreApiComponent;
     }
 
     protected CoreApiComponent getCoreApiComponent() {

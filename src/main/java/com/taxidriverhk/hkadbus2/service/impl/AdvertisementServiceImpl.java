@@ -35,7 +35,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         final List<AdvertisementEntity> advertisementEntities = advertisementRepository.getAdvertisements(categoryId);
         return advertisementEntities.stream()
                 .map(advertisementEntity -> EntityMapper.INSTANCE
-                        .advertisementEntityToAdvertisement(advertisementEntity, categoryId, language))
+                        .advertisementEntityToAdvertisement(advertisementEntity, categoryEntity.get(), language))
                 .collect(Collectors.toList());
     }
 }

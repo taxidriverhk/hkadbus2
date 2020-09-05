@@ -19,7 +19,9 @@ public interface EntityMapper {
 
     @Mapping(target = "id", expression = "java(advertisementEntity.getHashKey())")
     @Mapping(target = "name", expression = "java(advertisementEntity.getName().get(language))")
-    @Mapping(target = "categoryId", source = "categoryId")
+    @Mapping(target = "thumbnail", expression = "java(advertisementEntity.getThumbnail())")
+    @Mapping(target = "categoryId", expression = "java(categoryEntity.getHashKey())")
+    @Mapping(target = "categoryName", expression = "java(categoryEntity.getName().get(language))")
     Advertisement advertisementEntityToAdvertisement(
-            AdvertisementEntity advertisementEntity, String categoryId, String language);
+            AdvertisementEntity advertisementEntity, CategoryEntity categoryEntity, String language);
 }

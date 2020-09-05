@@ -10,5 +10,6 @@ public class Advertisement {
     private String id;
     private String name;
     private String categoryId;
+    private String categoryName;
     private String thumbnail;
 }
