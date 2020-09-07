@@ -1,12 +1,16 @@
 package com.taxidriverhk.hkadbus2.module;
 
 import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
+import com.taxidriverhk.hkadbus2.repository.BusBrandRepository;
+import com.taxidriverhk.hkadbus2.repository.BusModelRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
 import com.taxidriverhk.hkadbus2.service.AdvertisementService;
+import com.taxidriverhk.hkadbus2.service.BusService;
 import com.taxidriverhk.hkadbus2.service.CategoryService;
 import com.taxidriverhk.hkadbus2.service.PhotoService;
 import com.taxidriverhk.hkadbus2.service.impl.AdvertisementServiceImpl;
+import com.taxidriverhk.hkadbus2.service.impl.BusServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.CategoryServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.PhotoServiceImpl;
 import dagger.Module;
@@ -24,6 +28,15 @@ public class ServiceModule {
             final CategoryRepository categoryRepository
     ) {
         return new AdvertisementServiceImpl(advertisementRepository, categoryRepository);
+    }
+
+    @Provides
+    @Singleton
+    public BusService busService(
+            final BusBrandRepository busBrandRepository,
+            final BusModelRepository busModelRepository
+    ) {
+        return new BusServiceImpl(busBrandRepository, busModelRepository);
     }
 
     @Provides

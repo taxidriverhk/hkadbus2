@@ -6,9 +6,13 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
+import com.taxidriverhk.hkadbus2.repository.BusBrandRepository;
+import com.taxidriverhk.hkadbus2.repository.BusModelRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.AdvertisementMongoDBRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.BusBrandMongoDBRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.BusModelMongoDBRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategoryMongoDBRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.PhotoMongoDBRepository;
 import dagger.Module;
@@ -43,6 +47,16 @@ public class DataAccessModule {
     @Provides
     public AdvertisementRepository advertisementRepository(final MongoDatabase mongoDatabase) {
         return new AdvertisementMongoDBRepository(mongoDatabase);
+    }
+
+    @Provides
+    public BusBrandRepository busBrandRepository(final MongoDatabase mongoDatabase) {
+        return new BusBrandMongoDBRepository(mongoDatabase);
+    }
+
+    @Provides
+    public BusModelRepository busModelRepository(final MongoDatabase mongoDatabase) {
+        return new BusModelMongoDBRepository(mongoDatabase);
     }
 
     @Provides

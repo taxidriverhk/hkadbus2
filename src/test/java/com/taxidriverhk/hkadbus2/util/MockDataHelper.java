@@ -2,8 +2,11 @@ package com.taxidriverhk.hkadbus2.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.taxidriverhk.hkadbus2.model.domain.Advertisement;
+import com.taxidriverhk.hkadbus2.model.domain.BusModel;
 import com.taxidriverhk.hkadbus2.model.domain.Category;
 import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
+import com.taxidriverhk.hkadbus2.model.entity.BusBrandEntity;
+import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 
@@ -12,10 +15,14 @@ public final class MockDataHelper {
     public static final String LANGUAGE_EN = "en_us";
     public static final String LANGUAGE_ZH = "zh_hk";
 
+    public static final String BUS_BRAND_HASH_KEY_1 = "dennis";
+    public static final String BUS_BRAND_HASH_KEY_2 = "volvo";
+    public static final String BUS_MODEL_HASH_KEY_1 = "dragon-12m";
+    public static final String BUS_MODEL_HASH_KEY_2 = "olympian-12m";
     public static final String CATEGORY_HASH_KEY_1 = "food";
 
     public static final Category CATEGORY = Category.builder()
-            .id("food")
+            .id(CATEGORY_HASH_KEY_1)
             .name("Food")
             .thumbnail("http://thunbnail.jpg")
             .build();
@@ -64,6 +71,51 @@ public final class MockDataHelper {
                     LANGUAGE_ZH, "宜家傢俬"))
             .hashKey("ikea")
             .categoryId("furniture")
+            .thumbnail("http://thunbnail.jpg")
+            .build();
+
+    public static final BusModel BUS_MODEL_1 = BusModel.builder()
+            .id(BUS_MODEL_HASH_KEY_1)
+            .name("Dragon 12M")
+            .thumbnail("http://thunbnail.jpg")
+            .busBrandId(BUS_BRAND_HASH_KEY_1)
+            .busBrandName("Dennis")
+            .build();
+    public static final BusModel BUS_MODEL_2 = BusModel.builder()
+            .id(BUS_MODEL_HASH_KEY_2)
+            .name("Olympian 12M")
+            .thumbnail("http://thunbnail.jpg")
+            .busBrandId(BUS_BRAND_HASH_KEY_2)
+            .busBrandName("Volvo")
+            .build();
+
+    public static final BusBrandEntity BUS_BRAND_ENTITY_1 = BusBrandEntity.builder()
+            .hashKey(BUS_BRAND_HASH_KEY_1)
+            .name(ImmutableMap.of(
+                    LANGUAGE_EN, "Dennis",
+                    LANGUAGE_ZH, "丹尼士"))
+            .build();
+    public static final BusBrandEntity BUS_BRAND_ENTITY_2 = BusBrandEntity.builder()
+            .hashKey(BUS_BRAND_HASH_KEY_2)
+            .name(ImmutableMap.of(
+                    LANGUAGE_EN, "Volvo",
+                    LANGUAGE_ZH, "富豪"))
+            .build();
+
+    public static final BusModelEntity BUS_MODEL_ENTITY_1 = BusModelEntity.builder()
+            .hashKey(BUS_MODEL_HASH_KEY_1)
+            .name(ImmutableMap.of(
+                    LANGUAGE_EN, "Dragon 12M",
+                    LANGUAGE_ZH, "巨龍12米"))
+            .busBrandId(BUS_BRAND_HASH_KEY_1)
+            .thumbnail("http://thunbnail.jpg")
+            .build();
+    public static final BusModelEntity BUS_MODEL_ENTITY_2 = BusModelEntity.builder()
+            .hashKey(BUS_MODEL_HASH_KEY_2)
+            .name(ImmutableMap.of(
+                    LANGUAGE_EN, "Olympian 12M",
+                    LANGUAGE_ZH, "奧林比安12米f"))
+            .busBrandId(BUS_BRAND_HASH_KEY_2)
             .thumbnail("http://thunbnail.jpg")
             .build();
 
