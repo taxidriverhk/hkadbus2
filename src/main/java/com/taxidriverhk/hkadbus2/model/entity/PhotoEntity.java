@@ -13,6 +13,7 @@ public class PhotoEntity {
 
     public static final String ID = "photoId";
     public static final String THUMBNAIL = "thumbnail";
+    public static final String ADVERTISEMENT_ID = "advertisementId";
     public static final String BUS_ID = "busId";
     public static final String BUS_ROUTE_ID = "busRouteId";
     public static final String USER_ID = "userId";
@@ -21,6 +22,7 @@ public class PhotoEntity {
     private String photoId;
     private String thumbnail;
     private String image;
+    private String advertisementId;
     private String busId;
     private String busRouteId;
     private String userId;

@@ -1,12 +1,17 @@
 package com.taxidriverhk.hkadbus2.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.taxidriverhk.hkadbus2.model.domain.Advertisement;
+import com.taxidriverhk.hkadbus2.model.domain.BusCompany;
 import com.taxidriverhk.hkadbus2.model.domain.BusModel;
 import com.taxidriverhk.hkadbus2.model.domain.Category;
+import com.taxidriverhk.hkadbus2.model.domain.Photo;
 import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusBrandEntity;
+import com.taxidriverhk.hkadbus2.model.entity.BusEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
+import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 
@@ -19,6 +24,8 @@ public final class MockDataHelper {
     public static final String BUS_BRAND_HASH_KEY_2 = "volvo";
     public static final String BUS_MODEL_HASH_KEY_1 = "dragon-12m";
     public static final String BUS_MODEL_HASH_KEY_2 = "olympian-12m";
+    public static final String BUS_ROUTE_HASH_KEY_1 = "kmb-49x";
+    public static final String ADVERTISEMENT_HASH_KEY_1 = "calbee";
     public static final String CATEGORY_HASH_KEY_1 = "food";
 
     public static final Category CATEGORY = Category.builder()
@@ -35,7 +42,7 @@ public final class MockDataHelper {
             .build();
 
     public static final Advertisement ADVERTISEMENT_1 = Advertisement.builder()
-            .id("calbee")
+            .id(ADVERTISEMENT_HASH_KEY_1)
             .categoryId("food")
             .categoryName("Food")
             .name("Calbee")
@@ -53,7 +60,7 @@ public final class MockDataHelper {
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Calbee",
                     LANGUAGE_ZH, "卡樂B"))
-            .hashKey("calbee")
+            .hashKey(ADVERTISEMENT_HASH_KEY_1)
             .categoryId(CATEGORY_HASH_KEY_1)
             .thumbnail("http://thunbnail.jpg")
             .build();
@@ -89,6 +96,26 @@ public final class MockDataHelper {
             .busBrandName("Volvo")
             .build();
 
+    public static final String BUS_ID_1 = "ASDgTMT2mu";
+    public static final BusEntity BUS_ENTITY_1 = BusEntity.builder()
+            .busId(BUS_ID_1)
+            .busModelId(BUS_MODEL_HASH_KEY_1)
+            .busCompany(BusCompany.KMB.getText())
+            .fleetPrefix("AD")
+            .fleetNumber(15)
+            .licensePlateNumber("EA5913")
+            .build();
+
+    public static final String BUS_ID_2 = "n3h5TIFj4v";
+    public static final BusEntity BUS_ENTITY_2 = BusEntity.builder()
+            .busId(BUS_ID_2)
+            .busModelId(BUS_MODEL_HASH_KEY_2)
+            .busCompany(BusCompany.KMB.getText())
+            .fleetPrefix("3AV")
+            .fleetNumber(101)
+            .licensePlateNumber("GX2424")
+            .build();
+
     public static final BusBrandEntity BUS_BRAND_ENTITY_1 = BusBrandEntity.builder()
             .hashKey(BUS_BRAND_HASH_KEY_1)
             .name(ImmutableMap.of(
@@ -114,16 +141,70 @@ public final class MockDataHelper {
             .hashKey(BUS_MODEL_HASH_KEY_2)
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Olympian 12M",
-                    LANGUAGE_ZH, "奧林比安12米f"))
+                    LANGUAGE_ZH, "奧林比安12米"))
             .busBrandId(BUS_BRAND_HASH_KEY_2)
             .thumbnail("http://thunbnail.jpg")
             .build();
 
+    public static final BusRouteEntity BUS_ROUTE_ENTITY_1 = BusRouteEntity.builder()
+            .hashKey(BUS_ROUTE_HASH_KEY_1)
+            .routeNumber("49X")
+            .busCompanies(Lists.newArrayList(BusCompany.KMB.getText()))
+            .startLocation(ImmutableMap.of(
+                    LANGUAGE_EN, "Kwong Yuen",
+                    LANGUAGE_ZH, "廣源"))
+            .endLocation(ImmutableMap.of(
+                    LANGUAGE_EN, "Tsing Yi Ferry Pier",
+                    LANGUAGE_ZH, "青衣碼頭"))
+            .build();
+    public static final BusRouteEntity BUS_ROUTE_ENTITY_2 = BusRouteEntity.builder()
+            .hashKey(BUS_ROUTE_HASH_KEY_1)
+            .routeNumber("2")
+            .busCompanies(Lists.newArrayList(BusCompany.KMB.getText()))
+            .startLocation(ImmutableMap.of(
+                    LANGUAGE_EN, "So Uk",
+                    LANGUAGE_ZH, "廣源"))
+            .endLocation(ImmutableMap.of(
+                    LANGUAGE_EN, "Star Ferry",
+                    LANGUAGE_ZH, "青衣碼頭"))
+            .build();
+    public static final BusRouteEntity BUS_ROUTE_ENTITY_3 = BusRouteEntity.builder()
+            .hashKey(BUS_ROUTE_HASH_KEY_1)
+            .routeNumber("2")
+            .busCompanies(Lists.newArrayList(BusCompany.NWFB.getText()))
+            .startLocation(ImmutableMap.of(
+                    LANGUAGE_EN, "Central (Macau Ferry)",
+                    LANGUAGE_ZH, "中環 (港澳碼頭)"))
+            .endLocation(ImmutableMap.of(
+                    LANGUAGE_EN, "Grand Promenade",
+                    LANGUAGE_ZH, "嘉亨灣"))
+            .build();
+
     public static final String PHOTO_ID_1 = "a2Lbjw3eNS";
+
+    public static final Photo PHOTO_1 = Photo.builder()
+            .photoId(PHOTO_ID_1)
+            .advertisementId(ADVERTISEMENT_HASH_KEY_1)
+            .advertisement("Calbee")
+            .busCompany(BusCompany.KMB)
+            .busModelId(BUS_MODEL_HASH_KEY_1)
+            .busModel("Dragon 12M")
+            .busRouteId(BUS_ROUTE_HASH_KEY_1)
+            .busRoute("49X")
+            .licensePlateNumber("EA5913")
+            .fleetPrefix("AD")
+            .fleetNumber(15)
+            .image("http://image.jpg")
+            .thumbnail("http://thunbnail.jpg")
+            .username("test-user")
+            .uploadedDate(123456L)
+            .build();
+
     public static final PhotoEntity PHOTO_ENTITY_1 = PhotoEntity.builder()
             .photoId(PHOTO_ID_1)
-            .busId("fa-2536")
-            .busRouteId("kmb-89x")
+            .advertisementId(ADVERTISEMENT_HASH_KEY_1)
+            .busId(BUS_ID_1)
+            .busRouteId(BUS_ROUTE_HASH_KEY_1)
             .image("http://image.jpg")
             .thumbnail("http://thunbnail.jpg")
             .userId("test-user")

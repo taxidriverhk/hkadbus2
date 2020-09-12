@@ -13,6 +13,11 @@ import java.util.Map;
 @AllArgsConstructor
 public class AdvertisementEntity {
 
+    public static final String NAME = "name";
+    public static final String HASH_KEY = "hashKey";
+    public static final String CATEGORY_ID = "categoryId";
+    public static final String THUMBNAIL = "thumbnail";
+
     private String hashKey;
     private Map<String, String> name;
     private String categoryId;

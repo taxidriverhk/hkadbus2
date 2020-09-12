@@ -3,6 +3,8 @@ package com.taxidriverhk.hkadbus2.module;
 import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
 import com.taxidriverhk.hkadbus2.repository.BusBrandRepository;
 import com.taxidriverhk.hkadbus2.repository.BusModelRepository;
+import com.taxidriverhk.hkadbus2.repository.BusRepository;
+import com.taxidriverhk.hkadbus2.repository.BusRouteRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
 import com.taxidriverhk.hkadbus2.service.AdvertisementService;
@@ -47,7 +49,18 @@ public class ServiceModule {
 
     @Provides
     @Singleton
-    public PhotoService photoService(final PhotoRepository photoRepository) {
-        return new PhotoServiceImpl(photoRepository);
+    public PhotoService photoService(
+            final AdvertisementRepository advertisementRepository,
+            final BusRepository busRepository,
+            final BusModelRepository busModelRepository,
+            final BusRouteRepository busRouteRepository,
+            final PhotoRepository photoRepository
+    ) {
+        return new PhotoServiceImpl(
+                advertisementRepository,
+                busRepository,
+                busModelRepository,
+                busRouteRepository,
+                photoRepository);
     }
 }

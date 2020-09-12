@@ -8,6 +8,7 @@ import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -20,6 +21,11 @@ public class AdvertisementMongoDBRepository implements AdvertisementRepository {
     @Inject
     public AdvertisementMongoDBRepository(final MongoDatabase mongoDatabase) {
         this.mongoCollection = mongoDatabase.getCollection("advertisements", AdvertisementEntity.class);
+    }
+
+    @Override
+    public Optional<AdvertisementEntity> getAdvertisement(String hashKey) {
+        return Optional.ofNullable(mongoCollection.find(eq(AdvertisementEntity.HASH_KEY, hashKey)).first());
     }
 
     @Override
