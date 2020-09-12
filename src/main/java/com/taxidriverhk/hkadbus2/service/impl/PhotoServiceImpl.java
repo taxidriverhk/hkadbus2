@@ -35,6 +35,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public Photo getPhoto(final String photoId, final String language) {
+        log.info("Getting photo by ID {} and language {}", photoId, language);
         final Optional<PhotoEntity> photoEntityOptional = photoRepository.getPhoto(photoId);
         if (!photoEntityOptional.isPresent()) {
             throw new ItemNotFoundException(photoId);
@@ -43,17 +44,22 @@ public class PhotoServiceImpl implements PhotoService {
         final PhotoEntity photoEntity = photoEntityOptional.get();
 
         final String advertisementId = photoEntity.getAdvertisementId();
+        log.info("Retrieving the matching advertisement by ID {}", advertisementId);
         final AdvertisementEntity advertisementEntity = advertisementRepository.getAdvertisement(advertisementId).get();
 
         final String busId = photoEntity.getBusId();
+        log.info("Retrieving the matching bus by ID {}", busId);
         final BusEntity busEntity = busRepository.getBus(busId).get();
 
         final String busModelId = busEntity.getBusModelId();
+        log.info("Retrieving the matching bus model by ID {}", busModelId);
         final BusModelEntity busModelEntity = busModelRepository.getBusModelByHashKey(busModelId).get();
 
         final String busRouteId = photoEntity.getBusRouteId();
+        log.info("Retrieving the matching bus route by ID {}", busRouteId);
         final BusRouteEntity busRouteEntity = busRouteRepository.getBusRouteByHashKey(busRouteId).get();
 
+        log.info("Constructing the photo object to return");
         return Photo.builder()
                 .photoId(photoEntity.getPhotoId())
                 .advertisementId(advertisementEntity.getHashKey())
