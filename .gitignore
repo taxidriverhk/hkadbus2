@@ -33,7 +33,11 @@ hs_err_pid*
 # macOS
 .DS_Store
 
-# Azure Functions
-local.settings.json
-bin/
-obj/
+# Node modules
+node_modules/
+node/
+
+# Webpack Generated Artifacts
+frontend/images/photos/
+frontend/fonts/
+frontend/scripts/

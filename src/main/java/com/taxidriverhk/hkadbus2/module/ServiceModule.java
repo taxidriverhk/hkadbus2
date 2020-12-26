@@ -1,66 +1,24 @@
 package com.taxidriverhk.hkadbus2.module;
 
-import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
-import com.taxidriverhk.hkadbus2.repository.BusBrandRepository;
-import com.taxidriverhk.hkadbus2.repository.BusModelRepository;
-import com.taxidriverhk.hkadbus2.repository.BusRepository;
-import com.taxidriverhk.hkadbus2.repository.BusRouteRepository;
-import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
-import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
-import com.taxidriverhk.hkadbus2.service.AdvertisementService;
-import com.taxidriverhk.hkadbus2.service.BusService;
+import com.google.common.collect.ImmutableMap;
+import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.sun.jersey.guice.JerseyServletModule;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.taxidriverhk.hkadbus2.service.CategoryService;
-import com.taxidriverhk.hkadbus2.service.PhotoService;
-import com.taxidriverhk.hkadbus2.service.impl.AdvertisementServiceImpl;
-import com.taxidriverhk.hkadbus2.service.impl.BusServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.CategoryServiceImpl;
-import com.taxidriverhk.hkadbus2.service.impl.PhotoServiceImpl;
-import dagger.Module;
-import dagger.Provides;
 
-import javax.inject.Singleton;
+import java.util.Map;
 
-@Module
-public class ServiceModule {
+public class ServiceModule extends JerseyServletModule {
 
-    @Provides
-    @Singleton
-    public AdvertisementService advertisementService(
-            final AdvertisementRepository advertisementRepository,
-            final CategoryRepository categoryRepository
-    ) {
-        return new AdvertisementServiceImpl(advertisementRepository, categoryRepository);
-    }
+    @Override
+    protected void configureServlets() {
+        install(new DataAccessModule());
 
-    @Provides
-    @Singleton
-    public BusService busService(
-            final BusBrandRepository busBrandRepository,
-            final BusModelRepository busModelRepository
-    ) {
-        return new BusServiceImpl(busBrandRepository, busModelRepository);
-    }
+        bind(CategoryService.class).to(CategoryServiceImpl.class);
 
-    @Provides
-    @Singleton
-    public CategoryService categoryService(final CategoryRepository categoryRepository) {
-        return new CategoryServiceImpl(categoryRepository);
-    }
-
-    @Provides
-    @Singleton
-    public PhotoService photoService(
-            final AdvertisementRepository advertisementRepository,
-            final BusRepository busRepository,
-            final BusModelRepository busModelRepository,
-            final BusRouteRepository busRouteRepository,
-            final PhotoRepository photoRepository
-    ) {
-        return new PhotoServiceImpl(
-                advertisementRepository,
-                busRepository,
-                busModelRepository,
-                busRouteRepository,
-                photoRepository);
+        final Map<String, String> serveParams = ImmutableMap.of(
+                PackagesResourceConfig.PROPERTY_PACKAGES, "com.taxidriverhk.hkadbus2.activity");
+        serve("/api/*").with(GuiceContainer.class, serveParams);
     }
 }
