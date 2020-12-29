@@ -1,6 +1,7 @@
 package com.taxidriverhk.hkadbus2.module;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 import lombok.extern.log4j.Log4j2;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.properties.EncryptableProperties;
@@ -15,7 +16,7 @@ public class EnvironmentModule extends AbstractModule {
 
     public Properties applicationProperties() {
         final StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-        encryptor.setPassword(System.getenv("encryptorPassword"));
+        encryptor.setPassword(System.getenv("ENCRYPTOR_PASSWORD"));
         encryptor.setAlgorithm("PBEWithSHA1AndDESEDE");
 
         final Properties properties = new EncryptableProperties(encryptor);
@@ -35,5 +36,6 @@ public class EnvironmentModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        Names.bindProperties(binder(), applicationProperties());
     }
 }
