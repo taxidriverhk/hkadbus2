@@ -15,6 +15,8 @@ import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 
+import java.util.UUID;
+
 public final class MockDataHelper {
 
     public static final String LANGUAGE_EN = "en_us";
@@ -34,6 +36,7 @@ public final class MockDataHelper {
             .thumbnail("http://thunbnail.jpg")
             .build();
     public static final CategoryEntity CATEGORY_ENTITY = CategoryEntity.builder()
+            .id(createNamedUUID(CATEGORY_HASH_KEY_1))
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Food",
                     LANGUAGE_ZH, "食品"))
@@ -210,4 +213,8 @@ public final class MockDataHelper {
             .userId("test-user")
             .uploadedDate(123456L)
             .build();
+
+    private static UUID createNamedUUID(final String name) {
+        return UUID.nameUUIDFromBytes(name.getBytes());
+    }
 }
