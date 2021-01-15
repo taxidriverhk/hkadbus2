@@ -1,8 +1,11 @@
 package com.taxidriverhk.hkadbus2.exception;
 
-public class BadRequestException extends RuntimeException {
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+
+public class BadRequestException extends WebApplicationException {
 
     public BadRequestException(final String message) {
-        super(message);
+        super(new IllegalArgumentException(message), Response.Status.BAD_REQUEST);
     }
 }

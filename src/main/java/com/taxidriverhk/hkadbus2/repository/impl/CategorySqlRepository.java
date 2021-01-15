@@ -1,6 +1,7 @@
 package com.taxidriverhk.hkadbus2.repository.impl;
 
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
+import com.taxidriverhk.hkadbus2.model.entity.EntityConstants;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 import com.taxidriverhk.hkadbus2.util.SqlQueryUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,16 @@ public class CategorySqlRepository implements CategoryRepository {
     }
 
     @Override
-    public Optional<CategoryEntity> getCategoryByHashKey(String hashKey) {
-        return Optional.empty();
+    public Optional<CategoryEntity> getCategoryByHashKey(final String hashKey) {
+        log.info("Querying category by hash key {}", hashKey);
+
+        final Session session = sessionFactory.openSession();
+        final Optional<CategoryEntity> result = SqlQueryUtil.selectSingleItemByCompositeKey(
+                session,
+                CategoryEntity.class,
+                EntityConstants.HASH_KEY_ATTRIBUTE,
+                hashKey);
+        session.close();
+        return result;
     }
 }

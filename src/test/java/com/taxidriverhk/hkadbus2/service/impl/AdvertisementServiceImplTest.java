@@ -18,7 +18,7 @@ import static com.taxidriverhk.hkadbus2.util.MockDataHelper.ADVERTISEMENT_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.ADVERTISEMENT_2;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.ADVERTISEMENT_ENTITY_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.ADVERTISEMENT_ENTITY_2;
-import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_ENTITY;
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_ENTITY_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_HASH_KEY_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.LANGUAGE_EN;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,7 +44,12 @@ public class AdvertisementServiceImplTest {
 
     @Test
     public void WHEN_getAdvertisementsByCategoryId_THEN_shouldGetMatchingAdvertisements() {
-        assertThat(true, equalTo(true));
+        when(categoryRepository.getCategoryByHashKey(any())).thenReturn(Optional.of(CATEGORY_ENTITY_1));
+        when(advertisementRepository.getAdvertisements(any())).thenReturn(Lists.newArrayList(ADVERTISEMENT_ENTITY_1, ADVERTISEMENT_ENTITY_2));
+
+        final List<Advertisement> advertisements = advertisementService.getAdvertisements(CATEGORY_HASH_KEY_1, LANGUAGE_EN);
+
+        assertThat(advertisements, containsInAnyOrder(ADVERTISEMENT_1, ADVERTISEMENT_2));
     }
 
     @Test

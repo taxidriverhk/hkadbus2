@@ -45,7 +45,7 @@ public class PhotoServiceImpl implements PhotoService {
 
         final String advertisementId = photoEntity.getAdvertisementId();
         log.info("Retrieving the matching advertisement by ID {}", advertisementId);
-        final AdvertisementEntity advertisementEntity = advertisementRepository.getAdvertisement(advertisementId).get();
+        final AdvertisementEntity advertisementEntity = advertisementRepository.getAdvertisementByHashKey(advertisementId).get();
 
         final String busId = photoEntity.getBusId();
         log.info("Retrieving the matching bus by ID {}", busId);

@@ -3,8 +3,11 @@ package com.taxidriverhk.hkadbus2.module;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
+import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.AdvertisementSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategorySqlRepository;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.SessionFactory;
@@ -33,9 +36,16 @@ public class DataAccessModule extends AbstractModule {
         properties.setProperty("dialect", dialect);
 
         return new Configuration()
+                .addAnnotatedClass(AdvertisementEntity.class)
                 .addAnnotatedClass(CategoryEntity.class)
                 .addProperties(properties)
                 .buildSessionFactory();
+    }
+
+    @Provides
+    @Singleton
+    public AdvertisementRepository advertisementRepository(final SessionFactory sessionFactory) {
+        return new AdvertisementSqlRepository(sessionFactory);
     }
 
     @Provides

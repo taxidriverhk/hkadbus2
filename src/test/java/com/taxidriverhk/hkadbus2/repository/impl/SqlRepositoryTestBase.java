@@ -1,5 +1,6 @@
 package com.taxidriverhk.hkadbus2.repository.impl;
 
+import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,6 +23,7 @@ public abstract class SqlRepositoryTestBase {
         properties.setProperty("hibernate.hbm2ddl.show_sql", "true");
 
         sessionFactory = new Configuration()
+                .addAnnotatedClass(AdvertisementEntity.class)
                 .addAnnotatedClass(CategoryEntity.class)
                 .setProperties(properties)
                 .buildSessionFactory();

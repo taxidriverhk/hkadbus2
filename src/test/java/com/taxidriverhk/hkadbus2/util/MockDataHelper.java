@@ -27,20 +27,34 @@ public final class MockDataHelper {
     public static final String BUS_MODEL_HASH_KEY_1 = "dragon-12m";
     public static final String BUS_MODEL_HASH_KEY_2 = "olympian-12m";
     public static final String BUS_ROUTE_HASH_KEY_1 = "kmb-49x";
+
     public static final String ADVERTISEMENT_HASH_KEY_1 = "calbee";
+    public static final String ADVERTISEMENT_HASH_KEY_2 = "golden-elephant-brand";
+    public static final String ADVERTISEMENT_HASH_KEY_3 = "ikea";
+
     public static final String CATEGORY_HASH_KEY_1 = "food";
+    public static final String CATEGORY_HASH_KEY_2 = "furniture";
 
     public static final Category CATEGORY = Category.builder()
             .id(CATEGORY_HASH_KEY_1)
             .name("Food")
             .thumbnail("http://thunbnail.jpg")
             .build();
-    public static final CategoryEntity CATEGORY_ENTITY = CategoryEntity.builder()
-            .id(createNamedUUID(CATEGORY_HASH_KEY_1))
+    public static final UUID CATEGORY_ENTITY_ID_1 = createNamedUUID(CATEGORY_HASH_KEY_1);
+    public static final CategoryEntity CATEGORY_ENTITY_1 = CategoryEntity.builder()
+            .id(CATEGORY_ENTITY_ID_1)
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Food",
                     LANGUAGE_ZH, "食品"))
             .hashKey(CATEGORY_HASH_KEY_1)
+            .thumbnail("http://thunbnail.jpg")
+            .build();
+    public static final CategoryEntity CATEGORY_ENTITY_2 = CategoryEntity.builder()
+            .id(createNamedUUID(CATEGORY_HASH_KEY_2))
+            .name(ImmutableMap.of(
+                    LANGUAGE_EN, "Furniture",
+                    LANGUAGE_ZH, "傢俬"))
+            .hashKey(CATEGORY_HASH_KEY_2)
             .thumbnail("http://thunbnail.jpg")
             .build();
 
@@ -60,27 +74,30 @@ public final class MockDataHelper {
             .build();
 
     public static final AdvertisementEntity ADVERTISEMENT_ENTITY_1 = AdvertisementEntity.builder()
+            .id(createNamedUUID(ADVERTISEMENT_HASH_KEY_1))
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Calbee",
                     LANGUAGE_ZH, "卡樂B"))
             .hashKey(ADVERTISEMENT_HASH_KEY_1)
-            .categoryId(CATEGORY_HASH_KEY_1)
+            .category(CATEGORY_ENTITY_1)
             .thumbnail("http://thunbnail.jpg")
             .build();
     public static final AdvertisementEntity ADVERTISEMENT_ENTITY_2 = AdvertisementEntity.builder()
+            .id(createNamedUUID(ADVERTISEMENT_HASH_KEY_2))
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Golden Elephant Brand",
                     LANGUAGE_ZH, "金象米"))
-            .hashKey("golden-elephant-brand")
-            .categoryId(CATEGORY_HASH_KEY_1)
+            .hashKey(ADVERTISEMENT_HASH_KEY_2)
+            .category(CATEGORY_ENTITY_1)
             .thumbnail("http://thunbnail.jpg")
             .build();
     public static final AdvertisementEntity ADVERTISEMENT_ENTITY_3 = AdvertisementEntity.builder()
+            .id(createNamedUUID(ADVERTISEMENT_HASH_KEY_3))
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "IKEA",
                     LANGUAGE_ZH, "宜家傢俬"))
-            .hashKey("ikea")
-            .categoryId("furniture")
+            .category(CATEGORY_ENTITY_2)
+            .hashKey(ADVERTISEMENT_HASH_KEY_3)
             .thumbnail("http://thunbnail.jpg")
             .build();
 

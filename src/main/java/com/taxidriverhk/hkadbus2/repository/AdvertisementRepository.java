@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface AdvertisementRepository {
 
-    Optional<AdvertisementEntity> getAdvertisement(String hashKey);
+    Optional<AdvertisementEntity> getAdvertisementByHashKey(String hashKey);
     List<AdvertisementEntity> getAdvertisements(String categoryId);
 }

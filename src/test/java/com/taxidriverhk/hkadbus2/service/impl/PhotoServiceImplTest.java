@@ -57,7 +57,7 @@ public class PhotoServiceImplTest {
     @Test
     public void WHEN_getPhotoById_THEN_shouldGetDataFromCorrespondingRepositories() {
         when(photoRepository.getPhoto(PHOTO_ID_1)).thenReturn(Optional.of(PHOTO_ENTITY_1));
-        when(advertisementRepository.getAdvertisement(ADVERTISEMENT_HASH_KEY_1)).thenReturn(Optional.of(ADVERTISEMENT_ENTITY_1));
+        when(advertisementRepository.getAdvertisementByHashKey(ADVERTISEMENT_HASH_KEY_1)).thenReturn(Optional.of(ADVERTISEMENT_ENTITY_1));
         when(busRepository.getBus(BUS_ID_1)).thenReturn(Optional.of(BUS_ENTITY_1));
         when(busModelRepository.getBusModelByHashKey(BUS_MODEL_HASH_KEY_1)).thenReturn(Optional.of(BUS_MODEL_ENTITY_1));
         when(busRouteRepository.getBusRouteByHashKey(BUS_ROUTE_HASH_KEY_1)).thenReturn(Optional.of(BUS_ROUTE_ENTITY_1));

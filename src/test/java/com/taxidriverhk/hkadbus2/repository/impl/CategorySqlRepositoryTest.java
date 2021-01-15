@@ -7,10 +7,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
-import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_ENTITY;
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_ENTITY_1;
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_HASH_KEY_1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
 
 public class CategorySqlRepositoryTest extends SqlRepositoryTestBase {
 
@@ -24,13 +27,22 @@ public class CategorySqlRepositoryTest extends SqlRepositoryTestBase {
     @Test
     public void WHEN_queryWithoutFilter_THEN_shouldReturnAllCategories() {
         final List<CategoryEntity> categoryEntities = sqlRepository.getCategories();
-        assertThat(categoryEntities, containsInAnyOrder(CATEGORY_ENTITY));
+        assertThat(categoryEntities, containsInAnyOrder(CATEGORY_ENTITY_1));
+    }
+
+    @Test
+    public void WHEN_queryByHashKey_THEN_shouldReturnMatchingCategory() {
+        final Optional<CategoryEntity> categoryEntity = sqlRepository.getCategoryByHashKey(CATEGORY_HASH_KEY_1);
+        assertThat(categoryEntity.get(), equalTo(CATEGORY_ENTITY_1));
+
+        final Optional<CategoryEntity> nonExistentCategoryEntity = sqlRepository.getCategoryByHashKey("invalid-key");
+        assertThat(nonExistentCategoryEntity.isPresent(), equalTo(false));
     }
 
     @Override
     protected void setupDataForTest(Session session) {
         final Transaction transaction = session.beginTransaction();
-        session.save(CATEGORY_ENTITY);
+        session.save(CATEGORY_ENTITY_1);
         transaction.commit();
     }
 }
