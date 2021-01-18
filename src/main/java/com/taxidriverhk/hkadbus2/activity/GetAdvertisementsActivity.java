@@ -1,6 +1,5 @@
 package com.taxidriverhk.hkadbus2.activity;
 
-import com.taxidriverhk.hkadbus2.exception.BadRequestException;
 import com.taxidriverhk.hkadbus2.model.api.GetAdvertisementsResponse;
 import com.taxidriverhk.hkadbus2.model.domain.Advertisement;
 import com.taxidriverhk.hkadbus2.service.AdvertisementService;

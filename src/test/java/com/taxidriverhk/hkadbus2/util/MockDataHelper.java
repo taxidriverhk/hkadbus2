@@ -154,7 +154,6 @@ public final class MockDataHelper {
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Dragon 12M",
                     LANGUAGE_ZH, "巨龍12米"))
-            .busBrandId(BUS_BRAND_HASH_KEY_1)
             .thumbnail("http://thunbnail.jpg")
             .build();
     public static final BusModelEntity BUS_MODEL_ENTITY_2 = BusModelEntity.builder()
@@ -162,7 +161,6 @@ public final class MockDataHelper {
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Olympian 12M",
                     LANGUAGE_ZH, "奧林比安12米"))
-            .busBrandId(BUS_BRAND_HASH_KEY_2)
             .thumbnail("http://thunbnail.jpg")
             .build();
 

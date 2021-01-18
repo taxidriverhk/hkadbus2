@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface BusModelRepository {
 
-    List<BusModelEntity> getBusModelsByBrandId(String brandId);
+    List<BusModelEntity> getBusModels(String brandId);
     Optional<BusModelEntity> getBusModelByHashKey(String hashKey);
 }

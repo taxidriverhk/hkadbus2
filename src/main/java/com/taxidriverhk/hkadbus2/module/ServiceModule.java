@@ -8,8 +8,10 @@ import com.taxidriverhk.hkadbus2.activity.filter.AuthenticationFilter;
 import com.taxidriverhk.hkadbus2.activity.filter.CORSFilter;
 import com.taxidriverhk.hkadbus2.activity.filter.LoggingFilter;
 import com.taxidriverhk.hkadbus2.service.AdvertisementService;
+import com.taxidriverhk.hkadbus2.service.BusService;
 import com.taxidriverhk.hkadbus2.service.CategoryService;
 import com.taxidriverhk.hkadbus2.service.impl.AdvertisementServiceImpl;
+import com.taxidriverhk.hkadbus2.service.impl.BusServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.CategoryServiceImpl;
 
 import java.util.Map;
@@ -24,6 +26,7 @@ public class ServiceModule extends JerseyServletModule {
         install(new DataAccessModule());
 
         bind(AdvertisementService.class).to(AdvertisementServiceImpl.class);
+        bind(BusService.class).to(BusServiceImpl.class);
         bind(CategoryService.class).to(CategoryServiceImpl.class);
 
         final Map<String, String> serveParams = ImmutableMap.of(

@@ -4,10 +4,16 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
+import com.taxidriverhk.hkadbus2.model.entity.BusBrandEntity;
+import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
+import com.taxidriverhk.hkadbus2.repository.BusBrandRepository;
+import com.taxidriverhk.hkadbus2.repository.BusModelRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.AdvertisementSqlRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.BusBrandSqlRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.BusModelSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategorySqlRepository;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.SessionFactory;
@@ -37,6 +43,8 @@ public class DataAccessModule extends AbstractModule {
 
         return new Configuration()
                 .addAnnotatedClass(AdvertisementEntity.class)
+                .addAnnotatedClass(BusBrandEntity.class)
+                .addAnnotatedClass(BusModelEntity.class)
                 .addAnnotatedClass(CategoryEntity.class)
                 .addProperties(properties)
                 .buildSessionFactory();
@@ -46,6 +54,18 @@ public class DataAccessModule extends AbstractModule {
     @Singleton
     public AdvertisementRepository advertisementRepository(final SessionFactory sessionFactory) {
         return new AdvertisementSqlRepository(sessionFactory);
+    }
+
+    @Provides
+    @Singleton
+    public BusBrandRepository busBrandRepository(final SessionFactory sessionFactory) {
+        return new BusBrandSqlRepository(sessionFactory);
+    }
+
+    @Provides
+    @Singleton
+    public BusModelRepository busModelRepository(final SessionFactory sessionFactory) {
+        return new BusModelSqlRepository(sessionFactory);
     }
 
     @Provides
