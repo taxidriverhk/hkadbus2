@@ -38,6 +38,7 @@ node_modules/
 node/
 
 # Webpack Generated Artifacts
+frontend/build/
 frontend/images/photos/
 frontend/fonts/
 frontend/scripts/
