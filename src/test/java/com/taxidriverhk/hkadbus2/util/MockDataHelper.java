@@ -14,7 +14,10 @@ import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
+import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
 
 public final class MockDataHelper {
@@ -34,6 +37,9 @@ public final class MockDataHelper {
 
     public static final String CATEGORY_HASH_KEY_1 = "food";
     public static final String CATEGORY_HASH_KEY_2 = "furniture";
+
+    public static final Long TIMESTAMP_2020 = 1577836800000L;
+    public static final Date DATE_2020 = Date.from(Instant.ofEpochMilli(TIMESTAMP_2020));
 
     public static final Category CATEGORY = Category.builder()
             .id(CATEGORY_HASH_KEY_1)
@@ -116,33 +122,15 @@ public final class MockDataHelper {
             .busBrandName("Volvo")
             .build();
 
-    public static final String BUS_ID_1 = "ASDgTMT2mu";
-    public static final BusEntity BUS_ENTITY_1 = BusEntity.builder()
-            .busId(BUS_ID_1)
-            .busModelId(BUS_MODEL_HASH_KEY_1)
-            .busCompany(BusCompany.KMB.getText())
-            .fleetPrefix("AD")
-            .fleetNumber(15)
-            .licensePlateNumber("EA5913")
-            .build();
-
-    public static final String BUS_ID_2 = "n3h5TIFj4v";
-    public static final BusEntity BUS_ENTITY_2 = BusEntity.builder()
-            .busId(BUS_ID_2)
-            .busModelId(BUS_MODEL_HASH_KEY_2)
-            .busCompany(BusCompany.KMB.getText())
-            .fleetPrefix("3AV")
-            .fleetNumber(101)
-            .licensePlateNumber("GX2424")
-            .build();
-
     public static final BusBrandEntity BUS_BRAND_ENTITY_1 = BusBrandEntity.builder()
+            .id(createNamedUUID(BUS_BRAND_HASH_KEY_1))
             .hashKey(BUS_BRAND_HASH_KEY_1)
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Dennis",
                     LANGUAGE_ZH, "丹尼士"))
             .build();
     public static final BusBrandEntity BUS_BRAND_ENTITY_2 = BusBrandEntity.builder()
+            .id(createNamedUUID(BUS_BRAND_HASH_KEY_2))
             .hashKey(BUS_BRAND_HASH_KEY_2)
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Volvo",
@@ -150,22 +138,43 @@ public final class MockDataHelper {
             .build();
 
     public static final BusModelEntity BUS_MODEL_ENTITY_1 = BusModelEntity.builder()
+            .id(createNamedUUID(BUS_BRAND_HASH_KEY_1))
             .hashKey(BUS_MODEL_HASH_KEY_1)
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Dragon 12M",
                     LANGUAGE_ZH, "巨龍12米"))
             .thumbnail("http://thunbnail.jpg")
+            .busBrand(BUS_BRAND_ENTITY_1)
             .build();
     public static final BusModelEntity BUS_MODEL_ENTITY_2 = BusModelEntity.builder()
+            .id(createNamedUUID(BUS_BRAND_HASH_KEY_2))
             .hashKey(BUS_MODEL_HASH_KEY_2)
             .name(ImmutableMap.of(
                     LANGUAGE_EN, "Olympian 12M",
                     LANGUAGE_ZH, "奧林比安12米"))
             .thumbnail("http://thunbnail.jpg")
+            .busBrand(BUS_BRAND_ENTITY_2)
+            .build();
+
+    public static final String BUS_ID_1 = "ASDgTMT2mu";
+    public static final BusEntity BUS_ENTITY_1 = BusEntity.builder()
+            .id(createNamedUUID("AD15"))
+            .busCompany(BusCompany.KMB.getText())
+            .fleetNumber("AD15")
+            .licensePlateNumber("EA5913")
+            .busModel(BUS_MODEL_ENTITY_1)
+            .build();
+
+    public static final String BUS_ID_2 = "n3h5TIFj4v";
+    public static final BusEntity BUS_ENTITY_2 = BusEntity.builder()
+            .id(createNamedUUID("3AV101"))
+            .busCompany(BusCompany.KMB.getText())
+            .fleetNumber("3AV101")
+            .licensePlateNumber("GX2424")
+            .busModel(BUS_MODEL_ENTITY_2)
             .build();
 
     public static final BusRouteEntity BUS_ROUTE_ENTITY_1 = BusRouteEntity.builder()
-            .hashKey(BUS_ROUTE_HASH_KEY_1)
             .routeNumber("49X")
             .busCompanies(Lists.newArrayList(BusCompany.KMB.getText()))
             .startLocation(ImmutableMap.of(
@@ -176,7 +185,6 @@ public final class MockDataHelper {
                     LANGUAGE_ZH, "青衣碼頭"))
             .build();
     public static final BusRouteEntity BUS_ROUTE_ENTITY_2 = BusRouteEntity.builder()
-            .hashKey(BUS_ROUTE_HASH_KEY_1)
             .routeNumber("2")
             .busCompanies(Lists.newArrayList(BusCompany.KMB.getText()))
             .startLocation(ImmutableMap.of(
@@ -187,7 +195,6 @@ public final class MockDataHelper {
                     LANGUAGE_ZH, "青衣碼頭"))
             .build();
     public static final BusRouteEntity BUS_ROUTE_ENTITY_3 = BusRouteEntity.builder()
-            .hashKey(BUS_ROUTE_HASH_KEY_1)
             .routeNumber("2")
             .busCompanies(Lists.newArrayList(BusCompany.NWFB.getText()))
             .startLocation(ImmutableMap.of(
@@ -198,35 +205,43 @@ public final class MockDataHelper {
                     LANGUAGE_ZH, "嘉亨灣"))
             .build();
 
-    public static final String PHOTO_ID_1 = "a2Lbjw3eNS";
+    public static final UserEntity USER_ENTITY_1 = UserEntity.builder()
+            .id(createNamedUUID("admin"))
+            .username("test-user")
+            .passwordHash("test-hash")
+            .group("admin")
+            .registrationDate(DATE_2020)
+            .lastLoggedInDate(DATE_2020)
+            .build();
+
+    public static final Long PHOTO_SHORT_ID_1 = 12345L;
 
     public static final Photo PHOTO_1 = Photo.builder()
-            .photoId(PHOTO_ID_1)
+            .photoId(PHOTO_SHORT_ID_1)
             .advertisementId(ADVERTISEMENT_HASH_KEY_1)
             .advertisement("Calbee")
             .busCompany(BusCompany.KMB)
             .busModelId(BUS_MODEL_HASH_KEY_1)
             .busModel("Dragon 12M")
-            .busRouteId(BUS_ROUTE_HASH_KEY_1)
-            .busRoute("49X")
             .licensePlateNumber("EA5913")
-            .fleetPrefix("AD")
-            .fleetNumber(15)
+            .fleetNumber("AD15")
+            .routeNumber("49X")
             .image("http://image.jpg")
             .thumbnail("http://thunbnail.jpg")
             .username("test-user")
-            .uploadedDate(123456L)
+            .uploadedDate(TIMESTAMP_2020)
             .build();
 
     public static final PhotoEntity PHOTO_ENTITY_1 = PhotoEntity.builder()
-            .photoId(PHOTO_ID_1)
-            .advertisementId(ADVERTISEMENT_HASH_KEY_1)
-            .busId(BUS_ID_1)
-            .busRouteId(BUS_ROUTE_HASH_KEY_1)
+            .id(createNamedUUID(PHOTO_SHORT_ID_1.toString()))
+            .shortId(PHOTO_SHORT_ID_1)
             .image("http://image.jpg")
             .thumbnail("http://thunbnail.jpg")
-            .userId("test-user")
-            .uploadedDate(123456L)
+            .advertisement(ADVERTISEMENT_ENTITY_1)
+            .bus(BUS_ENTITY_1)
+            .busRoute(BUS_ROUTE_ENTITY_1)
+            .user(USER_ENTITY_1)
+            .uploadedDate(DATE_2020)
             .build();
 
     private static UUID createNamedUUID(final String name) {

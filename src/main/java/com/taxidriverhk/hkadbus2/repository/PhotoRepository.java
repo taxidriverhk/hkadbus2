@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface PhotoRepository {
 
-    Optional<PhotoEntity> getPhoto(String id);
+    Optional<PhotoEntity> getPhotoByShortId(Long shortId);
 }

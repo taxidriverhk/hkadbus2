@@ -13,17 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_BRAND_ENTITY_1;
-import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_BRAND_ENTITY_2;
-import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_BRAND_HASH_KEY_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_MODEL_1;
-import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_MODEL_2;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_MODEL_ENTITY_1;
-import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_MODEL_ENTITY_2;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.LANGUAGE_EN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +35,10 @@ public class BusServiceImplTest {
 
     @Test
     public void WHEN_getAllBusModels_THEN_shouldGetEntitiesFromRepository() {
-        assertThat(true, equalTo(true));
+        when(busBrandRepository.getBusBrands()).thenReturn(Lists.newArrayList(BUS_BRAND_ENTITY_1));
+        when(busModelRepository.getBusModels(any())).thenReturn(Lists.newArrayList(BUS_MODEL_ENTITY_1));
+
+        final List<BusModel> busModels = busService.getBusModels(LANGUAGE_EN);
+        assertThat(busModels, containsInAnyOrder(BUS_MODEL_1));
     }
 }

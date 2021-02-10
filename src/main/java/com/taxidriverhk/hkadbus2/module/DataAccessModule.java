@@ -5,16 +5,22 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusBrandEntity;
+import com.taxidriverhk.hkadbus2.model.entity.BusEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
+import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
+import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
+import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
 import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
 import com.taxidriverhk.hkadbus2.repository.BusBrandRepository;
 import com.taxidriverhk.hkadbus2.repository.BusModelRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
+import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.AdvertisementSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.BusBrandSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.BusModelSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategorySqlRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.PhotoSqlRepository;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -39,13 +45,18 @@ public class DataAccessModule extends AbstractModule {
         properties.setProperty("hibernate.connection.username", username);
         properties.setProperty("hibernate.connection.password", password);
         properties.setProperty("hibernate.connection.driver_class", driverClass);
+        properties.setProperty("hibernate.globally_quoted_identifiers", "true");
         properties.setProperty("dialect", dialect);
 
         return new Configuration()
                 .addAnnotatedClass(AdvertisementEntity.class)
+                .addAnnotatedClass(BusEntity.class)
                 .addAnnotatedClass(BusBrandEntity.class)
                 .addAnnotatedClass(BusModelEntity.class)
+                .addAnnotatedClass(BusRouteEntity.class)
                 .addAnnotatedClass(CategoryEntity.class)
+                .addAnnotatedClass(PhotoEntity.class)
+                .addAnnotatedClass(UserEntity.class)
                 .addProperties(properties)
                 .buildSessionFactory();
     }
@@ -72,6 +83,12 @@ public class DataAccessModule extends AbstractModule {
     @Singleton
     public CategoryRepository categoryRepository(final SessionFactory sessionFactory) {
         return new CategorySqlRepository(sessionFactory);
+    }
+
+    @Provides
+    @Singleton
+    public PhotoRepository photoRepository(final SessionFactory sessionFactory) {
+        return new PhotoSqlRepository(sessionFactory);
     }
 
     @Override

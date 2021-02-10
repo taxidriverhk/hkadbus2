@@ -10,9 +10,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
 import java.util.UUID;
 
 @Builder(toBuilder = true)
@@ -20,8 +21,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = EntityConstants.BUS_TABLE)
-public class BusEntity {
+@Table(name = EntityConstants.USER_TABLE)
+public class UserEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -29,16 +30,20 @@ public class BusEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "bus_company")
-    private String busCompany;
+    @Column(name = "username")
+    private String username;
 
-    @Column(name = "fleet_number")
-    private String fleetNumber;
+    @Column(name = "password_hash")
+    private String passwordHash;
 
-    @Column(name = "license_plate_number")
-    private String licensePlateNumber;
+    @Column(name = "group")
+    private String group;
 
-    @ManyToOne
-    @JoinColumn(name = "bus_model_id", nullable = false)
-    private BusModelEntity busModel;
+    @Column(name = "last_logged_in_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoggedInDate;
+
+    @Column(name = "registration_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date registrationDate;
 }

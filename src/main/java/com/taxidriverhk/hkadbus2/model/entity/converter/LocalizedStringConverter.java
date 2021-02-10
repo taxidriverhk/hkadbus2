@@ -14,12 +14,12 @@ public class LocalizedStringConverter implements AttributeConverter<Map<String, 
     private final static Gson GSON = new Gson();
 
     @Override
-    public String convertToDatabaseColumn(Map<String, String> localizedStringMap) {
+    public String convertToDatabaseColumn(final Map<String, String> localizedStringMap) {
         return GSON.toJson(localizedStringMap);
     }
 
     @Override
-    public Map<String, String> convertToEntityAttribute(String serializedMap) {
+    public Map<String, String> convertToEntityAttribute(final String serializedMap) {
         final Type mapType = new TypeToken<Map<String, String>>(){}.getType();
         return GSON.fromJson(serializedMap, mapType);
     }
