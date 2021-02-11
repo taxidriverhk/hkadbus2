@@ -19,7 +19,6 @@ import static com.taxidriverhk.hkadbus2.util.MockDataHelper.PHOTO_SHORT_ID_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.USER_ENTITY_1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.samePropertyValuesAs;
 
 public class PhotoSqlRepositoryTest extends SqlRepositoryTestBase {
 
@@ -33,7 +32,7 @@ public class PhotoSqlRepositoryTest extends SqlRepositoryTestBase {
     @Test
     public void WHEN_getPhotoByShortId_THEN_shouldReturnMatchingPhotoEntity() {
         final Optional<PhotoEntity> photoEntity = sqlRepository.getPhotoByShortId(PHOTO_SHORT_ID_1);
-        assertThat(photoEntity.get(), samePropertyValuesAs(PHOTO_ENTITY_1,"uploadedDate", "user"));
+        assertThat(photoEntity.get(), equalTo(PHOTO_ENTITY_1));
 
         final Optional<PhotoEntity> nonExistentPhotoEntity = sqlRepository.getPhotoByShortId(5555L);
         assertThat(nonExistentPhotoEntity.isPresent(), equalTo(false));

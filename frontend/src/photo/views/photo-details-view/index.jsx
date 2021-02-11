@@ -33,6 +33,8 @@ export default function PhotoDetailsView({
     const {
       advertisement,
       advertisementId,
+      category,
+      categoryId,
     } = photo;
 
     return (
@@ -52,13 +54,12 @@ export default function PhotoDetailsView({
           >
             {strings.categories}
           </Breadcrumb.Item>
-          { /* TODO: fix the category */ }
           <Breadcrumb.Item
             componentClass={Link}
-            to={`/categories/fix-me`}
-            href={`/categories/fix-me`}
+            to={`/categories/${categoryId}`}
+            href={`/categories/${categoryId}`}
           >
-            Fix Me
+            {category}
           </Breadcrumb.Item>
           <Breadcrumb.Item
             componentClass={Link}

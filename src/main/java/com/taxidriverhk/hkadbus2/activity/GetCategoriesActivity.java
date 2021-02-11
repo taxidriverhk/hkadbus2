@@ -3,6 +3,7 @@ package com.taxidriverhk.hkadbus2.activity;
 import com.taxidriverhk.hkadbus2.model.api.GetCategoriesResponse;
 import com.taxidriverhk.hkadbus2.model.domain.Category;
 import com.taxidriverhk.hkadbus2.service.CategoryService;
+import com.taxidriverhk.hkadbus2.util.RequestValidator;
 import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ public class GetCategoriesActivity {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response list(@QueryParam("language") final String language) {
+        RequestValidator.validateLanguage(language);
         final List<Category> categories = categoryService.getCategories(language);
         final GetCategoriesResponse getCategoriesResponse = GetCategoriesResponse.builder()
                 .categories(categories)

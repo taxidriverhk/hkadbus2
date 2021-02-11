@@ -36,13 +36,17 @@ public interface EntityMapper {
     @Mapping(target = "photoId", expression = "java(photoEntity.getShortId())")
     @Mapping(target = "advertisementId", expression = "java(photoEntity.getAdvertisement().getHashKey())")
     @Mapping(target = "advertisement", expression = "java(photoEntity.getAdvertisement().getName().get(language))")
+    @Mapping(target = "categoryId", expression = "java(photoEntity.getAdvertisement().getCategory().getHashKey())")
+    @Mapping(target = "category", expression = "java(photoEntity.getAdvertisement().getCategory().getName().get(language))")
     @Mapping(
             target = "busCompany",
             expression = "java(com.taxidriverhk.hkadbus2.model.domain.BusCompany.fromString(photoEntity.getBus().getBusCompany()))")
+    @Mapping(target = "busId", expression = "java(photoEntity.getBus().getShortId())")
     @Mapping(target = "busModelId", expression = "java(photoEntity.getBus().getBusModel().getHashKey())")
     @Mapping(target = "busModel", expression = "java(photoEntity.getBus().getBusModel().getName().get(language))")
     @Mapping(target = "routeNumber", expression = "java(photoEntity.getBusRoute().getRouteNumber())")
     @Mapping(target = "licensePlateNumber", expression = "java(photoEntity.getBus().getLicensePlateNumber())")
+    @Mapping(target = "fleetPrefix", expression = "java(photoEntity.getBus().getFleetPrefix())")
     @Mapping(target = "fleetNumber", expression = "java(photoEntity.getBus().getFleetNumber())")
     @Mapping(target = "username", expression = "java(photoEntity.getUser().getUsername())")
     @Mapping(target = "uploadedDate", expression = "java(photoEntity.getUploadedDate().getTime())")

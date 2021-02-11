@@ -22,8 +22,10 @@ const propTypes = {
 export default function PhotoDetails({
   photo: {
     busCompany,
+    busId,
     busModel,
     busModelId,
+    fleetPrefix,
     fleetNumber,
     image,
     licensePlateNumber,
@@ -83,10 +85,10 @@ export default function PhotoDetails({
           </tr>
           <tr>
             <td>{strings.fleetNumber}</td>
-            <td>{fleetNumber}</td>
+            <td>{fleetPrefix}{fleetNumber}</td>
             <td>
               { /* TODO: get fleet prefix */ }
-              <LinkedButton to={`/fleets/not-implemented`}>
+              <LinkedButton to={`/fleets/${fleetPrefix}`}>
                 {strings.relatedFleet}
               </LinkedButton>
             </td>
@@ -100,7 +102,7 @@ export default function PhotoDetails({
             </td>
             <td>
               { /* TODO: correct the URL */ }
-              <LinkedButton to={`/buses/not-implemented`}>
+              <LinkedButton to={`/buses/${busId}`}>
                 {strings.relatedBus}
               </LinkedButton>
             </td>

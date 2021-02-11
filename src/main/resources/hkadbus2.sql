@@ -41,7 +41,9 @@ ALTER TABLE public.advertisement OWNER TO postgres;
 
 CREATE TABLE public.bus (
     id uuid NOT NULL,
+    short_id integer
     bus_company text,
+    fleet_prefix text,
     fleet_number text,
     license_plate_number text,
     bus_model_id uuid
@@ -85,9 +87,10 @@ ALTER TABLE public.bus_model OWNER TO postgres;
 CREATE TABLE public.bus_route (
     id uuid NOT NULL,
     route_number text NOT NULL,
-    bus_companies text,
     start_location text,
-    end_location text
+    end_location text,
+    bus_companies text,
+    hash_key text
 );
 
 
@@ -113,6 +116,7 @@ ALTER TABLE public.category OWNER TO postgres;
 
 CREATE TABLE public.photo (
     id uuid NOT NULL,
+    short_id integer
     thumbnail text,
     image text,
     advertisement_id uuid,
@@ -120,7 +124,6 @@ CREATE TABLE public.photo (
     bus_route_id uuid,
     user_id uuid,
     uploaded_date date,
-    short_id integer
 );
 
 
@@ -156,8 +159,8 @@ COPY public.advertisement (id, name, thumbnail, hash_key, category_id) FROM stdi
 -- Data for Name: bus; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.bus (id, bus_company, fleet_number, license_plate_number, bus_model_id) FROM stdin;
-0b8805b9-ae00-4c6f-a525-63d321f988dd	ctb	409	FZ1978	02a2bd9f-330e-429a-bbd3-4cd5df5f33e0
+COPY public.bus (id, bus_company, fleet_number, license_plate_number, bus_model_id, fleet_prefix, short_id) FROM stdin;
+0b8805b9-ae00-4c6f-a525-63d321f988dd	ctb	09	FZ1978	02a2bd9f-330e-429a-bbd3-4cd5df5f33e0	4	63412
 \.
 
 
@@ -183,8 +186,8 @@ COPY public.bus_model (id, name, thumbnail, hash_key, bus_brand_id) FROM stdin;
 -- Data for Name: bus_route; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.bus_route (id, route_number, bus_companies, start_location, end_location) FROM stdin;
-b7128900-12c6-4529-a872-d1450d94c3aa	102	"kmb,ctb"	{"zh_hk":"筲箕灣","en_us":"Shau Kei Wan"}	{"zh_hk":"美孚","en_us":"Mei Foo"}
+COPY public.bus_route (id, route_number, start_location, end_location, bus_companies, hash_key) FROM stdin;
+b7128900-12c6-4529-a872-d1450d94c3aa	102	{"zh_hk":"筲箕灣","en_us":"Shau Kei Wan"}	{"zh_hk":"美孚","en_us":"Mei Foo"}	kmb,ctb	cross-harbour-102
 \.
 
 

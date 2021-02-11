@@ -29,8 +29,18 @@ public class BusEntity {
     @Column(name = "id")
     private UUID id;
 
+    @GeneratedValue(generator = "hilo")
+    @GenericGenerator(
+            name = "hilo",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator")
+    @Column(name = "short_id")
+    private Long shortId;
+
     @Column(name = "bus_company")
     private String busCompany;
+
+    @Column(name = "fleet_prefix")
+    private String fleetPrefix;
 
     @Column(name = "fleet_number")
     private String fleetNumber;

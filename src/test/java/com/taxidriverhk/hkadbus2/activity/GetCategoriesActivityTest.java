@@ -1,9 +1,9 @@
 package com.taxidriverhk.hkadbus2.activity;
 
 import com.taxidriverhk.hkadbus2.exception.BadRequestException;
-import com.taxidriverhk.hkadbus2.model.api.GetBusModelsResponse;
-import com.taxidriverhk.hkadbus2.model.domain.BusModel;
-import com.taxidriverhk.hkadbus2.service.BusService;
+import com.taxidriverhk.hkadbus2.model.api.GetCategoriesResponse;
+import com.taxidriverhk.hkadbus2.model.domain.Category;
+import com.taxidriverhk.hkadbus2.service.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,30 +23,30 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GetBusModelsActivityTest {
+public class GetCategoriesActivityTest {
 
     @Mock
-    private BusService busService;
+    private CategoryService categoryService;
 
     @Mock
-    private BusModel busModel;
+    private Category category;
 
     @InjectMocks
-    private GetBusModelsActivity activity;
+    private GetCategoriesActivity activity;
 
     @Test
-    public void GIVEN_validLanguage_WHEN_getBusModels_THEN_shouldReturnValidResponse() {
-        when(busService.getBusModels(any())).thenReturn(Collections.singletonList(busModel));
+    public void GIVEN_validLanguage_WHEN_getCategories_THEN_shouldReturnValidResponse() {
+        when(categoryService.getCategories(any())).thenReturn(Collections.singletonList(category));
 
         final Response response = activity.list(LANGUAGE_EN);
 
-        verify(busService, times(1)).getBusModels(LANGUAGE_EN);
-        final GetBusModelsResponse getBusModelsResponse = (GetBusModelsResponse) response.getEntity();
-        assertThat(getBusModelsResponse.getBusModels(), containsInAnyOrder(busModel));
+        verify(categoryService, times(1)).getCategories(LANGUAGE_EN);
+        final GetCategoriesResponse getCategoriesResponse = (GetCategoriesResponse) response.getEntity();
+        assertThat(getCategoriesResponse.getCategories(), containsInAnyOrder(category));
     }
 
     @Test
-    public void GIVEN_invalidLanguage_WHEN_getBusModels_THEN_shouldThrowException() {
+    public void GIVEN_invalidLanguage_WHEN_getCategories_THEN_shouldThrowException() {
         assertThrows(BadRequestException.class, () -> activity.list("invalid-language"));
     }
 }

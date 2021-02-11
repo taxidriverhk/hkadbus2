@@ -46,4 +46,7 @@ public class BusRouteEntity {
     @Column(name = "end_location")
     @Convert(converter = LocalizedStringConverter.class)
     private Map<String, String> endLocation;
+
+    @Column(name = "hash_key")
+    private String hashKey;
 }

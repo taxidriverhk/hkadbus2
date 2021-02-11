@@ -16,8 +16,8 @@ import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
 
+import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Date;
 import java.util.UUID;
 
 public final class MockDataHelper {
@@ -39,7 +39,7 @@ public final class MockDataHelper {
     public static final String CATEGORY_HASH_KEY_2 = "furniture";
 
     public static final Long TIMESTAMP_2020 = 1577836800000L;
-    public static final Date DATE_2020 = Date.from(Instant.ofEpochMilli(TIMESTAMP_2020));
+    public static final Timestamp DATE_2020 = Timestamp.from(Instant.ofEpochMilli(TIMESTAMP_2020));
 
     public static final Category CATEGORY = Category.builder()
             .id(CATEGORY_HASH_KEY_1)
@@ -159,8 +159,10 @@ public final class MockDataHelper {
     public static final String BUS_ID_1 = "ASDgTMT2mu";
     public static final BusEntity BUS_ENTITY_1 = BusEntity.builder()
             .id(createNamedUUID("AD15"))
+            .shortId(1L)
             .busCompany(BusCompany.KMB.getText())
-            .fleetNumber("AD15")
+            .fleetPrefix("AD")
+            .fleetNumber("15")
             .licensePlateNumber("EA5913")
             .busModel(BUS_MODEL_ENTITY_1)
             .build();
@@ -168,14 +170,17 @@ public final class MockDataHelper {
     public static final String BUS_ID_2 = "n3h5TIFj4v";
     public static final BusEntity BUS_ENTITY_2 = BusEntity.builder()
             .id(createNamedUUID("3AV101"))
+            .shortId(2L)
             .busCompany(BusCompany.KMB.getText())
-            .fleetNumber("3AV101")
+            .fleetPrefix("3AV")
+            .fleetNumber("101")
             .licensePlateNumber("GX2424")
             .busModel(BUS_MODEL_ENTITY_2)
             .build();
 
     public static final BusRouteEntity BUS_ROUTE_ENTITY_1 = BusRouteEntity.builder()
             .routeNumber("49X")
+            .hashKey("kmb-49x")
             .busCompanies(Lists.newArrayList(BusCompany.KMB.getText()))
             .startLocation(ImmutableMap.of(
                     LANGUAGE_EN, "Kwong Yuen",
@@ -186,16 +191,18 @@ public final class MockDataHelper {
             .build();
     public static final BusRouteEntity BUS_ROUTE_ENTITY_2 = BusRouteEntity.builder()
             .routeNumber("2")
+            .hashKey("kmb-2")
             .busCompanies(Lists.newArrayList(BusCompany.KMB.getText()))
             .startLocation(ImmutableMap.of(
                     LANGUAGE_EN, "So Uk",
-                    LANGUAGE_ZH, "廣源"))
+                    LANGUAGE_ZH, "蘇屋"))
             .endLocation(ImmutableMap.of(
                     LANGUAGE_EN, "Star Ferry",
-                    LANGUAGE_ZH, "青衣碼頭"))
+                    LANGUAGE_ZH, "尖沙咀碼頭"))
             .build();
     public static final BusRouteEntity BUS_ROUTE_ENTITY_3 = BusRouteEntity.builder()
             .routeNumber("2")
+            .hashKey("nwfb-2")
             .busCompanies(Lists.newArrayList(BusCompany.NWFB.getText()))
             .startLocation(ImmutableMap.of(
                     LANGUAGE_EN, "Central (Macau Ferry)",
@@ -220,11 +227,15 @@ public final class MockDataHelper {
             .photoId(PHOTO_SHORT_ID_1)
             .advertisementId(ADVERTISEMENT_HASH_KEY_1)
             .advertisement("Calbee")
+            .categoryId(CATEGORY_HASH_KEY_1)
+            .category("Food")
             .busCompany(BusCompany.KMB)
+            .busId(1L)
             .busModelId(BUS_MODEL_HASH_KEY_1)
             .busModel("Dragon 12M")
             .licensePlateNumber("EA5913")
-            .fleetNumber("AD15")
+            .fleetPrefix("AD")
+            .fleetNumber("15")
             .routeNumber("49X")
             .image("http://image.jpg")
             .thumbnail("http://thunbnail.jpg")
