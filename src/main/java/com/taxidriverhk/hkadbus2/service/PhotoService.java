@@ -7,5 +7,5 @@ import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
 public interface PhotoService {
 
     Photo getPhoto(Long photoId, String language);
-    SearchPhotoResult searchPhotos(SearchPhotoFilter filter, String nextPageCursor);
+    SearchPhotoResult searchPhotos(String query, String orderBy, String sort, SearchPhotoFilter filter, String nextSortKey);
 }

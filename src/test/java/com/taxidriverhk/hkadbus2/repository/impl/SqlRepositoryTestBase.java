@@ -7,6 +7,7 @@ import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
+import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -36,6 +37,7 @@ public abstract class SqlRepositoryTestBase {
                 .addAnnotatedClass(BusModelEntity.class)
                 .addAnnotatedClass(BusRouteEntity.class)
                 .addAnnotatedClass(CategoryEntity.class)
+                .addAnnotatedClass(SearchRecordEntity.class)
                 .addAnnotatedClass(PhotoEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .setProperties(properties)

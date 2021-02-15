@@ -13,6 +13,7 @@ public final class EntityConstants {
     public static final String BUS_ROUTE_TABLE = "bus_route";
     public static final String CATEGORY_TABLE = "category";
     public static final String PHOTO_TABLE = "photo";
+    public static final String SEARCH_RECORD_TABLE = "search_record";
     public static final String USER_TABLE = "user";
 
     public static final String ID_ATTRIBUTE = "id";

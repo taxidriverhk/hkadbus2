@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class SearchPhotoResult {
 
-    private long total;
-    private List<Photo> results;
-    private String nextPageCursor;
+    private Long total;
+    private List<SearchRecord> results;
+    private String lastSortKey;
 }

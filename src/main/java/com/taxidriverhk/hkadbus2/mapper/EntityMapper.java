@@ -4,13 +4,17 @@ import com.taxidriverhk.hkadbus2.model.domain.Advertisement;
 import com.taxidriverhk.hkadbus2.model.domain.BusModel;
 import com.taxidriverhk.hkadbus2.model.domain.Category;
 import com.taxidriverhk.hkadbus2.model.domain.Photo;
+import com.taxidriverhk.hkadbus2.model.domain.SearchRecord;
 import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
+import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper
 public interface EntityMapper {
@@ -51,4 +55,8 @@ public interface EntityMapper {
     @Mapping(target = "username", expression = "java(photoEntity.getUser().getUsername())")
     @Mapping(target = "uploadedDate", expression = "java(photoEntity.getUploadedDate().getTime())")
     Photo photoEntityToPhoto(PhotoEntity photoEntity, String language);
+
+    SearchRecord searchRecordEntityToSearchRecord(SearchRecordEntity searchRecordEntity);
+
+    List<SearchRecord> searchRecordEntitiesToSearchRecords(List<SearchRecordEntity> searchRecordEntities);
 }
