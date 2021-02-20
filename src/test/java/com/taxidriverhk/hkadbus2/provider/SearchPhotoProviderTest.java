@@ -8,12 +8,20 @@ import com.taxidriverhk.hkadbus2.repository.impl.SqlRepositoryTestBase;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_ENTITY_1;
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_ENTITY_2;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public class SearchPhotoProviderTest extends SqlRepositoryTestBase {
 
@@ -24,60 +32,91 @@ public class SearchPhotoProviderTest extends SqlRepositoryTestBase {
         provider = new SearchPhotoProvider(sessionFactory);
     }
 
-    @Test
-    public void GIVEN_usernameSearchFilter_WHEN_searchForRecords_THEN_shouldReturnMatchingRecords() {
+    @ParameterizedTest
+    @MethodSource("searchRecordTestCases")
+    public void GIVEN_searchQueryAndFilter_WHEN_searchForRecords_THEN_shouldReturnMatchingRecords(
+            final List<String> queryTexts,
+            final String orderBy,
+            final String sort,
+            final SearchPhotoFilter filter,
+            final String nextSortKey,
+            final int limit,
+            final long expectedTotal,
+            final int expectedSize
+    ) {
         final SearchRecordResult searchRecordResult = provider.searchPhotos(
-                null,
-                "uploadedDate",
-                "asc",
-                SearchPhotoFilter.builder()
-                        .uploaderNames(Collections.singletonList("admin"))
-                        .build(),
-                null,
-                1000
-        );
-        assertThat(searchRecordResult.getSearchRecordEntities(), hasSize(1));
+                queryTexts,
+                orderBy,
+                sort,
+                filter,
+                nextSortKey,
+                limit);
+        assertThat(searchRecordResult.getTotal(), equalTo(expectedTotal));
+        assertThat(searchRecordResult.getSearchRecordEntities(), hasSize(expectedSize));
     }
 
-    @Test
-    public void GIVEN_invalidUsernameSearchFilter_WHEN_searchForRecords_THEN_shouldReturnNothing() {
-        final SearchRecordResult searchRecordResult = provider.searchPhotos(
-                null,
-                "uploadedDate",
-                "asc",
-                SearchPhotoFilter.builder()
-                        .uploaderNames(Collections.singletonList("random-name"))
-                        .build(),
-                null,
-                1000
+    public static Stream<Arguments> searchRecordTestCases() {
+        return Stream.of(
+                arguments(Collections.EMPTY_LIST,
+                        "uploadedDate",
+                        "asc",
+                        SearchPhotoFilter.builder()
+                                .uploaderNames(Collections.singletonList("admin"))
+                                .build(),
+                        null,
+                        1,
+                        2L,
+                        1),
+                arguments(Lists.newArrayList("3AV55", "mcdonalds"),
+                        "uploadedDate",
+                        "asc",
+                        SearchPhotoFilter.builder().build(),
+                        null,
+                        1000,
+                        2L,
+                        2),
+                arguments(Lists.newArrayList("3AV59"),
+                        "uploadedDate",
+                        "asc",
+                        SearchPhotoFilter.builder().build(),
+                        null,
+                        1000,
+                        1L,
+                        1),
+                arguments(Lists.newArrayList("3AV55", "mcdonalds"),
+                        "uploadedDate",
+                        "asc",
+                        SearchPhotoFilter.builder().build(),
+                        "12345",
+                        1000,
+                        2L,
+                        1),
+                arguments(Lists.newArrayList("3AV55", "mcdonalds"),
+                        "uploadedDate",
+                        "desc",
+                        SearchPhotoFilter.builder().build(),
+                        "12346",
+                        1000,
+                        2L,
+                        1),
+                arguments(Collections.EMPTY_LIST,
+                        "uploadedDate",
+                        "desc",
+                        SearchPhotoFilter.builder()
+                                .licensePlateNumbers(Lists.newArrayList("gx4965"))
+                                .build(),
+                        null,
+                        1000,
+                        1L,
+                        1)
         );
-        assertThat(searchRecordResult.getSearchRecordEntities(), hasSize(0));
     }
 
     @Override
     protected void setupDataForTest(final Session session) {
         final Transaction transaction = session.beginTransaction();
-
-        final SearchRecordEntity searchRecordEntity1 = SearchRecordEntity.builder()
-                .photoShortId(1L)
-                .advertisementHashKey("mcdonalds")
-                .advertisementName("McDonald's")
-                .categoryHashKey("restaurant")
-                .categoryName("Restaurant")
-                .busCompany("kmb")
-                .busModelHashKey("volvo-olympian-12m")
-                .busModelName("Volvo Olympian 12M")
-                .routeNumber("215X")
-                .licensePlateNumber("GX4965")
-                .fleetPrefix("3AV")
-                .fleetNumber("55")
-                .thumbnail("http://thumbnail.jpg")
-                .username("admin")
-                .uploadedDate(12345L)
-                .tags(Lists.newArrayList("mcdonalds", "3av55", "gx4965"))
-                .build();
-        session.save(searchRecordEntity1);
-
+        session.save(SEARCH_RECORD_ENTITY_1);
+        session.save(SEARCH_RECORD_ENTITY_2);
         transaction.commit();
     }
 }

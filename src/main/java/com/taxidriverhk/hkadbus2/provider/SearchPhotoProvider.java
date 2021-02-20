@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,15 +31,27 @@ public class SearchPhotoProvider {
 
     private static final Map<String, Function<SearchPhotoFilter, List<String>>> FIELD_FILTER_MAPPING = ImmutableMap
             .<String, Function<SearchPhotoFilter, List<String>>>builder()
+            .put("advertisementName", SearchPhotoFilter::getAdvertisementNames)
+            .put("advertisementHashKey", SearchPhotoFilter::getAdvertisementIds)
+            .put("busCompanyName", SearchPhotoFilter::getBusCompanyNames)
+            .put("busModelName", SearchPhotoFilter::getBusModelNames)
+            .put("busModelHashKey", SearchPhotoFilter::getBusModelIds)
             .put("categoryName", SearchPhotoFilter::getCategoryNames)
             .put("categoryHashKey", SearchPhotoFilter::getCategoryIds)
+            .put("routeHashKey", SearchPhotoFilter::getBusRouteIds)
+            .put("routeNumber", SearchPhotoFilter::getBusRouteNumbers)
+            .put("fleetPrefix", SearchPhotoFilter::getFleetPrefixes)
+            .put("licensePlateNumber", SearchPhotoFilter::getLicensePlateNumbers)
             .put("username", SearchPhotoFilter::getUploaderNames)
+            .put("language", filter -> Strings.isNullOrEmpty(filter.getLanguage())
+                    ? Collections.EMPTY_LIST
+                    : Collections.singletonList(filter.getLanguage()))
             .build();
 
     private final SessionFactory sessionFactory;
 
     public SearchRecordResult searchPhotos(
-            final String query,
+            final List<String> queryTexts,
             final String orderBy,
             final String sort,
             final SearchPhotoFilter filter,
@@ -51,8 +64,8 @@ public class SearchPhotoProvider {
         final CriteriaQuery<SearchRecordEntity> criteriaQuery = criteriaBuilder.createQuery(SearchRecordEntity.class);
         final Root<SearchRecordEntity> root = criteriaQuery.from(SearchRecordEntity.class);
 
-        log.info("Building search query using query {} filter {}", query, filter);
-        final List<Predicate> filterPredicates = buildSelectQueryFromFilter(criteriaBuilder, root, query, filter);
+        log.info("Building search query using query texts {} filter {}", queryTexts, filter);
+        final List<Predicate> filterPredicates = buildSelectQueryFromFilter(criteriaBuilder, root, queryTexts, filter);
         log.info("The query will be ordered by {} with sort key {}", orderBy, nextSortKey);
         final Order order = buildOrderByQuery(criteriaBuilder, root, orderBy, sort);
         final Query searchQueryWithoutSortKey = session.createQuery(criteriaQuery
@@ -100,18 +113,26 @@ public class SearchPhotoProvider {
     private List<Predicate> buildSelectQueryFromFilter(
             final CriteriaBuilder criteriaBuilder,
             final Root<SearchRecordEntity> root,
-            final String query,
+            final List<String> queryTexts,
             final SearchPhotoFilter filter
     ) {
         final List<Predicate> filterPredicates = FIELD_FILTER_MAPPING.entrySet()
                 .stream()
                 .filter(entry -> CollectionUtils.isNotEmpty(entry.getValue().apply(filter)))
-                .map(entry -> root.get(entry.getKey())
-                        .in(entry.getValue().apply(filter)))
+                .map(entry -> criteriaBuilder.lower(root.get(entry.getKey()))
+                        .in(entry.getValue().apply(filter)
+                                .stream()
+                                .map(String::toLowerCase)
+                                .collect(Collectors.toList())))
                 .collect(Collectors.toList());
 
-        if (!Strings.isNullOrEmpty(query)) {
-            filterPredicates.add(criteriaBuilder.like(root.get("tags"), "%" + query + "%"));
+        if (CollectionUtils.isNotEmpty(queryTexts)) {
+            final List<Predicate> queryTextPredicates = queryTexts.stream()
+                    .map(queryText -> criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("tags")), "%" + queryText.toLowerCase() + "%"))
+                    .collect(Collectors.toList());
+            final Predicate combinedQueryTextPredicate = criteriaBuilder.or(queryTextPredicates.toArray(new Predicate[0]));
+            filterPredicates.add(combinedQueryTextPredicate);
         }
 
         return filterPredicates;

@@ -7,6 +7,7 @@ import com.taxidriverhk.hkadbus2.model.domain.BusCompany;
 import com.taxidriverhk.hkadbus2.model.domain.BusModel;
 import com.taxidriverhk.hkadbus2.model.domain.Category;
 import com.taxidriverhk.hkadbus2.model.domain.Photo;
+import com.taxidriverhk.hkadbus2.model.domain.SearchRecord;
 import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusBrandEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusEntity;
@@ -14,6 +15,7 @@ import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
+import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
 
 import java.sql.Timestamp;
@@ -253,6 +255,67 @@ public final class MockDataHelper {
             .busRoute(BUS_ROUTE_ENTITY_1)
             .user(USER_ENTITY_1)
             .uploadedDate(DATE_2020)
+            .build();
+
+    public static final SearchRecord SEARCH_RECORD_1 = SearchRecord.builder()
+            .photoId(1L)
+            .advertisementId("mcdonalds")
+            .advertisement("McDonald's")
+            .categoryId("restaurant")
+            .category("Restaurant")
+            .busCompany(BusCompany.KMB)
+            .busModelId("volvo-olympian-12m")
+            .busModel("Volvo Olympian 12M")
+            .routeId("kmb-215x")
+            .routeNumber("215X")
+            .licensePlateNumber("GX4965")
+            .fleetPrefix("3AV")
+            .fleetNumber("55")
+            .thumbnail("http://thumbnail.jpg")
+            .username("admin")
+            .uploadedDate(12345L)
+            .tags(Lists.newArrayList("mcdonalds", "3av55", "gx4965"))
+            .build();
+
+    public static final SearchRecordEntity SEARCH_RECORD_ENTITY_1 = SearchRecordEntity.builder()
+            .photoShortId(1L)
+            .advertisementHashKey("mcdonalds")
+            .advertisementName("McDonald's")
+            .categoryHashKey("restaurant")
+            .categoryName("Restaurant")
+            .busCompany("kmb")
+            .busModelHashKey("volvo-olympian-12m")
+            .busModelName("Volvo Olympian 12M")
+            .routeHashKey("kmb-215x")
+            .routeNumber("215X")
+            .licensePlateNumber("GX4965")
+            .fleetPrefix("3AV")
+            .fleetNumber("55")
+            .thumbnail("http://thumbnail.jpg")
+            .username("admin")
+            .uploadedDate(12345L)
+            .tags("mcdonalds,3av55,gx4965")
+            .language(LANGUAGE_EN)
+            .build();
+    public static final SearchRecordEntity SEARCH_RECORD_ENTITY_2 = SearchRecordEntity.builder()
+            .photoShortId(2L)
+            .advertisementHashKey("mcdonalds")
+            .advertisementName("McDonald's")
+            .categoryHashKey("restaurant")
+            .categoryName("Restaurant")
+            .busCompany("kmb")
+            .busModelHashKey("volvo-olympian-12m")
+            .busModelName("Volvo Olympian 12M")
+            .routeHashKey("kmb-215x")
+            .routeNumber("215X")
+            .licensePlateNumber("GX4966")
+            .fleetPrefix("3AV")
+            .fleetNumber("59")
+            .thumbnail("http://thumbnail.jpg")
+            .username("admin")
+            .uploadedDate(12346L)
+            .tags("mcdonalds,3av59,gx4966")
+            .language(LANGUAGE_EN)
             .build();
 
     private static UUID createNamedUUID(final String name) {

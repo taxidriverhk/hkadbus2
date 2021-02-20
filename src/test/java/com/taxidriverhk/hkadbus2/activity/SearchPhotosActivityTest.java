@@ -1,0 +1,136 @@
+package com.taxidriverhk.hkadbus2.activity;
+
+import com.taxidriverhk.hkadbus2.exception.BadRequestException;
+import com.taxidriverhk.hkadbus2.model.api.SearchPhotosResponse;
+import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
+import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
+import com.taxidriverhk.hkadbus2.service.PhotoService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import javax.ws.rs.core.Response;
+import java.util.Collections;
+
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_1;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+public class SearchPhotosActivityTest {
+
+    @Mock
+    private PhotoService photoService;
+
+    @InjectMocks
+    private SearchPhotosActivity activity;
+
+    @Test
+    public void GIVEN_validSearchParameters_WHEN_searchPhotos_THEN_shouldReturnMatchingRecords() {
+        when(photoService.searchPhotos(any(), any(), any(), any(), any())).thenReturn(SearchPhotoResult.builder()
+                .total(2L)
+                .results(Collections.singletonList(SEARCH_RECORD_1))
+                .lastSortKey("last-sort-key")
+                .build());
+
+        final Response response = activity.search(
+                "query-text",
+                "uploadedDate",
+                "asc",
+                null,
+                "en_us",
+                null,
+                null,
+                Collections.singletonList("mcdonalds"),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        final SearchPhotosResponse searchPhotosResponse = (SearchPhotosResponse) response.getEntity();
+
+        verify(photoService, times(1)).searchPhotos(
+                "query-text",
+                "uploadedDate",
+                "asc",
+                SearchPhotoFilter.builder()
+                        .advertisementNames(Collections.singletonList("mcdonalds"))
+                        .language("en_us")
+                        .build(),
+                null);
+        assertThat(searchPhotosResponse, equalTo(SearchPhotosResponse.builder()
+                .total(2L)
+                .lastSortKey("last-sort-key")
+                .results(Collections.singletonList(SEARCH_RECORD_1))
+                .build()));
+    }
+
+    @Test
+    public void GIVEN_invalidSearchParameters_WHEN_searchPhotos_THEN_shouldThrowBadRequestException() {
+        assertThrows(BadRequestException.class, () -> activity.search(
+                "query-text",
+                "invalid-order-by",
+                "asc",
+                null,
+                "en_us",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null));
+        assertThrows(BadRequestException.class, () -> activity.search(
+                "query-text",
+                "uploadedDate",
+                "invalid-sort-direction",
+                null,
+                "en_us",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null));
+        assertThrows(BadRequestException.class, () -> activity.search(
+                "query-text",
+                "uploadedDate",
+                "asc",
+                null,
+                "invalid-language",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null));
+    }
+}

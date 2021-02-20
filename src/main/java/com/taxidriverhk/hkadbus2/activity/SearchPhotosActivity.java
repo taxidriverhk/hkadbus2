@@ -4,6 +4,7 @@ import com.taxidriverhk.hkadbus2.model.api.SearchPhotosResponse;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
 import com.taxidriverhk.hkadbus2.service.PhotoService;
+import com.taxidriverhk.hkadbus2.util.RequestValidator;
 import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ public class SearchPhotosActivity {
             @QueryParam("order_by") final String orderBy,
             @QueryParam("sort") final String sort,
             @QueryParam("next_sort_key") final String nextSortKey,
+            @QueryParam("language") final String language,
             @QueryParam("category_name") final List<String> categoryNames,
             @QueryParam("category_id") final List<String> categoryIds,
             @QueryParam("advertisement_name") final List<String> advertisementNames,
@@ -41,6 +43,10 @@ public class SearchPhotosActivity {
             @QueryParam("license_plate_number") final List<String> licensePlateNumbers,
             @QueryParam("uploader_name") final List<String> uploaderNames
     ) {
+        RequestValidator.validateLanguage(language);
+        RequestValidator.validateOrderBy(orderBy);
+        RequestValidator.validateSort(sort);
+
         final SearchPhotoFilter searchPhotoFilter = SearchPhotoFilter.builder()
                 .advertisementIds(advertisementIds)
                 .advertisementNames(advertisementNames)
@@ -54,6 +60,7 @@ public class SearchPhotosActivity {
                 .fleetPrefixes(fleetPrefixes)
                 .licensePlateNumbers(licensePlateNumbers)
                 .uploaderNames(uploaderNames)
+                .language(language)
                 .build();
         final SearchPhotoResult searchPhotoResult = photoService.searchPhotos(
                 query,

@@ -17,6 +17,7 @@ public class SearchRecord {
     private BusCompany busCompany;
     private String busModelId;
     private String busModel;
+    private String routeId;
     private String routeNumber;
     private String licensePlateNumber;
     private String fleetPrefix;

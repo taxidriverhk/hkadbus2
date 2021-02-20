@@ -56,6 +56,19 @@ public interface EntityMapper {
     @Mapping(target = "uploadedDate", expression = "java(photoEntity.getUploadedDate().getTime())")
     Photo photoEntityToPhoto(PhotoEntity photoEntity, String language);
 
+
+    @Mapping(source = "advertisementHashKey", target = "advertisementId")
+    @Mapping(source = "advertisementName", target = "advertisement")
+    @Mapping(source = "categoryHashKey", target = "categoryId")
+    @Mapping(source = "categoryName", target = "category")
+    @Mapping(
+            target = "busCompany",
+            expression = "java(com.taxidriverhk.hkadbus2.model.domain.BusCompany.fromString(searchRecordEntity.getBusCompany()))")
+    @Mapping(source = "busModelHashKey", target = "busModelId")
+    @Mapping(source = "busModelName", target = "busModel")
+    @Mapping(source = "photoShortId", target = "photoId")
+    @Mapping(source = "routeHashKey", target = "routeId")
+    @Mapping(target = "tags", expression = "java(java.util.Arrays.asList(searchRecordEntity.getTags().split(\",\")))")
     SearchRecord searchRecordEntityToSearchRecord(SearchRecordEntity searchRecordEntity);
 
     List<SearchRecord> searchRecordEntitiesToSearchRecords(List<SearchRecordEntity> searchRecordEntities);

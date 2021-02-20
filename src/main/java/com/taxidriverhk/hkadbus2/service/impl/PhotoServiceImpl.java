@@ -1,11 +1,13 @@
 package com.taxidriverhk.hkadbus2.service.impl;
 
+import com.google.common.base.Strings;
 import com.taxidriverhk.hkadbus2.exception.BadRequestException;
 import com.taxidriverhk.hkadbus2.exception.ItemNotFoundException;
 import com.taxidriverhk.hkadbus2.mapper.EntityMapper;
 import com.taxidriverhk.hkadbus2.model.domain.Photo;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
+import com.taxidriverhk.hkadbus2.model.domain.SearchRecord;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
@@ -19,6 +21,8 @@ import javax.inject.Inject;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +31,7 @@ import java.util.Optional;
 public class PhotoServiceImpl implements PhotoService {
 
     private static final int PAGE_LIMIT = 100;
+    private static final String QUERY_TEXT_SPLITTER_REGEX = "[ ,]+";
 
     private final PhotoRepository photoRepository;
     private final SearchPhotoProvider searchPhotoProvider;
@@ -47,24 +52,31 @@ public class PhotoServiceImpl implements PhotoService {
             final SearchPhotoFilter filter,
             final String nextSortKey
     ) {
+        final List<String> queryTexts = Strings.isNullOrEmpty(query)
+                ? Collections.EMPTY_LIST
+                : Arrays.asList(query.split(QUERY_TEXT_SPLITTER_REGEX));
         final SearchRecordResult searchRecordResult = searchPhotoProvider.searchPhotos(
-                query,
+                queryTexts,
                 orderBy,
                 sort,
                 filter,
                 nextSortKey,
                 PAGE_LIMIT);
-        final Optional<String> lastSortKey = getLastSortKey(searchRecordResult.getSearchRecordEntities(), orderBy);
+
+        final Optional<String> lastSortKey = getLastSortKey(searchRecordResult, orderBy);
+        final List<SearchRecord> searchRecords = EntityMapper.INSTANCE
+                .searchRecordEntitiesToSearchRecords(searchRecordResult.getSearchRecordEntities());
         return SearchPhotoResult.builder()
                 .total(searchRecordResult.getTotal())
-                .results(EntityMapper.INSTANCE
-                        .searchRecordEntitiesToSearchRecords(searchRecordResult.getSearchRecordEntities()))
+                .results(searchRecords)
                 .lastSortKey(lastSortKey.orElse(null))
                 .build();
     }
 
-    private Optional<String> getLastSortKey(final List<SearchRecordEntity> searchRecordEntities, final String orderBy) {
-        if (searchRecordEntities.size() < 1) {
+    private Optional<String> getLastSortKey(final SearchRecordResult searchRecordResult, final String orderBy) {
+        final List<SearchRecordEntity> searchRecordEntities = searchRecordResult.getSearchRecordEntities();
+        final long total = searchRecordResult.getTotal();
+        if (searchRecordEntities.size() < 1 || total <= searchRecordEntities.size()) {
             return Optional.empty();
         }
 

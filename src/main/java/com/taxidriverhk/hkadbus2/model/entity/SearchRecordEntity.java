@@ -1,17 +1,16 @@
 package com.taxidriverhk.hkadbus2.model.entity;
 
-import com.taxidriverhk.hkadbus2.model.entity.converter.StringListConverter;
+import com.taxidriverhk.hkadbus2.model.entity.identifier.SearchRecordEntityId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
-import java.util.List;
 
 @Builder(toBuilder = true)
 @Data
@@ -19,11 +18,16 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = EntityConstants.SEARCH_RECORD_TABLE)
+@IdClass(SearchRecordEntityId.class)
 public class SearchRecordEntity {
 
     @Id
     @Column(name = "photo_short_id")
     private Long photoShortId;
+
+    @Id
+    @Column(name = "language")
+    private String language;
 
     @Column(name = "advertisement_hash_key")
     private String advertisementHashKey;
@@ -45,6 +49,9 @@ public class SearchRecordEntity {
 
     @Column(name = "bus_model_name")
     private String busModelName;
+
+    @Column(name = "route_hash_key")
+    private String routeHashKey;
 
     @Column(name = "route_number")
     private String routeNumber;
@@ -68,6 +75,5 @@ public class SearchRecordEntity {
     private Long uploadedDate;
 
     @Column(name = "tags")
-    @Convert(converter = StringListConverter.class)
-    private List<String> tags;
+    private String tags;
 }
