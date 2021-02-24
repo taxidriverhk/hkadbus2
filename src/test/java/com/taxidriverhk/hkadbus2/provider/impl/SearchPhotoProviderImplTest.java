@@ -1,13 +1,14 @@
-package com.taxidriverhk.hkadbus2.provider;
+package com.taxidriverhk.hkadbus2.provider.impl;
 
 import com.google.common.collect.Lists;
+import com.taxidriverhk.hkadbus2.exception.BadRequestException;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
-import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
 import com.taxidriverhk.hkadbus2.repository.impl.SqlRepositoryTestBase;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -21,15 +22,16 @@ import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_ENTITY
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-public class SearchPhotoProviderTest extends SqlRepositoryTestBase {
+public class SearchPhotoProviderImplTest extends SqlRepositoryTestBase {
 
-    private SearchPhotoProvider provider;
+    private SearchPhotoProviderImpl provider;
 
     @BeforeEach
     public void setup() {
-        provider = new SearchPhotoProvider(sessionFactory);
+        provider = new SearchPhotoProviderImpl(sessionFactory);
     }
 
     @ParameterizedTest
@@ -42,7 +44,8 @@ public class SearchPhotoProviderTest extends SqlRepositoryTestBase {
             final String nextSortKey,
             final int limit,
             final long expectedTotal,
-            final int expectedSize
+            final int expectedSize,
+            final String expectedNextPageCursor
     ) {
         final SearchRecordResult searchRecordResult = provider.searchPhotos(
                 queryTexts,
@@ -53,6 +56,20 @@ public class SearchPhotoProviderTest extends SqlRepositoryTestBase {
                 limit);
         assertThat(searchRecordResult.getTotal(), equalTo(expectedTotal));
         assertThat(searchRecordResult.getSearchRecordEntities(), hasSize(expectedSize));
+        assertThat(searchRecordResult.getNextPageCursor(), equalTo(expectedNextPageCursor));
+    }
+
+    @Test
+    public void GIVEN_invalidNextPageCursor_WHEN_searchForRecords_THEN_shouldThrowBadRequestException() {
+        assertThrows(BadRequestException.class, () -> provider.searchPhotos(
+                Collections.EMPTY_LIST,
+                "uploadedDate",
+                "asc",
+                SearchPhotoFilter.builder()
+                        .language("en_us")
+                        .build(),
+                "invalid-next-cursor",
+                1000));
     }
 
     public static Stream<Arguments> searchRecordTestCases() {
@@ -66,7 +83,8 @@ public class SearchPhotoProviderTest extends SqlRepositoryTestBase {
                         null,
                         1,
                         2L,
-                        1),
+                        1,
+                        "12345-1"),
                 arguments(Lists.newArrayList("3AV55", "mcdonalds"),
                         "uploadedDate",
                         "asc",
@@ -74,7 +92,8 @@ public class SearchPhotoProviderTest extends SqlRepositoryTestBase {
                         null,
                         1000,
                         2L,
-                        2),
+                        2,
+                        null),
                 arguments(Lists.newArrayList("3AV59"),
                         "uploadedDate",
                         "asc",
@@ -82,23 +101,26 @@ public class SearchPhotoProviderTest extends SqlRepositoryTestBase {
                         null,
                         1000,
                         1L,
-                        1),
+                        1,
+                        null),
                 arguments(Lists.newArrayList("3AV55", "mcdonalds"),
                         "uploadedDate",
                         "asc",
                         SearchPhotoFilter.builder().build(),
-                        "12345",
+                        "12345-1",
                         1000,
                         2L,
-                        1),
+                        1,
+                        "12346-2"),
                 arguments(Lists.newArrayList("3AV55", "mcdonalds"),
                         "uploadedDate",
                         "desc",
                         SearchPhotoFilter.builder().build(),
-                        "12346",
+                        "12346-2",
                         1000,
                         2L,
-                        1),
+                        1,
+                        "12345-1"),
                 arguments(Collections.EMPTY_LIST,
                         "uploadedDate",
                         "desc",
@@ -108,7 +130,8 @@ public class SearchPhotoProviderTest extends SqlRepositoryTestBase {
                         null,
                         1000,
                         1L,
-                        1)
+                        1,
+                        null)
         );
     }
 

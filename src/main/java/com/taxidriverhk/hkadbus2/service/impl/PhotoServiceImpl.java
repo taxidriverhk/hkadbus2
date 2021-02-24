@@ -63,29 +63,12 @@ public class PhotoServiceImpl implements PhotoService {
                 nextSortKey,
                 PAGE_LIMIT);
 
-        final Optional<String> lastSortKey = getLastSortKey(searchRecordResult, orderBy);
         final List<SearchRecord> searchRecords = EntityMapper.INSTANCE
                 .searchRecordEntitiesToSearchRecords(searchRecordResult.getSearchRecordEntities());
         return SearchPhotoResult.builder()
                 .total(searchRecordResult.getTotal())
                 .results(searchRecords)
-                .lastSortKey(lastSortKey.orElse(null))
+                .nextPageCursor(searchRecordResult.getNextPageCursor())
                 .build();
-    }
-
-    private Optional<String> getLastSortKey(final SearchRecordResult searchRecordResult, final String orderBy) {
-        final List<SearchRecordEntity> searchRecordEntities = searchRecordResult.getSearchRecordEntities();
-        final long total = searchRecordResult.getTotal();
-        if (searchRecordEntities.size() < 1 || total <= searchRecordEntities.size()) {
-            return Optional.empty();
-        }
-
-        try {
-            final SearchRecordEntity lastSearchRecord = searchRecordEntities.get(searchRecordEntities.size() - 1);
-            final Object value = new PropertyDescriptor(orderBy, SearchRecordEntity.class).getReadMethod().invoke(lastSearchRecord);
-            return Optional.of(value.toString());
-        } catch (final IntrospectionException | IllegalAccessException | InvocationTargetException ex) {
-            throw new BadRequestException(String.format("Invalid order by field %s", orderBy));
-        }
     }
 }

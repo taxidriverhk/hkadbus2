@@ -11,5 +11,5 @@ public class SearchPhotoResult {
 
     private Long total;
     private List<SearchRecord> results;
-    private String lastSortKey;
+    private String nextPageCursor;
 }

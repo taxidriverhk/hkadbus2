@@ -37,7 +37,7 @@ public class SearchPhotosActivityTest {
         when(photoService.searchPhotos(any(), any(), any(), any(), any())).thenReturn(SearchPhotoResult.builder()
                 .total(2L)
                 .results(Collections.singletonList(SEARCH_RECORD_1))
-                .lastSortKey("last-sort-key")
+                .nextPageCursor("last-sort-key")
                 .build());
 
         final Response response = activity.search(
@@ -71,7 +71,7 @@ public class SearchPhotosActivityTest {
                 null);
         assertThat(searchPhotosResponse, equalTo(SearchPhotosResponse.builder()
                 .total(2L)
-                .lastSortKey("last-sort-key")
+                .nextPageCursor("last-sort-key")
                 .results(Collections.singletonList(SEARCH_RECORD_1))
                 .build()));
     }

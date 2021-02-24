@@ -12,4 +12,5 @@ public class SearchRecordResult {
 
     private Long total;
     private List<SearchRecordEntity> searchRecordEntities;
+    private String nextPageCursor;
 }

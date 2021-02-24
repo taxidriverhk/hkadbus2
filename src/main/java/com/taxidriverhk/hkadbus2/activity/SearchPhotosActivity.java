@@ -72,7 +72,7 @@ public class SearchPhotosActivity {
         final SearchPhotosResponse searchPhotosResponse = SearchPhotosResponse.builder()
                 .total(searchPhotoResult.getTotal())
                 .results(searchPhotoResult.getResults())
-                .lastSortKey(searchPhotoResult.getLastSortKey())
+                .nextPageCursor(searchPhotoResult.getNextPageCursor())
                 .build();
         return Response.ok(searchPhotosResponse)
                 .build();

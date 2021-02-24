@@ -24,7 +24,6 @@ import static com.taxidriverhk.hkadbus2.util.MockDataHelper.PHOTO_ENTITY_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.PHOTO_SHORT_ID_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_ENTITY_1;
-import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_ENTITY_2;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -63,10 +62,11 @@ public class PhotoServiceImplTest {
     }
 
     @Test
-    public void GIVEN_searchFilter_WHEN_searchPhotos_THEN_shouldIncludeLastSortKeyInResult() {
+    public void GIVEN_searchFilter_WHEN_searchPhotos_THEN_shouldIncludeNextPageCursorInResult() {
         when(searchPhotoProvider.searchPhotos(any(), any(), any(), any(), any(), anyInt())).thenReturn(SearchRecordResult.builder()
                 .searchRecordEntities(Lists.newArrayList(SEARCH_RECORD_ENTITY_1))
                 .total(2L)
+                .nextPageCursor("test-next-page-cursor")
                 .build());
 
         final SearchPhotoResult searchPhotoResult = photoService.searchPhotos(
@@ -86,61 +86,36 @@ public class PhotoServiceImplTest {
         assertThat(searchPhotoResult, equalTo(SearchPhotoResult.builder()
                 .results(Lists.newArrayList(SEARCH_RECORD_1))
                 .total(2L)
-                .lastSortKey("12345")
+                .nextPageCursor("test-next-page-cursor")
                 .build()));
     }
 
     @Test
-    public void GIVEN_allMatchingRecordsAreReturned_WHEN_searchPhotos_THEN_shouldNotIncludeLastSortKeyInResult() {
-        when(searchPhotoProvider.searchPhotos(any(), any(), any(), any(), any(), anyInt())).thenReturn(SearchRecordResult.builder()
-                .searchRecordEntities(Lists.newArrayList(SEARCH_RECORD_ENTITY_1))
-                .total(1L)
-                .build());
-
-        final SearchPhotoResult searchPhotoResult = photoService.searchPhotos(
-                "3av55,mcdonalds",
-                "uploadedDate",
-                "asc",
-                searchPhotoFilter,
-                null);
-        assertThat(searchPhotoResult, equalTo(SearchPhotoResult.builder()
-                .results(Lists.newArrayList(SEARCH_RECORD_1))
-                .total(1L)
-                .lastSortKey(null)
-                .build()));
-    }
-
-    @Test
-    public void GIVEN_noMatchingRecordsAreReturned_WHEN_searchPhotos_THEN_shouldNotIncludeLastSortKeyInResult() {
-        when(searchPhotoProvider.searchPhotos(any(), any(), any(), any(), any(), anyInt())).thenReturn(SearchRecordResult.builder()
-                .searchRecordEntities(Collections.EMPTY_LIST)
-                .total(0L)
-                .build());
-
-        final SearchPhotoResult searchPhotoResult = photoService.searchPhotos(
-                "3av55,mcdonalds",
-                "uploadedDate",
-                "asc",
-                searchPhotoFilter,
-                null);
-        assertThat(searchPhotoResult, equalTo(SearchPhotoResult.builder()
-                .results(Collections.EMPTY_LIST)
-                .total(0L)
-                .lastSortKey(null)
-                .build()));
-    }
-
-    @Test
-    public void GIVEN_invalidOrderBy_WHEN_searchPhotos_THEN_shouldThrowBadRequestException() {
+    public void GIVEN_searchFilterWithoutQuery_WHEN_searchPhotos_THEN_shouldStillReturnResults() {
         when(searchPhotoProvider.searchPhotos(any(), any(), any(), any(), any(), anyInt())).thenReturn(SearchRecordResult.builder()
                 .searchRecordEntities(Lists.newArrayList(SEARCH_RECORD_ENTITY_1))
                 .total(2L)
+                .nextPageCursor("test-next-page-cursor")
                 .build());
-        assertThrows(BadRequestException.class, () -> photoService.searchPhotos(
-                "3av55,mcdonalds",
-                "invalid-order-by",
+
+        final SearchPhotoResult searchPhotoResult = photoService.searchPhotos(
+                null,
+                "uploadedDate",
                 "asc",
                 searchPhotoFilter,
-                null));
+                null);
+
+        verify(searchPhotoProvider, times(1)).searchPhotos(
+                Collections.EMPTY_LIST,
+                "uploadedDate",
+                "asc",
+                searchPhotoFilter,
+                null,
+                100);
+        assertThat(searchPhotoResult, equalTo(SearchPhotoResult.builder()
+                .results(Lists.newArrayList(SEARCH_RECORD_1))
+                .total(2L)
+                .nextPageCursor("test-next-page-cursor")
+                .build()));
     }
 }

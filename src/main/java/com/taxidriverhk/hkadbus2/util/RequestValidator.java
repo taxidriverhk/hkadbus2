@@ -12,7 +12,10 @@ import java.util.Set;
 public final class RequestValidator {
 
     private static final Set<String> VALID_LANGUAGES = ImmutableSet.of("en_us", "zh_hk");
-    private static final Set<String> VALID_ORDER_BY = ImmutableSet.of("photoId", "uploadedDate");
+    private static final Set<String> VALID_ORDER_BY = ImmutableSet.of(
+            "username",
+            "uploadedDate",
+            "licensePlateNumber");
 
     public static void validateLanguage(final String language) {
         if (!VALID_LANGUAGES.contains(language)) {
