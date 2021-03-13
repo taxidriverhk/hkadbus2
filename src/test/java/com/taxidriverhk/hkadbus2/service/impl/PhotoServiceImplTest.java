@@ -91,6 +91,35 @@ public class PhotoServiceImplTest {
     }
 
     @Test
+    public void GIVEN_searchFilterWithMultipleQueryTexts_WHEN_searchPhotos_THEN_shouldIncludeNextPageCursorInResult() {
+        when(searchPhotoProvider.searchPhotos(any(), any(), any(), any(), any(), anyInt())).thenReturn(SearchRecordResult.builder()
+                .searchRecordEntities(Lists.newArrayList(SEARCH_RECORD_ENTITY_1))
+                .total(2L)
+                .nextPageCursor("test-next-page-cursor")
+                .build());
+
+        final SearchPhotoResult searchPhotoResult = photoService.searchPhotos(
+                "3av55 mcdonalds 麥當勞",
+                "uploadedDate",
+                "asc",
+                searchPhotoFilter,
+                null);
+
+        verify(searchPhotoProvider, times(1)).searchPhotos(
+                Lists.newArrayList("3av55", "mcdonalds", "麥當勞"),
+                "uploadedDate",
+                "asc",
+                searchPhotoFilter,
+                null,
+                100);
+        assertThat(searchPhotoResult, equalTo(SearchPhotoResult.builder()
+                .results(Lists.newArrayList(SEARCH_RECORD_1))
+                .total(2L)
+                .nextPageCursor("test-next-page-cursor")
+                .build()));
+    }
+
+    @Test
     public void GIVEN_searchFilterWithoutQuery_WHEN_searchPhotos_THEN_shouldStillReturnResults() {
         when(searchPhotoProvider.searchPhotos(any(), any(), any(), any(), any(), anyInt())).thenReturn(SearchRecordResult.builder()
                 .searchRecordEntities(Lists.newArrayList(SEARCH_RECORD_ENTITY_1))

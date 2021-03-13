@@ -1,7 +1,6 @@
 package com.taxidriverhk.hkadbus2.service.impl;
 
 import com.google.common.base.Strings;
-import com.taxidriverhk.hkadbus2.exception.BadRequestException;
 import com.taxidriverhk.hkadbus2.exception.ItemNotFoundException;
 import com.taxidriverhk.hkadbus2.mapper.EntityMapper;
 import com.taxidriverhk.hkadbus2.model.domain.Photo;
@@ -9,7 +8,6 @@ import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
 import com.taxidriverhk.hkadbus2.model.domain.SearchRecord;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
-import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
 import com.taxidriverhk.hkadbus2.provider.SearchPhotoProvider;
 import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
@@ -18,20 +16,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import javax.inject.Inject;
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class PhotoServiceImpl implements PhotoService {
 
     private static final int PAGE_LIMIT = 100;
-    private static final String QUERY_TEXT_SPLITTER_REGEX = "[ ,]+";
+    private static final String QUERY_TEXT_SPLITTER_REGEX = "[\\s,]+";
 
     private final PhotoRepository photoRepository;
     private final SearchPhotoProvider searchPhotoProvider;
