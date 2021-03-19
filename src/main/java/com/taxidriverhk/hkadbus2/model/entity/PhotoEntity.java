@@ -32,10 +32,6 @@ public class PhotoEntity {
     @Column(name = "id")
     private UUID id;
 
-    @GeneratedValue(generator = "hilo")
-    @GenericGenerator(
-            name = "hilo",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator")
     @Column(name = "short_id")
     private Long shortId;
 
