@@ -22,6 +22,8 @@ export let strings = new LocalizedStrings({
     photoDetails: 'Photo Details',
     busModel: 'Model',
     busModelName: '{0} {1}',
+    fleetPrefix: 'Prefix (ex. 3AV)',
+    fleetSuffix: 'Number (ex. 102)',
     fleetNumber: 'Fleet Number',
     licensePlateNumber: 'Licence Plate Number',
     busCompany: 'Bus Company',
@@ -33,11 +35,16 @@ export let strings = new LocalizedStrings({
     relatedBus: 'Related photos of same bus',
     relatedRoute: 'Related photos of same router number',
 
+    // Search Photos
+    search: 'Search',
+    general: 'Keywords (separate by commas or space)',
+
     // Messages
     loadingTitle: 'Loading',
     loadingMsg: 'Content is being loaded, please wait.',
     errorTitle: 'Error',
     errorMsg: 'Error occurred when trying to load the contents, please try again later.',
+    noResults: 'No results found, please refine the query and try search again.',
     notFoundMsg: 'Page not found, please check the URL and try again.'
   },
   'zh_hk': {
@@ -61,6 +68,8 @@ export let strings = new LocalizedStrings({
     photoDetails: '詳細資料',
     busModel: '型號',
     busModelName: '{0}{1}',
+    fleetPrefix: '前綴 (例: 3AV)',
+    fleetSuffix: '後綴 (例: 102)',
     fleetNumber: '車隊編號',
     licensePlateNumber: '車牌號碼',
     busCompany: '巴士公司',
@@ -72,11 +81,16 @@ export let strings = new LocalizedStrings({
     relatedBus: '相同巴士',
     relatedRoute: '相同路線',
 
+    // Search Photos
+    search: '搜尋',
+    general: '關鍵字 (以逗號或空格分隔)',
+
     // Messages
     loadingTitle: '載入中',
     loadingMsg: '正在載入中, 請稍候。',
     errorTitle: '錯誤',
     errorMsg: '發生錯誤, 請稍後再試。',
+    noResults: '找不到任何結果, 請修正搜尋字眼並再試。',
     notFoundMsg: '找不到網頁, 請檢查網址再試。'
   }
 });

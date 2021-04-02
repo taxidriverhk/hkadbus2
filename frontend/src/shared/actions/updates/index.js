@@ -3,7 +3,6 @@ import {
   UPDATES_RECEIVE,
   UPDATES_REJECT
 } from 'shared/actions/types';
-import fetchGraphQL from 'shared/fetch/fetch-graphql';
 
 function requestUpdates() {
   return {

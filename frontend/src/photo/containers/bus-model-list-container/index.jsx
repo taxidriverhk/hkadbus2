@@ -29,10 +29,6 @@ export default function BusModelListContainer() {
 
   useEffect(() => {
     dispatchFetchBusModels(language);
-  }, []);
-
-  useEffect(() => {
-    dispatchFetchBusModels(language);
   }, [language]);
 
   return (

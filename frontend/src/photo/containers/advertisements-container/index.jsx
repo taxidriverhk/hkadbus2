@@ -31,10 +31,6 @@ export default function AdvertisementsContainer(props) {
 
   useEffect(() => {
     dispatchFetchAdvertisements(id, language);
-  }, []);
-
-  useEffect(() => {
-    dispatchFetchAdvertisements(id, language);
   }, [language]);
 
   return (

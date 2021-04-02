@@ -22,7 +22,6 @@ const propTypes = {
 export default function PhotoDetails({
   photo: {
     busCompany,
-    busId,
     busModel,
     busModelId,
     fleetPrefix,
@@ -77,8 +76,7 @@ export default function PhotoDetails({
               {busModel}
             </td>
             <td>
-              { /* TODO: correct the URL */ }
-              <LinkedButton to={`/models/${busModelId}`}>
+              <LinkedButton to={`/search?busModelId=${busModelId}`}>
                 {strings.relatedModel}
               </LinkedButton>
             </td>
@@ -87,8 +85,7 @@ export default function PhotoDetails({
             <td>{strings.fleetNumber}</td>
             <td>{fleetPrefix}{fleetNumber}</td>
             <td>
-              { /* TODO: get fleet prefix */ }
-              <LinkedButton to={`/fleets/${fleetPrefix}`}>
+              <LinkedButton to={`/search?fleetPrefix=${fleetPrefix}`}>
                 {strings.relatedFleet}
               </LinkedButton>
             </td>
@@ -101,8 +98,7 @@ export default function PhotoDetails({
               </span>
             </td>
             <td>
-              { /* TODO: correct the URL */ }
-              <LinkedButton to={`/buses/${busId}`}>
+              <LinkedButton to={`/search?licensePlateNumber=${licensePlateNumber}`}>
                 {strings.relatedBus}
               </LinkedButton>
             </td>
@@ -119,8 +115,7 @@ export default function PhotoDetails({
               </span>
             </td>
             <td>
-              { /* TODO: correct the URL */ }
-              <LinkedButton to={`/routes/${routeNumber}`}>
+              <LinkedButton to={`/search?routeNumber=${routeNumber}`}>
                 {strings.relatedRoute}
               </LinkedButton>
             </td>

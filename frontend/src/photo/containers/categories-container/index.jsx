@@ -29,10 +29,6 @@ export default function CategoriesContainer() {
 
   useEffect(() => {
     dispatchFetchCategories(language);
-  }, []);
-
-  useEffect(() => {
-    dispatchFetchCategories(language);
   }, [language]);
 
   return (

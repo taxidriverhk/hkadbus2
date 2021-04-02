@@ -31,7 +31,7 @@ export default function AdvertisementsView({
       return {
         photo: advertisement.thumbnail,
         caption: advertisement.name,
-        link: `/advertisements/${advertisement.id}`,
+        link: `/search?advertisementId=${advertisement.id}`,
       };
     });
     return (

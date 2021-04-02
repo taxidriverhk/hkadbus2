@@ -18,8 +18,8 @@ import NotFound from 'shared/components/not-found';
 import AdvertisementsContainer from 'photo/containers/advertisements-container';
 import BusModelListContainer from 'photo/containers/bus-model-list-container';
 import CategoriesContainer from 'photo/containers/categories-container';
+import SearchPhotosContainer from 'photo/containers/search-photos-container';
 import PhotoDetailsContainer from 'photo/containers/photo-details-container';
-import PhotoListByAdvertisementContainer from 'photo/containers/photo-list-by-advertisement-container';
 
 const DEFAULT_LANGUAGE = 'en_us';
 const NUM_OF_HEADER_IMAGES = 5;
@@ -113,14 +113,14 @@ export default function App(props) {
               path='/categories/:id'
             />
             <Route
-              component={PhotoListByAdvertisementContainer}
-              exact
-              path='/advertisements/:id'
-            />
-            <Route
               component={PhotoDetailsContainer}
               exact
               path='/photos/:id'
+            />
+            <Route
+              component={SearchPhotosContainer}
+              exact
+              path='/search'
             />
             <Route
               component={BusModelListContainer}

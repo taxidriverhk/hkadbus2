@@ -47,10 +47,7 @@ export default function CategoriesView({
           }));
       
           return (
-            <React.Fragment>
-              
-              <PhotoCardList cards={categoryCards} />
-            </React.Fragment>
+            <PhotoCardList cards={categoryCards} />
           );
         }
       })()}

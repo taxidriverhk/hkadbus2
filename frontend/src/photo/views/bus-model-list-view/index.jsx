@@ -57,7 +57,7 @@ export default function BusModelListView({
                 photo: thumbnail,
                 title: strings.formatString(strings.busModelName, busBrandName, name),
                 description: '',
-                link: `/models/${id}`,
+                link: `/search?busModelId=${id}`,
               })),
             }));
           return busSegments.map(({

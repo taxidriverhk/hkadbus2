@@ -30,9 +30,6 @@ export default function PhotoDetailsContainer(props) {
 
   useEffect(() => {
     dispatchFetchPhoto(id, language);
-  }, []);
-  useEffect(() => {
-    dispatchFetchPhoto(id, language);
   }, [language]);
 
   return (
