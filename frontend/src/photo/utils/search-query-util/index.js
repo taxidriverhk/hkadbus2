@@ -1,5 +1,6 @@
 const FILTER_ATTRIBUTE_URL_PARAMS = [
   'q',
+  'advertisementId',
   'busModelId',
   'busRouteId',
   'fleetPrefix',
@@ -32,6 +33,7 @@ export default class SearchQueryUtil {
   static convertToApiCallParams(filter, language) {
     const {
       q: query,
+      advertisementId,
       busModelId,
       busRouteId,
       fleetPrefix,
@@ -46,6 +48,7 @@ export default class SearchQueryUtil {
       sort: 'desc',
       language,
 
+      advertisement_id: advertisementId,
       bus_model_id: busModelId,
       bus_route_id: busRouteId,
       bus_route_number: routeNumber,
