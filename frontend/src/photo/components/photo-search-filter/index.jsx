@@ -55,7 +55,7 @@ export default function PhotoSearchFilter({
 
   const handleInputFilterChange = (attribute) => (event) => {
     setInputFilter({
-      ...filter,
+      ...inputFilter,
       [attribute]: event.currentTarget.value,
     });
   };

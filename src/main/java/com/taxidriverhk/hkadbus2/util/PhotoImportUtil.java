@@ -15,6 +15,7 @@ import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
 import com.taxidriverhk.hkadbus2.module.DataAccessModule;
+import com.taxidriverhk.hkadbus2.module.EnvironmentModule;
 import lombok.Builder;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -74,7 +75,7 @@ public class PhotoImportUtil {
     private static final Integer SHORT_ID_MAX_VALUE = 100000;
     private static final String LANGUAGE_EN = "en_us";
     private static final String LANGUAGE_ZH = "zh_hk";
-    private static final String INPUT_FILE_PATH = "C:\\Users\\Taxi Driver\\Downloads\\hkadbus2_input.csv";
+    private static final String INPUT_FILE_PATH = "C:\\Users\\Taxi Driver\\Downloads\\hkadbus2-import.csv";
 
     private final SessionFactory sessionFactory;
     private final Set<Long> usedShortIds;
@@ -138,7 +139,7 @@ public class PhotoImportUtil {
                             .busCompany(tokens[15])
                             .busRouteHashKey(tokens[16])
                             .busRouteNumber(tokens[17])
-                            .busRouteCompanies(tokens[18].split(","))
+                            .busRouteCompanies(tokens[18].split("\\|"))
                             .startEn(tokens[19])
                             .startZh(tokens[20])
                             .endEn(tokens[21])
@@ -331,7 +332,7 @@ public class PhotoImportUtil {
                     .uploadedDate(System.currentTimeMillis())
                     .username(photoImportEntry.getUsername())
                     .thumbnail(photoImportEntry.getThumbnail())
-                    .tags(photoImportEntry.getTags())
+                    .tags(photoImportEntry.getTags().replace('|', ','))
                     .build());
             session.save(SearchRecordEntity.builder()
                     .photoShortId(photoEntities.get(i).getShortId())
@@ -351,7 +352,7 @@ public class PhotoImportUtil {
                     .uploadedDate(System.currentTimeMillis())
                     .username(photoImportEntry.getUsername())
                     .thumbnail(photoImportEntry.getThumbnail())
-                    .tags(photoImportEntry.getTags())
+                    .tags(photoImportEntry.getTags().replace('|', ','))
                     .build());
         }
         insertSearchRecordTransactions.commit();

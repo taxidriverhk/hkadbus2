@@ -14,9 +14,9 @@ export default class SearchQueryUtil {
   static convertToQueryParams(filter, sort) {
     const urlQueryParams = new URLSearchParams();
     FILTER_ATTRIBUTE_URL_PARAMS
-      .forEach(([filterAttribute, queryParamAttribute]) => {
+      .forEach((filterAttribute) => {
         if (filter[filterAttribute]) {
-          urlQueryParams.append(queryParamAttribute, filter[filterAttribute]);
+          urlQueryParams.append(filterAttribute, filter[filterAttribute]);
         }
       });
     return urlQueryParams.toString();
