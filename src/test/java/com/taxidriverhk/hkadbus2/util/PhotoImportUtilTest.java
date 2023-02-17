@@ -50,6 +50,7 @@ public class PhotoImportUtilTest extends SqlRepositoryTestBase {
                 SearchPhotoFilter.builder().build(),
                 null,
                 10);
+        assertThat(searchRecordResult.getSearchRecordEntities().size(), equalTo(10));
         assertThat(searchRecordResult.getTotal(), greaterThanOrEqualTo(1L));
     }
 

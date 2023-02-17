@@ -11,6 +11,7 @@ import com.taxidriverhk.hkadbus2.model.entity.BusEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
+import com.taxidriverhk.hkadbus2.model.entity.EntityConstants;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
@@ -161,7 +162,7 @@ public class PhotoImportUtil {
                 .filter(photoImportEntry -> !checkEntityAlreadyExists(
                         session, 
                         CategoryEntity.class, 
-                        "categoryHashKey",
+                        EntityConstants.HASH_KEY_ATTRIBUTE,
                         photoImportEntry.getCategoryHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
@@ -185,7 +186,7 @@ public class PhotoImportUtil {
                 .filter(photoImportEntry -> !checkEntityAlreadyExists(
                         session, 
                         AdvertisementEntity.class, 
-                        "advertisementHashKey",
+                        EntityConstants.HASH_KEY_ATTRIBUTE,
                         photoImportEntry.getAdvertisementHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
@@ -234,7 +235,7 @@ public class PhotoImportUtil {
                 .filter(photoImportEntry -> !checkEntityAlreadyExists(
                         session, 
                         BusBrandEntity.class, 
-                        "busBrandHashKey",
+                        EntityConstants.HASH_KEY_ATTRIBUTE,
                         photoImportEntry.getBusBrandHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
@@ -257,7 +258,7 @@ public class PhotoImportUtil {
                 .filter(photoImportEntry -> !checkEntityAlreadyExists(
                         session, 
                         BusModelEntity.class, 
-                        "busModelHashKey",
+                        EntityConstants.HASH_KEY_ATTRIBUTE,
                         photoImportEntry.getBusModelHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
@@ -306,7 +307,7 @@ public class PhotoImportUtil {
                 .filter(photoImportEntry -> !checkEntityAlreadyExists(
                         session, 
                         BusRouteEntity.class, 
-                        "busRouteHashKey",
+                        EntityConstants.HASH_KEY_ATTRIBUTE,
                         photoImportEntry.getBusRouteHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
