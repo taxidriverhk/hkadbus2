@@ -54,7 +54,7 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
             .put("licensePlateNumber", SearchPhotoFilter::getLicensePlateNumbers)
             .put("username", SearchPhotoFilter::getUploaderNames)
             .put("language", filter -> Strings.isNullOrEmpty(filter.getLanguage())
-                    ? Collections.EMPTY_LIST
+                    ? Collections.emptyList()
                     : Collections.singletonList(filter.getLanguage()))
             .build();
 

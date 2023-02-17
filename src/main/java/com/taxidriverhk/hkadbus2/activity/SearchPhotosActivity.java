@@ -28,6 +28,7 @@ public class SearchPhotosActivity {
             @QueryParam("search_text") final String query,
             @QueryParam("order_by") final String orderBy,
             @QueryParam("sort") final String sort,
+            @QueryParam("size") final Integer size,
             @QueryParam("next_sort_key") final String nextSortKey,
             @QueryParam("language") final String language,
             @QueryParam("category_name") final List<String> categoryNames,
@@ -46,6 +47,7 @@ public class SearchPhotosActivity {
         RequestValidator.validateLanguage(language);
         RequestValidator.validateOrderBy(orderBy);
         RequestValidator.validateSort(sort);
+        RequestValidator.validateSize(size);
 
         final SearchPhotoFilter searchPhotoFilter = SearchPhotoFilter.builder()
                 .advertisementIds(advertisementIds)
@@ -67,6 +69,7 @@ public class SearchPhotosActivity {
                 orderBy,
                 sort,
                 searchPhotoFilter,
+                size,
                 nextSortKey);
 
         final SearchPhotosResponse searchPhotosResponse = SearchPhotosResponse.builder()

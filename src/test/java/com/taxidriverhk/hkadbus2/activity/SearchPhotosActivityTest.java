@@ -34,7 +34,7 @@ public class SearchPhotosActivityTest {
 
     @Test
     public void GIVEN_validSearchParameters_WHEN_searchPhotos_THEN_shouldReturnMatchingRecords() {
-        when(photoService.searchPhotos(any(), any(), any(), any(), any())).thenReturn(SearchPhotoResult.builder()
+        when(photoService.searchPhotos(any(), any(), any(), any(), any(), any())).thenReturn(SearchPhotoResult.builder()
                 .total(2L)
                 .results(Collections.singletonList(SEARCH_RECORD_1))
                 .nextPageCursor("last-sort-key")
@@ -44,6 +44,7 @@ public class SearchPhotosActivityTest {
                 "query-text",
                 "uploadedDate",
                 "asc",
+                10,
                 null,
                 "en_us",
                 null,
@@ -68,6 +69,7 @@ public class SearchPhotosActivityTest {
                         .advertisementNames(Collections.singletonList("mcdonalds"))
                         .language("en_us")
                         .build(),
+                10,
                 null);
         assertThat(searchPhotosResponse, equalTo(SearchPhotosResponse.builder()
                 .total(2L)
@@ -82,6 +84,7 @@ public class SearchPhotosActivityTest {
                 "query-text",
                 "invalid-order-by",
                 "asc",
+                null,
                 null,
                 "en_us",
                 null,
@@ -101,6 +104,7 @@ public class SearchPhotosActivityTest {
                 "uploadedDate",
                 "invalid-sort-direction",
                 null,
+                null,
                 "en_us",
                 null,
                 null,
@@ -119,7 +123,27 @@ public class SearchPhotosActivityTest {
                 "uploadedDate",
                 "asc",
                 null,
+                null,
                 "invalid-language",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null));
+        assertThrows(BadRequestException.class, () -> activity.search(
+                "query-text",
+                "uploadedDate",
+                "asc",
+                -1,
+                null,
+                "en_us",
                 null,
                 null,
                 null,

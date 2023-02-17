@@ -1,7 +1,6 @@
 package com.taxidriverhk.hkadbus2.service.impl;
 
 import com.google.common.collect.Lists;
-import com.taxidriverhk.hkadbus2.exception.BadRequestException;
 import com.taxidriverhk.hkadbus2.exception.ItemNotFoundException;
 import com.taxidriverhk.hkadbus2.model.domain.Photo;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
@@ -74,6 +73,7 @@ public class PhotoServiceImplTest {
                 "uploadedDate",
                 "asc",
                 searchPhotoFilter,
+                10,
                 null);
 
         verify(searchPhotoProvider, times(1)).searchPhotos(
@@ -82,7 +82,7 @@ public class PhotoServiceImplTest {
                 "asc",
                 searchPhotoFilter,
                 null,
-                100);
+                10);
         assertThat(searchPhotoResult, equalTo(SearchPhotoResult.builder()
                 .results(Lists.newArrayList(SEARCH_RECORD_1))
                 .total(2L)
@@ -103,6 +103,7 @@ public class PhotoServiceImplTest {
                 "uploadedDate",
                 "asc",
                 searchPhotoFilter,
+                null,
                 null);
 
         verify(searchPhotoProvider, times(1)).searchPhotos(
@@ -132,10 +133,11 @@ public class PhotoServiceImplTest {
                 "uploadedDate",
                 "asc",
                 searchPhotoFilter,
+                null,
                 null);
 
         verify(searchPhotoProvider, times(1)).searchPhotos(
-                Collections.EMPTY_LIST,
+                Collections.emptyList(),
                 "uploadedDate",
                 "asc",
                 searchPhotoFilter,

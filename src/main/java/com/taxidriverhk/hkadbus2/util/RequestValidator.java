@@ -34,4 +34,10 @@ public final class RequestValidator {
             throw new BadRequestException(String.format("Invalid sort direction %s", sort));
         }
     }
+
+    public static void validateSize(final Integer size) {
+        if (size != null && size.intValue() < 1) {
+            throw new BadRequestException("Page size must be at least 1");
+        }
+    }
 }

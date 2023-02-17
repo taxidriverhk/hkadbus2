@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import javax.inject.Inject;
+
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -44,18 +47,20 @@ public class PhotoServiceImpl implements PhotoService {
             final String orderBy,
             final String sort,
             final SearchPhotoFilter filter,
+            final Integer size,
             final String nextSortKey
     ) {
         final List<String> queryTexts = Strings.isNullOrEmpty(query)
-                ? Collections.EMPTY_LIST
+                ? Collections.emptyList()
                 : Arrays.asList(query.split(QUERY_TEXT_SPLITTER_REGEX));
+        final Integer sizeToUse = ObjectUtils.defaultIfNull(size, PAGE_LIMIT);
         final SearchRecordResult searchRecordResult = searchPhotoProvider.searchPhotos(
                 queryTexts,
                 orderBy,
                 sort,
                 filter,
                 nextSortKey,
-                PAGE_LIMIT);
+                sizeToUse.intValue());
 
         final List<SearchRecord> searchRecords = EntityMapper.INSTANCE
                 .searchRecordEntitiesToSearchRecords(searchRecordResult.getSearchRecordEntities());
