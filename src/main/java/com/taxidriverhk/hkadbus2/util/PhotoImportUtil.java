@@ -31,6 +31,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -159,11 +160,6 @@ public class PhotoImportUtil {
                 .collect(Collectors.toMap(PhotoImportEntry::getCategoryHashKey, Function.identity(), (c1, c2) -> c1))
                 .values()
                 .stream()
-                .filter(photoImportEntry -> !checkEntityAlreadyExists(
-                        session, 
-                        CategoryEntity.class, 
-                        EntityConstants.HASH_KEY_ATTRIBUTE,
-                        photoImportEntry.getCategoryHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
                         CategoryEntity.builder()
@@ -173,21 +169,23 @@ public class PhotoImportUtil {
                                         LANGUAGE_ZH, photoImportEntry.getCategoryNameZh()))
                                 .thumbnail(photoImportEntry.getThumbnail())
                                 .build(),
-                        CategoryEntity.class))
+                        CategoryEntity.class,
+                        tryGetExistingEntity(
+                                session,
+                                CategoryEntity.class,
+                                EntityConstants.HASH_KEY_ATTRIBUTE,
+                                photoImportEntry.getCategoryHashKey())))
                 .collect(Collectors.toMap(CategoryEntity::getHashKey, Function.identity()));
         insertCategoryTransaction.commit();
 
         // Insert advertisements (keyed by advertisement hash key)
         final Transaction insertAdvertisementTransaction = session.beginTransaction();
-        final Map<String, AdvertisementEntity> advertisementHashKeyToAdvertisementEntityMap = photoImportEntries.stream()
-                .collect(Collectors.toMap(PhotoImportEntry::getAdvertisementHashKey, Function.identity(), (a1, a2) -> a1))
+        final Map<String, AdvertisementEntity> advertisementHashKeyToAdvertisementEntityMap = photoImportEntries
+                .stream()
+                .collect(Collectors.toMap(PhotoImportEntry::getAdvertisementHashKey, Function.identity(),
+                        (a1, a2) -> a1))
                 .values()
                 .stream()
-                .filter(photoImportEntry -> !checkEntityAlreadyExists(
-                        session, 
-                        AdvertisementEntity.class, 
-                        EntityConstants.HASH_KEY_ATTRIBUTE,
-                        photoImportEntry.getAdvertisementHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
                         AdvertisementEntity.builder()
@@ -198,7 +196,12 @@ public class PhotoImportUtil {
                                 .thumbnail(photoImportEntry.getThumbnail())
                                 .category(categoryHashKeyToCategoryEntityMap.get(photoImportEntry.getCategoryHashKey()))
                                 .build(),
-                        AdvertisementEntity.class))
+                        AdvertisementEntity.class,
+                        tryGetExistingEntity(
+                                session,
+                                AdvertisementEntity.class,
+                                EntityConstants.HASH_KEY_ATTRIBUTE,
+                                photoImportEntry.getAdvertisementHashKey())))
                 .collect(Collectors.toMap(AdvertisementEntity::getHashKey, Function.identity()));
         insertAdvertisementTransaction.commit();
 
@@ -208,11 +211,6 @@ public class PhotoImportUtil {
                 .collect(Collectors.toMap(PhotoImportEntry::getUsername, Function.identity(), (u1, u2) -> u1))
                 .values()
                 .stream()
-                .filter(photoImportEntry -> !checkEntityAlreadyExists(
-                        session, 
-                        UserEntity.class, 
-                        "username",
-                        photoImportEntry.getUsername()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
                         UserEntity.builder()
@@ -222,7 +220,12 @@ public class PhotoImportUtil {
                                 .registrationDate(Date.from(Instant.now()))
                                 .lastLoggedInDate(Date.from(Instant.now()))
                                 .build(),
-                        UserEntity.class))
+                        UserEntity.class,
+                        tryGetExistingEntity(
+                                session,
+                                UserEntity.class,
+                                "username",
+                                photoImportEntry.getUsername())))
                 .collect(Collectors.toMap(UserEntity::getUsername, Function.identity()));
         insertUserTransaction.commit();
 
@@ -232,11 +235,6 @@ public class PhotoImportUtil {
                 .collect(Collectors.toMap(PhotoImportEntry::getBusBrandHashKey, Function.identity(), (b1, b2) -> b1))
                 .values()
                 .stream()
-                .filter(photoImportEntry -> !checkEntityAlreadyExists(
-                        session, 
-                        BusBrandEntity.class, 
-                        EntityConstants.HASH_KEY_ATTRIBUTE,
-                        photoImportEntry.getBusBrandHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
                         BusBrandEntity.builder()
@@ -245,7 +243,12 @@ public class PhotoImportUtil {
                                         LANGUAGE_EN, photoImportEntry.getBusBrandNameEn(),
                                         LANGUAGE_ZH, photoImportEntry.getBusBrandNameZh()))
                                 .build(),
-                        BusBrandEntity.class))
+                        BusBrandEntity.class,
+                        tryGetExistingEntity(
+                                session,
+                                BusBrandEntity.class,
+                                EntityConstants.HASH_KEY_ATTRIBUTE,
+                                photoImportEntry.getBusBrandHashKey())))
                 .collect(Collectors.toMap(BusBrandEntity::getHashKey, Function.identity()));
         insertBusBrandTransaction.commit();
 
@@ -255,11 +258,6 @@ public class PhotoImportUtil {
                 .collect(Collectors.toMap(PhotoImportEntry::getBusModelHashKey, Function.identity(), (b1, b2) -> b1))
                 .values()
                 .stream()
-                .filter(photoImportEntry -> !checkEntityAlreadyExists(
-                        session, 
-                        BusModelEntity.class, 
-                        EntityConstants.HASH_KEY_ATTRIBUTE,
-                        photoImportEntry.getBusModelHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
                         BusModelEntity.builder()
@@ -270,7 +268,12 @@ public class PhotoImportUtil {
                                 .busBrand(busBrandHashKeyToBusBrandEntityMap.get(photoImportEntry.getBusBrandHashKey()))
                                 .thumbnail(photoImportEntry.getThumbnail())
                                 .build(),
-                        BusModelEntity.class))
+                        BusModelEntity.class,
+                        tryGetExistingEntity(
+                                session,
+                                BusModelEntity.class,
+                                EntityConstants.HASH_KEY_ATTRIBUTE,
+                                photoImportEntry.getBusModelHashKey())))
                 .collect(Collectors.toMap(BusModelEntity::getHashKey, Function.identity()));
         insertBusModelTransaction.commit();
 
@@ -280,11 +283,6 @@ public class PhotoImportUtil {
                 .collect(Collectors.toMap(PhotoImportEntry::getLicensePlateNumber, Function.identity(), (b1, b2) -> b1))
                 .values()
                 .stream()
-                .filter(photoImportEntry -> !checkEntityAlreadyExists(
-                        session, 
-                        BusEntity.class, 
-                        "licensePlateNumber",
-                        photoImportEntry.getLicensePlateNumber()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
                         BusEntity.builder()
@@ -294,7 +292,12 @@ public class PhotoImportUtil {
                                 .fleetNumber(photoImportEntry.getFleetNumber())
                                 .busModel(busModelHashKeyToBusModelEntityMap.get(photoImportEntry.getBusModelHashKey()))
                                 .build(),
-                        BusEntity.class))
+                        BusEntity.class,
+                        tryGetExistingEntity(
+                                session,
+                                BusEntity.class,
+                                "licensePlateNumber",
+                                photoImportEntry.getLicensePlateNumber())))
                 .collect(Collectors.toMap(BusEntity::getLicensePlateNumber, Function.identity()));
         insertBusTransactions.commit();
 
@@ -304,11 +307,6 @@ public class PhotoImportUtil {
                 .collect(Collectors.toMap(PhotoImportEntry::getBusRouteHashKey, Function.identity(), (b1, b2) -> b1))
                 .values()
                 .stream()
-                .filter(photoImportEntry -> !checkEntityAlreadyExists(
-                        session, 
-                        BusRouteEntity.class, 
-                        EntityConstants.HASH_KEY_ATTRIBUTE,
-                        photoImportEntry.getBusRouteHashKey()))
                 .map(photoImportEntry -> constructEntityAndSave(
                         session,
                         BusRouteEntity.builder()
@@ -322,7 +320,12 @@ public class PhotoImportUtil {
                                         LANGUAGE_EN, photoImportEntry.getEndEn(),
                                         LANGUAGE_ZH, photoImportEntry.getEndZh()))
                                 .build(),
-                        BusRouteEntity.class))
+                        BusRouteEntity.class,
+                        tryGetExistingEntity(
+                                session,
+                                BusRouteEntity.class,
+                                EntityConstants.HASH_KEY_ATTRIBUTE,
+                                photoImportEntry.getBusRouteHashKey())))
                 .collect(Collectors.toMap(BusRouteEntity::getHashKey, Function.identity()));
         insertBusRouteTransactions.commit();
 
@@ -333,7 +336,8 @@ public class PhotoImportUtil {
                         session,
                         PhotoEntity.builder()
                                 .shortId(generateShortId())
-                                .advertisement(advertisementHashKeyToAdvertisementEntityMap.get(photoImportEntry.getAdvertisementHashKey()))
+                                .advertisement(advertisementHashKeyToAdvertisementEntityMap
+                                        .get(photoImportEntry.getAdvertisementHashKey()))
                                 .bus(licensePlateToBusEntityMap.get(photoImportEntry.getLicensePlateNumber()))
                                 .busRoute(busRouteHashKeyToBusRouteEntityMap.get(photoImportEntry.getBusRouteHashKey()))
                                 .user(usernameToUserEntityMap.get(photoImportEntry.getUsername()))
@@ -341,7 +345,8 @@ public class PhotoImportUtil {
                                 .image(photoImportEntry.getImage())
                                 .thumbnail(photoImportEntry.getThumbnail())
                                 .build(),
-                        PhotoEntity.class))
+                        PhotoEntity.class,
+                        Optional.empty()))
                 .collect(Collectors.toList());
         insertPhotoTransactions.commit();
 
@@ -396,7 +401,7 @@ public class PhotoImportUtil {
     }
 
     @SneakyThrows
-    private <T,V> boolean checkEntityAlreadyExists(
+    private <T, V> Optional<T> tryGetExistingEntity(
             final Session session,
             final Class<T> entityClass,
             final String attribute,
@@ -406,11 +411,20 @@ public class PhotoImportUtil {
                 session,
                 entityClass,
                 attribute,
-                value).isPresent();
+                value);
     }
 
     @SneakyThrows
-    private <T> T constructEntityAndSave(final Session session, final T entity, final Class<T> entityType) {
+    private <T> T constructEntityAndSave(
+            final Session session,
+            final T entity,
+            final Class<T> entityType,
+            final Optional<T> existingEntity
+    ) {
+        if (existingEntity.isPresent()) {
+            return existingEntity.get();
+        }
+
         final UUID id = (UUID) session.save(entity);
         final Method setIdMethod = entityType.getMethod("setId", UUID.class);
         setIdMethod.invoke(entity, id);
