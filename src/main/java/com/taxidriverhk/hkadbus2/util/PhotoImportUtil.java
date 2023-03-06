@@ -29,6 +29,7 @@ import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -113,7 +114,6 @@ public class PhotoImportUtil {
         //      bus_route_hash_key,bus_route_number,bus_companies,start_en,start_zh,end_en,end_zh,
         //      username,
         //      thumbnail,image,
-        //      tags
         // ]
         final List<String> lines = Files.readAllLines(Paths.get(inputFilePath));
         // Remove the header line
@@ -148,7 +148,6 @@ public class PhotoImportUtil {
                             .username(tokens[23])
                             .thumbnail(tokens[24])
                             .image(tokens[25])
-                            .tags(tokens[26])
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -372,7 +371,7 @@ public class PhotoImportUtil {
                     .uploadedDate(System.currentTimeMillis())
                     .username(photoImportEntry.getUsername())
                     .thumbnail(photoImportEntry.getThumbnail())
-                    .tags(photoImportEntry.getTags().replace('|', ','))
+                    .tags(generateTags(photoImportEntry))
                     .build());
             session.save(SearchRecordEntity.builder()
                     .photoShortId(photoEntities.get(i).getShortId())
@@ -392,7 +391,7 @@ public class PhotoImportUtil {
                     .uploadedDate(System.currentTimeMillis())
                     .username(photoImportEntry.getUsername())
                     .thumbnail(photoImportEntry.getThumbnail())
-                    .tags(photoImportEntry.getTags().replace('|', ','))
+                    .tags(generateTags(photoImportEntry))
                     .build());
         }
         insertSearchRecordTransactions.commit();
@@ -439,5 +438,28 @@ public class PhotoImportUtil {
             shortId = random.nextInt(SHORT_ID_MAX_VALUE) + 1L;
         }
         return shortId;
+    }
+
+    private String generateTags(final PhotoImportEntry photoImportEntry) {
+        final Set<String> tags = new HashSet<String>();
+        tags.addAll(lowerCaseAndSplitBySpace(photoImportEntry.getAdvertisementNameEn()));
+        tags.add(photoImportEntry.getAdvertisementNameZh());
+        tags.addAll(lowerCaseAndSplitBySpace(photoImportEntry.getCategoryNameEn()));
+        tags.add(photoImportEntry.getCategoryNameZh());
+        tags.addAll(lowerCaseAndSplitBySpace(photoImportEntry.getBusBrandNameEn()));
+        tags.add(photoImportEntry.getBusBrandNameZh());
+        tags.add(photoImportEntry.getBusCompany());
+        tags.addAll(lowerCaseAndSplitBySpace(photoImportEntry.getBusModelNameEn()));
+        tags.add(photoImportEntry.getBusModelNameZh());
+        tags.add(photoImportEntry.getBusRouteNumber().toLowerCase());
+        tags.add(photoImportEntry.getFleetPrefix().toLowerCase());
+        tags.add(photoImportEntry.getFleetPrefix().toLowerCase() + photoImportEntry.getFleetNumber());
+        tags.add(photoImportEntry.getUsername().toLowerCase());
+
+        return String.join(",", tags);
+    }
+
+    private List<String> lowerCaseAndSplitBySpace(String input) {
+        return Arrays.asList(input.toLowerCase().split(" "));
     }
 }
