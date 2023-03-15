@@ -42,3 +42,6 @@ frontend/build/
 frontend/images/photos/
 frontend/fonts/
 frontend/scripts/
+
+# Config
+config
