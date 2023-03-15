@@ -25,6 +25,8 @@ import com.taxidriverhk.hkadbus2.repository.impl.BusModelSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategorySqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.PhotoSqlRepository;
 import lombok.extern.log4j.Log4j2;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -43,13 +45,27 @@ public class DataAccessModule extends AbstractModule {
             @Named("datasource.sql.driverClass") final String driverClass,
             @Named("datasource.sql.dialect") final String dialect
     ) {
+        final String urlOverride = System.getenv("HKADBUS2_DATABASE_URL");
+        final String usernameOverride = System.getenv("HKADBUS2_DATABASE_USERNAME");
+        final String passwordOverride = System.getenv("HKADBUS2_DATABASE_PASSWORD");
+        final String driverClassOverride = System.getenv("HKADBUS2_DATABASE_DRIVER_CLASS");
+        final String dialectOverride = System.getenv("HKADBUS2_DATABASE_DIALECT");
+
+        final String urlToUse = StringUtils.isNotEmpty(urlOverride) ? urlOverride : url;
+        final String usernameToUse = StringUtils.isNotEmpty(usernameOverride) ? usernameOverride : username;
+        final String passwordToUse = StringUtils.isNotEmpty(passwordOverride) ? passwordOverride : password;
+        final String driverClassToUse = StringUtils.isNotEmpty(driverClassOverride) ? driverClassOverride : driverClass;
+        final String dialectToUse = StringUtils.isNotEmpty(dialectOverride) ? dialectOverride : dialect;
+
+        log.info("Connecting to SQL database with URL {}", urlToUse);
+
         final Properties properties = new Properties();
-        properties.setProperty("hibernate.connection.url", url);
-        properties.setProperty("hibernate.connection.username", username);
-        properties.setProperty("hibernate.connection.password", password);
-        properties.setProperty("hibernate.connection.driver_class", driverClass);
+        properties.setProperty("hibernate.connection.url", urlToUse);
+        properties.setProperty("hibernate.connection.username", usernameToUse);
+        properties.setProperty("hibernate.connection.password", passwordToUse);
+        properties.setProperty("hibernate.connection.driver_class", driverClassToUse);
         properties.setProperty("hibernate.globally_quoted_identifiers", "true");
-        properties.setProperty("dialect", dialect);
+        properties.setProperty("dialect", dialectToUse);
 
         return new Configuration()
                 .addAnnotatedClass(AdvertisementEntity.class)
