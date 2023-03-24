@@ -1,8 +1,17 @@
 package com.taxidriverhk.hkadbus2.service.impl;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.ObjectUtils;
+
 import com.google.common.base.Strings;
 import com.taxidriverhk.hkadbus2.exception.ItemNotFoundException;
 import com.taxidriverhk.hkadbus2.mapper.EntityMapper;
+import com.taxidriverhk.hkadbus2.model.api.PutPhotoRequest;
 import com.taxidriverhk.hkadbus2.model.domain.Photo;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
@@ -12,16 +21,9 @@ import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
 import com.taxidriverhk.hkadbus2.provider.SearchPhotoProvider;
 import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
 import com.taxidriverhk.hkadbus2.service.PhotoService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.ObjectUtils;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
@@ -39,6 +41,13 @@ public class PhotoServiceImpl implements PhotoService {
         final PhotoEntity photoEntity = photoRepository.getPhotoByShortId(photoId)
                 .orElseThrow(() -> new ItemNotFoundException(photoId.toString()));
         return EntityMapper.INSTANCE.photoEntityToPhoto(photoEntity, language);
+    }
+
+    @Override
+    public Long putPhoto(final PutPhotoRequest request) {
+        log.info("Putting photo with request {}", request);
+        // TODO: implement me
+        return 123L;
     }
 
     @Override
