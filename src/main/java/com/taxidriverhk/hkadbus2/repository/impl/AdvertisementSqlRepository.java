@@ -1,17 +1,19 @@
 package com.taxidriverhk.hkadbus2.repository.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.EntityConstants;
 import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
 import com.taxidriverhk.hkadbus2.util.SqlQueryUtil;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -46,5 +48,11 @@ public class AdvertisementSqlRepository implements AdvertisementRepository {
                 UUID.fromString(categoryId));
         session.close();
         return results;
+    }
+
+    @Override
+    public String putAdvertisement(final AdvertisementEntity advertisement) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'putAdvertisement'");
     }
 }

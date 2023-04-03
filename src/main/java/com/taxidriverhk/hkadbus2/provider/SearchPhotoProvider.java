@@ -1,9 +1,10 @@
 package com.taxidriverhk.hkadbus2.provider;
 
-import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
-import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
-
 import java.util.List;
+
+import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
+import com.taxidriverhk.hkadbus2.model.domain.SearchRecord;
+import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
 
 public interface SearchPhotoProvider {
 
@@ -15,4 +16,5 @@ public interface SearchPhotoProvider {
             String nextSortKey,
             int limit
     );
+    boolean insertSearchRecord(SearchRecord searchRecord);
 }

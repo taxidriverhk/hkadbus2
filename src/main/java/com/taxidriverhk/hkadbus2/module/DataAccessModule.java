@@ -1,5 +1,13 @@
 package com.taxidriverhk.hkadbus2.module;
 
+import java.util.Properties;
+
+import javax.inject.Named;
+
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -17,21 +25,21 @@ import com.taxidriverhk.hkadbus2.provider.impl.SearchPhotoProviderImpl;
 import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
 import com.taxidriverhk.hkadbus2.repository.BusBrandRepository;
 import com.taxidriverhk.hkadbus2.repository.BusModelRepository;
+import com.taxidriverhk.hkadbus2.repository.BusRepository;
+import com.taxidriverhk.hkadbus2.repository.BusRouteRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
+import com.taxidriverhk.hkadbus2.repository.UserRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.AdvertisementSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.BusBrandSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.BusModelSqlRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.BusRoutelSqlRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.BusSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategorySqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.PhotoSqlRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.UserSqlRepository;
+
 import lombok.extern.log4j.Log4j2;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-
-import javax.inject.Named;
-import java.util.Properties;
 
 @Log4j2
 public class DataAccessModule extends AbstractModule {
@@ -89,14 +97,26 @@ public class DataAccessModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public BusBrandRepository busBrandRepository(final SessionFactory sessionFactory) {
-        return new BusBrandSqlRepository(sessionFactory);
+    public BusRepository busRepository(final SessionFactory sessionFactory) {
+        return new BusSqlRepository(sessionFactory);
     }
 
     @Provides
     @Singleton
     public BusModelRepository busModelRepository(final SessionFactory sessionFactory) {
         return new BusModelSqlRepository(sessionFactory);
+    }
+
+    @Provides
+    @Singleton
+    public BusBrandRepository busBrandRepository(final SessionFactory sessionFactory) {
+        return new BusBrandSqlRepository(sessionFactory);
+    }
+
+    @Provides
+    @Singleton
+    public BusRouteRepository busRouteRepository(final SessionFactory sessionFactory) {
+        return new BusRoutelSqlRepository(sessionFactory);
     }
 
     @Provides
@@ -109,6 +129,12 @@ public class DataAccessModule extends AbstractModule {
     @Singleton
     public PhotoRepository photoRepository(final SessionFactory sessionFactory) {
         return new PhotoSqlRepository(sessionFactory);
+    }
+
+    @Provides
+    @Singleton
+    public UserRepository userRepository(final SessionFactory sessionFactory) {
+        return new UserSqlRepository(sessionFactory);
     }
 
     @Provides

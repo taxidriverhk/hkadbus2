@@ -1,7 +1,12 @@
 package com.taxidriverhk.hkadbus2.util;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.taxidriverhk.hkadbus2.model.api.PutPhotoRequest;
 import com.taxidriverhk.hkadbus2.model.domain.Advertisement;
 import com.taxidriverhk.hkadbus2.model.domain.BusCompany;
 import com.taxidriverhk.hkadbus2.model.domain.BusModel;
@@ -17,10 +22,6 @@ import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.UUID;
 
 public final class MockDataHelper {
 
@@ -39,6 +40,8 @@ public final class MockDataHelper {
 
     public static final String CATEGORY_HASH_KEY_1 = "food";
     public static final String CATEGORY_HASH_KEY_2 = "furniture";
+
+    public static final String BUS_LICENSE_PLATE_NUMBER_1 = "EA5913";
 
     public static final Long TIMESTAMP_2020 = 1577836800000L;
     public static final Timestamp DATE_2020 = Timestamp.from(Instant.ofEpochMilli(TIMESTAMP_2020));
@@ -165,7 +168,7 @@ public final class MockDataHelper {
             .busCompany(BusCompany.KMB.getText())
             .fleetPrefix("AD")
             .fleetNumber("15")
-            .licensePlateNumber("EA5913")
+            .licensePlateNumber(BUS_LICENSE_PLATE_NUMBER_1)
             .busModel(BUS_MODEL_ENTITY_1)
             .build();
 
@@ -181,6 +184,7 @@ public final class MockDataHelper {
             .build();
 
     public static final BusRouteEntity BUS_ROUTE_ENTITY_1 = BusRouteEntity.builder()
+            .id(createNamedUUID("kmb-49x"))
             .routeNumber("49X")
             .hashKey("kmb-49x")
             .busCompanies(Lists.newArrayList(BusCompany.KMB.getText()))
@@ -235,7 +239,7 @@ public final class MockDataHelper {
             .busId(1L)
             .busModelId(BUS_MODEL_HASH_KEY_1)
             .busModel("Dragon 12M")
-            .licensePlateNumber("EA5913")
+            .licensePlateNumber(BUS_LICENSE_PLATE_NUMBER_1)
             .fleetPrefix("AD")
             .fleetNumber("15")
             .routeNumber("49X")
@@ -316,6 +320,11 @@ public final class MockDataHelper {
             .uploadedDate(12346L)
             .tags("mcdonalds,3av59,gx4966")
             .language(LANGUAGE_EN)
+            .build();
+
+    public static final PutPhotoRequest PUT_PHOTO_REQUEST = PutPhotoRequest.builder()
+            .advertisementId(ADVERTISEMENT_HASH_KEY_1)
+            .licensePlateNumber(BUS_LICENSE_PLATE_NUMBER_1)
             .build();
 
     private static UUID createNamedUUID(final String name) {

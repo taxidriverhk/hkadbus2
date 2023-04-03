@@ -1,16 +1,18 @@
 package com.taxidriverhk.hkadbus2.repository.impl;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 import com.taxidriverhk.hkadbus2.model.entity.BusBrandEntity;
 import com.taxidriverhk.hkadbus2.model.entity.EntityConstants;
 import com.taxidriverhk.hkadbus2.repository.BusBrandRepository;
 import com.taxidriverhk.hkadbus2.util.SqlQueryUtil;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -40,5 +42,11 @@ public class BusBrandSqlRepository implements BusBrandRepository {
                 hashKey);
         session.close();
         return result;
+    }
+
+    @Override
+    public String putBusBrand(final BusBrandEntity busBrand) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'putBusBrand'");
     }
 }

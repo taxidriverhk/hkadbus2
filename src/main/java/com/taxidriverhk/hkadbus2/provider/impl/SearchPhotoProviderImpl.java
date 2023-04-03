@@ -1,26 +1,5 @@
 package com.taxidriverhk.hkadbus2.provider.impl;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.taxidriverhk.hkadbus2.exception.BadRequestException;
-import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
-import com.taxidriverhk.hkadbus2.model.domain.SortDirection;
-import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
-import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
-import com.taxidriverhk.hkadbus2.provider.SearchPhotoProvider;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.apache.commons.collections4.CollectionUtils;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -30,6 +9,31 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.taxidriverhk.hkadbus2.exception.BadRequestException;
+import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
+import com.taxidriverhk.hkadbus2.model.domain.SearchRecord;
+import com.taxidriverhk.hkadbus2.model.domain.SortDirection;
+import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
+import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
+import com.taxidriverhk.hkadbus2.provider.SearchPhotoProvider;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -120,6 +124,10 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
                 .searchRecordEntities(searchRecordEntitiesWithLimit)
                 .nextPageCursor(nextPageCursorOptional.orElse(null))
                 .build();
+    }
+
+    public boolean insertSearchRecord(final SearchRecord searchRecord) {
+        return true;
     }
 
     private List<Order> buildOrderByQuery(

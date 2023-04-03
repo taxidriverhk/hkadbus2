@@ -1,15 +1,17 @@
 package com.taxidriverhk.hkadbus2.repository.impl;
 
+import java.util.Optional;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
 import com.taxidriverhk.hkadbus2.model.entity.EntityConstants;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
 import com.taxidriverhk.hkadbus2.util.SqlQueryUtil;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -29,5 +31,11 @@ public class PhotoSqlRepository implements PhotoRepository {
                 shortId);
         session.close();
         return result;
+    }
+
+    @Override
+    public Long putPhoto(final PhotoEntity photo) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'putPhoto'");
     }
 }
