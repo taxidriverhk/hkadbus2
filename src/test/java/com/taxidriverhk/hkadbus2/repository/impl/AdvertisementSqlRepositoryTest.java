@@ -1,24 +1,28 @@
 package com.taxidriverhk.hkadbus2.repository.impl;
 
-import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.Optional;
-
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.ADVERTISEMENT_ENTITY_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.ADVERTISEMENT_ENTITY_2;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.ADVERTISEMENT_ENTITY_3;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.ADVERTISEMENT_HASH_KEY_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_ENTITY_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_ENTITY_2;
-import static com.taxidriverhk.hkadbus2.util.MockDataHelper.CATEGORY_ENTITY_ID_1;
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.LANGUAGE_EN;
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.LANGUAGE_ZH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.ImmutableMap;
+import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 
 public class AdvertisementSqlRepositoryTest extends SqlRepositoryTestBase {
 
@@ -42,6 +46,22 @@ public class AdvertisementSqlRepositoryTest extends SqlRepositoryTestBase {
 
         final Optional<AdvertisementEntity> nonExistentAdvertisementEntity = sqlRepository.getAdvertisementByHashKey("invalid-key");
         assertThat(nonExistentAdvertisementEntity.isPresent(), equalTo(false));
+    }
+
+    @Test
+    public void WHEN_insertNewEntity_THEN_shouldReturnAdvertisementId() {
+        final String advertisementId = sqlRepository.putAdvertisement(AdvertisementEntity.builder()
+                .name(ImmutableMap.of(
+                        LANGUAGE_EN, "Sprite",
+                        LANGUAGE_ZH, "雪碧"))
+                .hashKey("sprite")
+                .category(CATEGORY_ENTITY_1)
+                .thumbnail("http://thunbnail.jpg")
+                .build());
+        assertThat(advertisementId, notNullValue());
+
+        final Optional<AdvertisementEntity> advertisementEntity = sqlRepository.getAdvertisementByHashKey("sprite");
+        assertThat(advertisementEntity.isPresent(), equalTo(true));
     }
 
     @Override

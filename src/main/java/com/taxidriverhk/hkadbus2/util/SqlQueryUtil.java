@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -13,6 +14,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import com.taxidriverhk.hkadbus2.exception.InternalErrorException;
@@ -30,6 +32,16 @@ public final class SqlQueryUtil {
         final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         final CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(entityClass);
         return session.createQuery(criteriaQuery.select(criteriaQuery.from(entityClass))).getResultList();
+    }
+
+    public static <T> Optional<T> selectSingleItemByPrimaryKey(
+            final Session session,
+            final Class<T> entityClass,
+            final String id
+    ) {
+        final UUID key = UUID.fromString(id);
+        final T entity = (T) session.get(entityClass, key);
+        return Optional.ofNullable(entity);
     }
 
     public static <T,V> Optional<T> selectSingleItemByCompositeKey(
@@ -70,6 +82,18 @@ public final class SqlQueryUtil {
                 entityClass,
                 root -> root.get(foreignKeyAttribute).get(referencedAttribute),
                 value).getResultList();
+    }
+
+    public static <T> T mutateWithTransaction(
+            final Session session,
+            final Class<T> entityClass,
+            final Supplier<T> mutation
+    ) {
+        final Transaction transaction = session.beginTransaction();
+        final T entity = mutation.get();
+        transaction.commit();
+
+        return entity;
     }
 
     // This assumes that a transaction has been initiated before calling this function

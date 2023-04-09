@@ -46,7 +46,18 @@ public class BusBrandSqlRepository implements BusBrandRepository {
 
     @Override
     public String putBusBrand(final BusBrandEntity busBrand) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'putBusBrand'");
+        log.info("Inserting bus brand with entity {}", busBrand);
+
+        final Session session = sessionFactory.openSession();
+        final BusBrandEntity result = SqlQueryUtil.mutateWithTransaction(
+                session, 
+                BusBrandEntity.class,
+                () -> SqlQueryUtil.insertEntity(
+                        session,
+                        BusBrandEntity.class,
+                        busBrand
+                ));
+        session.close();
+        return result.getId().toString();
     }
 }

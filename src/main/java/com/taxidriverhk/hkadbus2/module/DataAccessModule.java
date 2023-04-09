@@ -33,7 +33,7 @@ import com.taxidriverhk.hkadbus2.repository.UserRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.AdvertisementSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.BusBrandSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.BusModelSqlRepository;
-import com.taxidriverhk.hkadbus2.repository.impl.BusRoutelSqlRepository;
+import com.taxidriverhk.hkadbus2.repository.impl.BusRouteSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.BusSqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.CategorySqlRepository;
 import com.taxidriverhk.hkadbus2.repository.impl.PhotoSqlRepository;
@@ -116,7 +116,7 @@ public class DataAccessModule extends AbstractModule {
     @Provides
     @Singleton
     public BusRouteRepository busRouteRepository(final SessionFactory sessionFactory) {
-        return new BusRoutelSqlRepository(sessionFactory);
+        return new BusRouteSqlRepository(sessionFactory);
     }
 
     @Provides

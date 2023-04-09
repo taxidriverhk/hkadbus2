@@ -35,7 +35,18 @@ public class PhotoSqlRepository implements PhotoRepository {
 
     @Override
     public Long putPhoto(final PhotoEntity photo) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'putPhoto'");
+        log.info("Inserting photo with entity {}", photo);
+
+        final Session session = sessionFactory.openSession();
+        final PhotoEntity result = SqlQueryUtil.mutateWithTransaction(
+                session, 
+                PhotoEntity.class,
+                () -> SqlQueryUtil.insertEntity(
+                        session,
+                        PhotoEntity.class,
+                        photo
+                ));
+        session.close();
+        return result.getShortId();
     }
 }

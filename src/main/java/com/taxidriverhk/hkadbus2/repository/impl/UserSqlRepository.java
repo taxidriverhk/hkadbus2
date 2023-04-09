@@ -31,5 +31,4 @@ public class UserSqlRepository implements UserRepository {
         session.close();
         return result;
     }
-    
 }

@@ -52,7 +52,18 @@ public class BusModelSqlRepository implements BusModelRepository {
 
     @Override
     public String putBusModel(final BusModelEntity busModel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'putBusModel'");
+        log.info("Inserting bus model with entity {}", busModel);
+
+        final Session session = sessionFactory.openSession();
+        final BusModelEntity result = SqlQueryUtil.mutateWithTransaction(
+                session, 
+                BusModelEntity.class,
+                () -> SqlQueryUtil.insertEntity(
+                        session,
+                        BusModelEntity.class,
+                        busModel
+                ));
+        session.close();
+        return result.getId().toString();
     }
 }

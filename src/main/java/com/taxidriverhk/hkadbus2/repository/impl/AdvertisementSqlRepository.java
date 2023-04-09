@@ -52,7 +52,18 @@ public class AdvertisementSqlRepository implements AdvertisementRepository {
 
     @Override
     public String putAdvertisement(final AdvertisementEntity advertisement) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'putAdvertisement'");
+        log.info("Inserting advertisement with entity {}", advertisement);
+
+        final Session session = sessionFactory.openSession();
+        final AdvertisementEntity result = SqlQueryUtil.mutateWithTransaction(
+                session, 
+                AdvertisementEntity.class,
+                () -> SqlQueryUtil.insertEntity(
+                        session,
+                        AdvertisementEntity.class,
+                        advertisement
+                ));
+        session.close();
+        return result.getId().toString();
     }
 }

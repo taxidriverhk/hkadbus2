@@ -46,7 +46,18 @@ public class CategorySqlRepository implements CategoryRepository {
 
     @Override
     public String putCategory(final CategoryEntity category) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'putCategory'");
+        log.info("Inserting category with entity {}", category);
+
+        final Session session = sessionFactory.openSession();
+        final CategoryEntity result = SqlQueryUtil.mutateWithTransaction(
+                session, 
+                CategoryEntity.class,
+                () -> SqlQueryUtil.insertEntity(
+                        session,
+                        CategoryEntity.class,
+                        category
+                ));
+        session.close();
+        return result.getId().toString();
     }
 }
