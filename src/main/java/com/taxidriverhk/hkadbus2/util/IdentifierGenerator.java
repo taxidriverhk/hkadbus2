@@ -15,8 +15,8 @@ public final class IdentifierGenerator {
 
         final String numericIdString = bigNumber.toString();
         final int digits = numericIdString.length();
-        // Obtain the last 18 digits
-        final String shortenNumericId = numericIdString.substring(digits - 18, digits);
+        // Obtain the last 9 digits
+        final String shortenNumericId = numericIdString.substring(digits - 9, digits);
 
         return Long.valueOf(shortenNumericId);
     }
