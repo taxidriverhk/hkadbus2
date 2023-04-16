@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,6 +53,7 @@ import com.taxidriverhk.hkadbus2.repository.BusRouteRepository;
 import com.taxidriverhk.hkadbus2.repository.CategoryRepository;
 import com.taxidriverhk.hkadbus2.repository.PhotoRepository;
 import com.taxidriverhk.hkadbus2.repository.UserRepository;
+import com.taxidriverhk.hkadbus2.service.async.SearchRecordInsertionAsyncHandler;
 
 @ExtendWith(MockitoExtension.class)
 public class PhotoServiceImplTest {
@@ -85,6 +87,9 @@ public class PhotoServiceImplTest {
 
     @Mock
     private SearchPhotoFilter searchPhotoFilter;
+
+    @Mock
+    private SearchRecordInsertionAsyncHandler searchRecordInsertionAsyncHandler;
 
     @InjectMocks
     private PhotoServiceImpl photoService;
@@ -249,6 +254,8 @@ public class PhotoServiceImplTest {
         final PhotoEntity photoEntityInserted = photoEntityArgumentCaptor.getValue();
         assertThat(photoShortId, equalTo(PHOTO_SHORT_ID_1));
         assertThat(photoEntityInserted.getAdvertisement().getHashKey(), equalTo(ADVERTISEMENT_ENTITY_1.getHashKey()));
+
+        verify(searchRecordInsertionAsyncHandler, times(1)).insertSearchRecords(any(), any(), eq(PHOTO_SHORT_ID_1), anyInt());
     }
 
     @Test

@@ -1,5 +1,11 @@
 package com.taxidriverhk.hkadbus2.mapper;
 
+import java.util.List;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
+
 import com.taxidriverhk.hkadbus2.model.domain.Advertisement;
 import com.taxidriverhk.hkadbus2.model.domain.BusModel;
 import com.taxidriverhk.hkadbus2.model.domain.Category;
@@ -10,11 +16,6 @@ import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 @Mapper
 public interface EntityMapper {
@@ -56,7 +57,6 @@ public interface EntityMapper {
     @Mapping(target = "uploadedDate", expression = "java(photoEntity.getUploadedDate().getTime())")
     Photo photoEntityToPhoto(PhotoEntity photoEntity, String language);
 
-
     @Mapping(source = "advertisementHashKey", target = "advertisementId")
     @Mapping(source = "advertisementName", target = "advertisement")
     @Mapping(source = "categoryHashKey", target = "categoryId")
@@ -72,4 +72,16 @@ public interface EntityMapper {
     SearchRecord searchRecordEntityToSearchRecord(SearchRecordEntity searchRecordEntity);
 
     List<SearchRecord> searchRecordEntitiesToSearchRecords(List<SearchRecordEntity> searchRecordEntities);
+
+    @Mapping(source = "advertisementId", target = "advertisementHashKey")
+    @Mapping(source = "advertisement", target = "advertisementName")
+    @Mapping(source = "categoryId", target = "categoryHashKey")
+    @Mapping(source = "category", target = "categoryName")
+    @Mapping(source = "busModelId", target = "busModelHashKey")
+    @Mapping(source = "busModel", target = "busModelName")
+    @Mapping(source = "photoId", target = "photoShortId")
+    @Mapping(source = "routeId", target = "routeHashKey")
+    @Mapping(target = "tags", expression = "java(String.join(\",\", searchRecord.getTags()))")
+    @Mapping(target = "language", constant = "")
+    SearchRecordEntity searchRecordToSearchRecordEntity(SearchRecord searchRecord);
 }

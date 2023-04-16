@@ -1,22 +1,26 @@
 package com.taxidriverhk.hkadbus2.module;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.taxidriverhk.hkadbus2.activity.filter.AuthenticationFilter;
 import com.taxidriverhk.hkadbus2.activity.filter.CORSFilter;
 import com.taxidriverhk.hkadbus2.activity.filter.LoggingFilter;
+import com.taxidriverhk.hkadbus2.provider.SearchPhotoProvider;
 import com.taxidriverhk.hkadbus2.service.AdvertisementService;
 import com.taxidriverhk.hkadbus2.service.BusService;
 import com.taxidriverhk.hkadbus2.service.CategoryService;
 import com.taxidriverhk.hkadbus2.service.PhotoService;
+import com.taxidriverhk.hkadbus2.service.async.SearchRecordInsertionAsyncHandler;
 import com.taxidriverhk.hkadbus2.service.impl.AdvertisementServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.BusServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.CategoryServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.PhotoServiceImpl;
-
-import java.util.Map;
 
 public class ServiceModule extends JerseyServletModule {
 
@@ -38,5 +42,11 @@ public class ServiceModule extends JerseyServletModule {
         filter(API_URI_PATTERN).through(LoggingFilter.class);
         filter(API_URI_PATTERN).through(CORSFilter.class);
         serve(API_URI_PATTERN).with(GuiceContainer.class, serveParams);
+    }
+
+    @Provides
+    @Singleton
+    public SearchRecordInsertionAsyncHandler searchRecordInsertionAsyncHandler(final SearchPhotoProvider searchPhotoProvider) {
+        return new SearchRecordInsertionAsyncHandler(searchPhotoProvider);
     }
 }

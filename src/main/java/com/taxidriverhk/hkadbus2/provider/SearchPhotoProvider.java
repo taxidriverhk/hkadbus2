@@ -16,5 +16,5 @@ public interface SearchPhotoProvider {
             String nextSortKey,
             int limit
     );
-    boolean insertSearchRecord(SearchRecord searchRecord);
+    void insertSearchRecord(SearchRecord searchRecord, String language);
 }

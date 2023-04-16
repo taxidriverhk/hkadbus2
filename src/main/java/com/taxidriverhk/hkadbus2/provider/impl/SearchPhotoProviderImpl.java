@@ -20,11 +20,13 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.taxidriverhk.hkadbus2.exception.BadRequestException;
+import com.taxidriverhk.hkadbus2.mapper.EntityMapper;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
 import com.taxidriverhk.hkadbus2.model.domain.SearchRecord;
 import com.taxidriverhk.hkadbus2.model.domain.SortDirection;
@@ -126,8 +128,16 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
                 .build();
     }
 
-    public boolean insertSearchRecord(final SearchRecord searchRecord) {
-        return true;
+    public void insertSearchRecord(final SearchRecord searchRecord, final String language) {
+        final Session session = sessionFactory.openSession();
+        final Transaction transaction = session.beginTransaction();
+
+        final SearchRecordEntity entity = EntityMapper.INSTANCE.searchRecordToSearchRecordEntity(searchRecord);
+        entity.setLanguage(language);
+
+        session.save(entity);
+        transaction.commit();
+        session.close();
     }
 
     private List<Order> buildOrderByQuery(

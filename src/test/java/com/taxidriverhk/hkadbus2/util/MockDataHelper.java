@@ -324,7 +324,36 @@ public final class MockDataHelper {
 
     public static final PutPhotoRequest PUT_PHOTO_REQUEST = PutPhotoRequest.builder()
             .advertisementId(ADVERTISEMENT_HASH_KEY_1)
+            .advertisementNames(ImmutableMap.of(
+                    LANGUAGE_EN, "Calbee",
+                    LANGUAGE_ZH, "卡樂B"))
+            .categoryId(CATEGORY_HASH_KEY_1)
+            .categoryNames(ImmutableMap.of(
+                    LANGUAGE_EN, "Food",
+                    LANGUAGE_ZH, "食品"))
+            .busBrandId(BUS_BRAND_HASH_KEY_2)
+            .busBrandNames(ImmutableMap.of(
+                    LANGUAGE_EN, "Volvo",
+                    LANGUAGE_ZH, "富豪"))
+            .busModelId("olympian-12m")
+            .busModelNames(ImmutableMap.of(
+                    LANGUAGE_EN, "Olympian 12M",
+                    LANGUAGE_ZH, "奧林比安12米"))
+            .busCompany(BusCompany.KMB)
+            .routeNumber("49X")
+            .busRouteId("kmb-49x")
+            .busRouteStartLocationNames(ImmutableMap.of(
+                    LANGUAGE_EN, "Kwong Yuen",
+                    LANGUAGE_ZH, "廣源"))
+            .busRouteEndLocationNames(ImmutableMap.of(
+                    LANGUAGE_EN, "Tsing Yi Ferry",
+                    LANGUAGE_ZH, "青衣碼頭"))
             .licensePlateNumber(BUS_LICENSE_PLATE_NUMBER_1)
+            .fleetPrefix("3AV")
+            .fleetNumber("59")
+            .image("http://image.jpg")
+            .thumbnail("http://thumbnail.jpg")
+            .username("test-user")
             .build();
 
     private static UUID createNamedUUID(final String name) {
