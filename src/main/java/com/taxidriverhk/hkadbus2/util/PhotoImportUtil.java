@@ -42,6 +42,8 @@ public class PhotoImportUtil {
     @Data
     private static class PhotoImportEntry {
 
+        private final boolean inserted;
+        private final int rowNumber;
         private final String categoryNameEn;
         private final String categoryNameZh;
         private final String categoryHashKey;
@@ -75,11 +77,11 @@ public class PhotoImportUtil {
     private static final String LANGUAGE_ZH = "zh_hk";
 
     // Change the path to the CSV/Excel file to begin the import
-    private static final String INPUT_FILE_PATH = "C:\\Users\\Taxi Driver\\Downloads\\hkadbus2-import.csv";
+    private static final String INPUT_FILE_PATH = "<placeholder-file-path>";
     // Change this to point to a different endpoint if needed
     private static final String API_URL = "http://localhost:8080/hkadbus2/api/photo";
     // Provide the API key required to make the put call
-    private static final String API_KEY = "<placeholder-key>";
+    private static final String API_KEY = "<placeholder-api-key>";
 
     private final Gson gson;
     private final CloseableHttpClient httpClient;
@@ -110,42 +112,47 @@ public class PhotoImportUtil {
         final List<PhotoImportEntry> photoImportEntries = fileType == PhotoImportFileType.CSV
             ? readFromCsv(inputFilePath)
             : readFromExcel(inputFilePath);
-        final List<PutPhotoRequest> putPhotoRequests = photoImportEntries.stream()
-                .map(photoImportEntry -> PutPhotoRequest.builder()
-                        .advertisementId(photoImportEntry.getAdvertisementHashKey())
-                        .advertisementNames(ImmutableMap.of(
-                                LANGUAGE_EN, photoImportEntry.getAdvertisementNameEn(),
-                                LANGUAGE_ZH, photoImportEntry.getAdvertisementNameZh()))
-                        .busBrandId(photoImportEntry.getBusBrandHashKey())
-                        .busBrandNames(null)
-                        .busCompany(BusCompany.fromString(photoImportEntry.getBusCompany()))
-                        .busModelId(photoImportEntry.getBusModelHashKey())
-                        .busModelNames(ImmutableMap.of(
-                                LANGUAGE_EN, photoImportEntry.getBusModelNameEn(),
-                                LANGUAGE_ZH, photoImportEntry.getBusModelNameZh()))
-                        .busRouteEndLocationNames(ImmutableMap.of(
-                                LANGUAGE_EN, photoImportEntry.getEndEn(),
-                                LANGUAGE_ZH, photoImportEntry.getEndZh()))
-                        .busRouteId(photoImportEntry.getBusRouteHashKey())
-                        .busRouteStartLocationNames(ImmutableMap.of(
-                                LANGUAGE_EN, photoImportEntry.getStartEn(),
-                                LANGUAGE_ZH, photoImportEntry.getStartZh()))
-                        .categoryId(photoImportEntry.getCategoryHashKey())
-                        .categoryNames(ImmutableMap.of(
-                                LANGUAGE_EN, photoImportEntry.getCategoryNameEn(),
-                                LANGUAGE_ZH, photoImportEntry.getCategoryNameZh()))
-                        .fleetNumber(photoImportEntry.getFleetNumber())
-                        .fleetPrefix(photoImportEntry.getFleetPrefix())
-                        .image(photoImportEntry.getImage())
-                        .licensePlateNumber(photoImportEntry.getLicensePlateNumber())
-                        .routeNumber(photoImportEntry.getBusRouteNumber())
-                        .thumbnail(photoImportEntry.getThumbnail())
-                        .username(photoImportEntry.getUsername())
-                        .build())
-                .collect(Collectors.toList());
 
         // Using a for loop to allow easier debugging and to ensure the requests are done serially
-        for (final PutPhotoRequest putPhotoRequest : putPhotoRequests) {
+        for (final PhotoImportEntry photoImportEntry : photoImportEntries) {
+            if (photoImportEntry.isInserted()) {
+                continue;
+            }
+
+            final PutPhotoRequest putPhotoRequest = PutPhotoRequest.builder()
+                    .advertisementId(photoImportEntry.getAdvertisementHashKey())
+                    .advertisementNames(ImmutableMap.of(
+                            LANGUAGE_EN, photoImportEntry.getAdvertisementNameEn(),
+                            LANGUAGE_ZH, photoImportEntry.getAdvertisementNameZh()))
+                    .busBrandId(photoImportEntry.getBusBrandHashKey())
+                    .busBrandNames(ImmutableMap.of(
+                            LANGUAGE_EN, photoImportEntry.getBusBrandNameEn(),
+                            LANGUAGE_ZH, photoImportEntry.getBusBrandNameZh()))
+                    .busCompany(BusCompany.fromString(photoImportEntry.getBusCompany()))
+                    .busModelId(photoImportEntry.getBusModelHashKey())
+                    .busModelNames(ImmutableMap.of(
+                            LANGUAGE_EN, photoImportEntry.getBusModelNameEn(),
+                            LANGUAGE_ZH, photoImportEntry.getBusModelNameZh()))
+                    .busRouteEndLocationNames(ImmutableMap.of(
+                            LANGUAGE_EN, photoImportEntry.getEndEn(),
+                            LANGUAGE_ZH, photoImportEntry.getEndZh()))
+                    .busRouteId(photoImportEntry.getBusRouteHashKey())
+                    .busRouteStartLocationNames(ImmutableMap.of(
+                            LANGUAGE_EN, photoImportEntry.getStartEn(),
+                            LANGUAGE_ZH, photoImportEntry.getStartZh()))
+                    .categoryId(photoImportEntry.getCategoryHashKey())
+                    .categoryNames(ImmutableMap.of(
+                            LANGUAGE_EN, photoImportEntry.getCategoryNameEn(),
+                            LANGUAGE_ZH, photoImportEntry.getCategoryNameZh()))
+                    .fleetNumber(photoImportEntry.getFleetNumber())
+                    .fleetPrefix(photoImportEntry.getFleetPrefix())
+                    .image(photoImportEntry.getImage())
+                    .licensePlateNumber(photoImportEntry.getLicensePlateNumber())
+                    .routeNumber(photoImportEntry.getBusRouteNumber())
+                    .thumbnail(photoImportEntry.getThumbnail())
+                    .username(photoImportEntry.getUsername())
+                    .build();
+
             final HttpPost request = new HttpPost(API_URL);
             final StringEntity payload = new StringEntity(gson.toJson(putPhotoRequest));
 
@@ -155,7 +162,8 @@ public class PhotoImportUtil {
 
             try (final CloseableHttpResponse response = httpClient.execute(request)) {
                 final String responseStr = EntityUtils.toString(response.getEntity());
-                System.out.println("Inserted photo with result " + responseStr);
+                System.out.println(
+                    String.format("Inserted photo at row %d with result %s", photoImportEntry.getRowNumber(), responseStr));
             }
         }
 
@@ -226,32 +234,34 @@ public class PhotoImportUtil {
             }
 
             final PhotoImportEntry entry = PhotoImportEntry.builder()
-                    .categoryNameEn(getStringExcelCellValue(row, 0))
-                    .categoryNameZh(getStringExcelCellValue(row, 1))
-                    .categoryHashKey(getStringExcelCellValue(row, 2))
-                    .advertisementNameEn(getStringExcelCellValue(row, 3))
-                    .advertisementNameZh(getStringExcelCellValue(row, 4))
-                    .advertisementHashKey(getStringExcelCellValue(row, 5))
-                    .busBrandNameEn(getStringExcelCellValue(row, 6))
-                    .busBrandNameZh(getStringExcelCellValue(row, 7))
-                    .busBrandHashKey(getStringExcelCellValue(row, 8))
-                    .busModelNameEn(getStringExcelCellValue(row, 9))
-                    .busModelNameZh(getStringExcelCellValue(row, 10))
-                    .busModelHashKey(getStringExcelCellValue(row, 11))
-                    .licensePlateNumber(getStringExcelCellValue(row, 12))
-                    .fleetPrefix(getStringExcelCellValue(row, 13))
-                    .fleetNumber(getStringExcelCellValue(row, 14))
-                    .busCompany(getStringExcelCellValue(row, 15))
-                    .busRouteHashKey(getStringExcelCellValue(row, 16))
-                    .busRouteNumber(getStringExcelCellValue(row, 17))
-                    .busRouteCompanies(getStringExcelCellValue(row, 18).split("\\|"))
-                    .startEn(getStringExcelCellValue(row, 19))
-                    .startZh(getStringExcelCellValue(row, 20))
-                    .endEn(getStringExcelCellValue(row, 21))
-                    .endZh(getStringExcelCellValue(row, 22))
-                    .username(getStringExcelCellValue(row, 23))
-                    .thumbnail(getStringExcelCellValue(row, 24))
-                    .image(getStringExcelCellValue(row, 25))
+                    .inserted("Y".equals(getStringExcelCellValue(row, 0)))
+                    .rowNumber(row.getRowNum() + 1)
+                    .categoryNameEn(getStringExcelCellValue(row, 1))
+                    .categoryNameZh(getStringExcelCellValue(row, 2))
+                    .categoryHashKey(getStringExcelCellValue(row, 3))
+                    .advertisementNameEn(getStringExcelCellValue(row, 4))
+                    .advertisementNameZh(getStringExcelCellValue(row, 5))
+                    .advertisementHashKey(getStringExcelCellValue(row, 6))
+                    .busBrandNameEn(getStringExcelCellValue(row, 7))
+                    .busBrandNameZh(getStringExcelCellValue(row,8))
+                    .busBrandHashKey(getStringExcelCellValue(row, 9))
+                    .busModelNameEn(getStringExcelCellValue(row, 10))
+                    .busModelNameZh(getStringExcelCellValue(row, 11))
+                    .busModelHashKey(getStringExcelCellValue(row, 12))
+                    .licensePlateNumber(getStringExcelCellValue(row, 13))
+                    .fleetPrefix(getStringExcelCellValue(row, 14))
+                    .fleetNumber(getStringExcelCellValue(row, 15))
+                    .busCompany(getStringExcelCellValue(row, 16))
+                    .busRouteHashKey(getStringExcelCellValue(row, 17))
+                    .busRouteNumber(getStringExcelCellValue(row, 18))
+                    .busRouteCompanies(getStringExcelCellValue(row, 19).split("\\|"))
+                    .startEn(getStringExcelCellValue(row, 20))
+                    .startZh(getStringExcelCellValue(row, 21))
+                    .endEn(getStringExcelCellValue(row, 22))
+                    .endZh(getStringExcelCellValue(row, 23))
+                    .username(getStringExcelCellValue(row, 24))
+                    .thumbnail(getStringExcelCellValue(row, 25))
+                    .image(getStringExcelCellValue(row, 26))
                     .build();
             entries.add(entry);
         }
