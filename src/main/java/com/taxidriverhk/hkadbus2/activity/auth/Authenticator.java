@@ -1,5 +1,7 @@
 package com.taxidriverhk.hkadbus2.activity.auth;
 
+import java.time.Instant;
+
 import javax.inject.Inject;
 
 import com.auth0.jwt.JWT;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class Authenticator {
 
+    private static final int TTL_SECONDS = 3600;
     private static final String ISSUER = "taxidriverhk";
 
     private final Algorithm authTokenSigner;
@@ -22,6 +25,7 @@ public class Authenticator {
         try {
             return JWT.create()
                 .withIssuer(ISSUER)
+                .withExpiresAt(Instant.now().plusSeconds(TTL_SECONDS))
                 .sign(authTokenSigner);
         } catch (final JWTCreationException exception){
             throw new InternalErrorException("Failed to generate auth token");

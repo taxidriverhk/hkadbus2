@@ -22,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.taxidriverhk.hkadbus2.activity.auth.Authenticator;
 import com.taxidriverhk.hkadbus2.util.PhotoImportUtil.PhotoImportFileType;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +34,9 @@ public class PhotoImportUtilTest {
     @Mock
     private CloseableHttpClient httpClient;
 
+    @Mock
+    private Authenticator authenticator;
+
     @InjectMocks
     private PhotoImportUtil photoImportUtil;
 
@@ -43,6 +47,7 @@ public class PhotoImportUtilTest {
             final PhotoImportFileType importFileType
     ) throws Exception {
         when(response.getEntity()).thenReturn(new StringEntity("test response string"));
+        when(authenticator.generateToken()).thenReturn("test auth token");
         when(httpClient.execute(any(HttpPost.class))).thenReturn(response);
 
         // Import the CSV file

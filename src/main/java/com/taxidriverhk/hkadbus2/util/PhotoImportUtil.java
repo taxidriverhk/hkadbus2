@@ -20,10 +20,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.taxidriverhk.hkadbus2.activity.auth.Authenticator;
 import com.taxidriverhk.hkadbus2.model.api.PutPhotoRequest;
 import com.taxidriverhk.hkadbus2.model.domain.BusCompany;
 
@@ -81,20 +83,27 @@ public class PhotoImportUtil {
     // Change this to point to a different endpoint if needed
     private static final String API_URL = "http://localhost:8080/hkadbus2/api/photo";
     // Provide the API key required to make the put call
-    private static final String API_KEY = "<placeholder-api-key>";
+    // If null, then one will attempt to be generated
+    private static final String API_KEY = null;
 
     private final Gson gson;
     private final CloseableHttpClient httpClient;
+    private final Authenticator authenticator;
 
     public PhotoImportUtil() {
         gson = new Gson();
         httpClient = HttpClientBuilder.create().build();
+
+        final String secret = System.getenv("ENCRYPTOR_PASSWORD");
+        final Algorithm authTokenSigner = Algorithm.HMAC256(secret);
+        authenticator = new Authenticator(authTokenSigner);
     }
 
     @VisibleForTesting
-    public PhotoImportUtil(final CloseableHttpClient httpClient) {
+    public PhotoImportUtil(final CloseableHttpClient httpClient, final Authenticator authenticator) {
         this.gson = new Gson();
         this.httpClient = httpClient;
+        this.authenticator = authenticator;
     }
 
     public static void main(final String[] args) throws Exception {
@@ -109,6 +118,11 @@ public class PhotoImportUtil {
 
     @VisibleForTesting
     public void execute(final String inputFilePath, final PhotoImportFileType fileType) throws Exception {
+        String apiKey = API_KEY;
+        if (apiKey == null) {
+            apiKey = authenticator.generateToken();
+        }
+
         final List<PhotoImportEntry> photoImportEntries = fileType == PhotoImportFileType.CSV
             ? readFromCsv(inputFilePath)
             : readFromExcel(inputFilePath);
@@ -158,7 +172,7 @@ public class PhotoImportUtil {
 
             request.setEntity(payload);
             request.setHeader("Content-Type", "application/json");
-            request.setHeader("Authorization", API_KEY);
+            request.setHeader("Authorization", apiKey);
 
             try (final CloseableHttpResponse response = httpClient.execute(request)) {
                 final String responseStr = EntityUtils.toString(response.getEntity());
