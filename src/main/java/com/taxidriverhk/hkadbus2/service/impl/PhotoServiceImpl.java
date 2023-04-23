@@ -28,6 +28,7 @@ import com.taxidriverhk.hkadbus2.model.domain.Photo;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
 import com.taxidriverhk.hkadbus2.model.domain.SearchRecord;
+import com.taxidriverhk.hkadbus2.model.domain.SortDirection;
 import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusBrandEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusEntity;
@@ -35,6 +36,7 @@ import com.taxidriverhk.hkadbus2.model.entity.BusModelEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
+import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
 import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
 import com.taxidriverhk.hkadbus2.provider.SearchPhotoProvider;
@@ -92,6 +94,27 @@ public class PhotoServiceImpl implements PhotoService {
         }
         final UserEntity userEntity = userEntityOptional.get();
 
+        final Boolean skipInsertionWithSameThumbnail = request.getSkipInsertionWithSameThumbnail();
+        final String thumbnail = request.getThumbnail();
+        if (skipInsertionWithSameThumbnail != null && skipInsertionWithSameThumbnail.booleanValue() == true) {
+            final SearchRecordResult photosWithSameThumbnail = searchPhotoProvider.searchPhotos(
+                    Collections.emptyList(), 
+                    "uploadedDate",
+                    SortDirection.ASC.getName(),
+                    SearchPhotoFilter.builder()
+                            .thumbnails(Arrays.asList(thumbnail))
+                            .build(),
+                    null,
+                    1);
+            if (photosWithSameThumbnail.getTotal() > 0L) {
+                return photosWithSameThumbnail.getSearchRecordEntities()
+                        .stream()
+                        .findFirst()
+                        .map(SearchRecordEntity::getPhotoShortId)
+                        .get();
+            }
+        }
+
         final String categoryHashKey = request.getCategoryId();
         final String advertisementHashKey = request.getAdvertisementId();
         final String busBrandHashKey = request.getBusBrandId();
@@ -99,7 +122,6 @@ public class PhotoServiceImpl implements PhotoService {
         final String busModelHashKey = request.getBusModelId();
         final String busRouteHashKey = request.getBusRouteId();
         final String licensePlateNumber = request.getLicensePlateNumber();
-        final String thumbnail = request.getThumbnail();
 
         AdvertisementEntity advertisementEntity = null;
         BusEntity busEntity = null;

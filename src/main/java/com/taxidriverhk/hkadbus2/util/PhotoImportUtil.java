@@ -165,6 +165,7 @@ public class PhotoImportUtil {
                     .routeNumber(photoImportEntry.getBusRouteNumber())
                     .thumbnail(photoImportEntry.getThumbnail())
                     .username(photoImportEntry.getUsername())
+                    .skipInsertionWithSameThumbnail(true)
                     .build();
 
             final HttpPost request = new HttpPost(API_URL);

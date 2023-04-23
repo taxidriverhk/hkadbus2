@@ -1,9 +1,9 @@
 package com.taxidriverhk.hkadbus2.model.domain;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 @Builder
 @Data
@@ -21,5 +21,6 @@ public class SearchPhotoFilter {
     private List<String> fleetPrefixes;
     private List<String> licensePlateNumbers;
     private List<String> uploaderNames;
+    private List<String> thumbnails; 
     private String language;
 }

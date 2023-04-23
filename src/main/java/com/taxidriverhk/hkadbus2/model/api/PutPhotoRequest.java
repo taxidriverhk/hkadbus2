@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
+@Builder(toBuilder = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,4 +34,7 @@ public class PutPhotoRequest {
     private String image;
     private String thumbnail;
     private String username;
+    // If true, then the API will check if a photo with the same
+    // thumbnail URL already exists and skips the insertion if one is found
+    private Boolean skipInsertionWithSameThumbnail;
 }

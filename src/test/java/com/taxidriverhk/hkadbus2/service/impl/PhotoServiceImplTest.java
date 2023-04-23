@@ -19,10 +19,12 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -256,6 +258,22 @@ public class PhotoServiceImplTest {
         assertThat(photoEntityInserted.getAdvertisement().getHashKey(), equalTo(ADVERTISEMENT_ENTITY_1.getHashKey()));
 
         verify(searchRecordInsertionAsyncHandler, times(1)).insertSearchRecords(any(), any(), eq(PHOTO_SHORT_ID_1), anyInt());
+    }
+
+    @Test
+    public void GIVEN_photoRequestWithExistingThumbnail_WHEN_putPhoto_THEN_shouldSkipInsertion() {
+        when(userRepository.getUserByUsername(any())).thenReturn(Optional.of(USER_ENTITY_1));
+        when(searchPhotoProvider.searchPhotos(anyList(), any(), any(), any(), any(), anyInt())).thenReturn(SearchRecordResult.builder()
+                .total(1L)
+                .searchRecordEntities(Lists.newArrayList(SEARCH_RECORD_ENTITY_1))
+                .build());
+
+        final long photoShortId = photoService.putPhoto(PUT_PHOTO_REQUEST.toBuilder()
+                .skipInsertionWithSameThumbnail(true)
+                .build());
+
+        verifyZeroInteractions(photoRepository);
+        assertThat(photoShortId, equalTo(SEARCH_RECORD_ENTITY_1.getPhotoShortId()));
     }
 
     @Test

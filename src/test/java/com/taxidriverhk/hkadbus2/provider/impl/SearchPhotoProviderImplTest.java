@@ -170,6 +170,17 @@ public class SearchPhotoProviderImplTest extends SqlRepositoryTestBase {
                         1000,
                         1L,
                         1,
+                        null),
+                arguments(Collections.emptyList(),
+                        "uploadedDate",
+                        "desc",
+                        SearchPhotoFilter.builder()
+                                .thumbnails(Lists.newArrayList("http://thumbnail.jpg"))
+                                .build(),
+                        null,
+                        1000,
+                        2L,
+                        2,
                         null)
         );
     }
