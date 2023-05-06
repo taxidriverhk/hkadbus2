@@ -49,6 +49,7 @@ public interface EntityMapper {
     @Mapping(target = "busId", expression = "java(photoEntity.getBus().getShortId())")
     @Mapping(target = "busModelId", expression = "java(photoEntity.getBus().getBusModel().getHashKey())")
     @Mapping(target = "busModel", expression = "java(photoEntity.getBus().getBusModel().getName().get(language))")
+    @Mapping(target = "busBrand", expression = "java(photoEntity.getBus().getBusModel().getBusBrand().getName().get(language))")
     @Mapping(target = "routeNumber", expression = "java(photoEntity.getBusRoute().getRouteNumber())")
     @Mapping(target = "licensePlateNumber", expression = "java(photoEntity.getBus().getLicensePlateNumber())")
     @Mapping(target = "fleetPrefix", expression = "java(photoEntity.getBus().getFleetPrefix())")

@@ -237,6 +237,7 @@ public final class MockDataHelper {
             .category("Food")
             .busCompany(BusCompany.KMB)
             .busId(1L)
+            .busBrand("Dennis")
             .busModelId(BUS_MODEL_HASH_KEY_1)
             .busModel("Dragon 12M")
             .licensePlateNumber(BUS_LICENSE_PLATE_NUMBER_1)

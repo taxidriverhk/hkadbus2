@@ -14,6 +14,7 @@ public class Photo {
     private String category;
     private BusCompany busCompany;
     private Long busId;
+    private String busBrand;
     private String busModelId;
     private String busModel;
     private String routeNumber;
