@@ -20,7 +20,9 @@ import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
+import com.taxidriverhk.hkadbus2.provider.EntityOptionsProvider;
 import com.taxidriverhk.hkadbus2.provider.SearchPhotoProvider;
+import com.taxidriverhk.hkadbus2.provider.impl.EntityOptionsProviderImpl;
 import com.taxidriverhk.hkadbus2.provider.impl.SearchPhotoProviderImpl;
 import com.taxidriverhk.hkadbus2.repository.AdvertisementRepository;
 import com.taxidriverhk.hkadbus2.repository.BusBrandRepository;
@@ -141,6 +143,12 @@ public class DataAccessModule extends AbstractModule {
     @Singleton
     public SearchPhotoProvider searchPhotoProvider(final SessionFactory sessionFactory) {
         return new SearchPhotoProviderImpl(sessionFactory);
+    }
+
+    @Provides
+    @Singleton
+    public EntityOptionsProvider entityOptionsProvider(final SessionFactory sessionFactory) {
+        return new EntityOptionsProviderImpl(sessionFactory);
     }
 
     @Override
