@@ -61,7 +61,8 @@ public class EntityOptionsProviderImpl implements EntityOptionsProvider {
         return tupleResults.stream()
                 .collect(Collectors.toMap(
                         tuple -> tuple.get(0).toString(),
-                        tuple -> tuple.get(1).toString()
+                        tuple -> tuple.get(1).toString(),
+                        (key1, key2) -> key1
                 ));
     }
 }
