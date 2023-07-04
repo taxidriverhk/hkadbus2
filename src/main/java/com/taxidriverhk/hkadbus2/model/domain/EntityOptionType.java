@@ -14,6 +14,7 @@ public enum EntityOptionType {
     BUS_MODEL("bus-model"),
     CATEGORY("category"),
     LICENSE_PLATE_NUMBER("license-plate-number"),
+    LOCATION("location"),
     ROUTE("route");
 
     @Getter

@@ -1,5 +1,8 @@
 package com.taxidriverhk.hkadbus2.provider.impl;
 
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_ROUTE_ENTITY_1;
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_ROUTE_ENTITY_2;
+import static com.taxidriverhk.hkadbus2.util.MockDataHelper.BUS_ROUTE_ENTITY_3;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.LANGUAGE_EN;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_ENTITY_1;
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_ENTITY_2;
@@ -63,6 +66,16 @@ public class EntityOptionsProviderImplTest extends SqlRepositoryTestBase {
                         Sets.newHashSet("Restaurant", "Drink")
                 ),
                 arguments(
+                        EntityOptionType.LOCATION,
+                        Sets.newHashSet(
+                                "Kwong Yuen", "Tsing Yi Ferry Pier", "So Uk",
+                                "Star Ferry", "Central (Macau Ferry)", "Grand Promenade"),
+                        Sets.newHashSet(
+                                "Kwong Yuen", "Tsing Yi Ferry Pier", "So Uk",
+                                "Star Ferry", "Central (Macau Ferry)", "Grand Promenade"
+                        )
+                ),
+                arguments(
                         EntityOptionType.LICENSE_PLATE_NUMBER,
                         Sets.newHashSet("GX4965", "GX4966", "GM1204"),
                         Sets.newHashSet("GX4965", "GX4966", "GM1204")
@@ -81,6 +94,10 @@ public class EntityOptionsProviderImplTest extends SqlRepositoryTestBase {
         session.save(SEARCH_RECORD_ENTITY_1);
         session.save(SEARCH_RECORD_ENTITY_2);
         session.save(SEARCH_RECORD_ENTITY_3);
+
+        session.save(BUS_ROUTE_ENTITY_1);
+        session.save(BUS_ROUTE_ENTITY_2);
+        session.save(BUS_ROUTE_ENTITY_3);
         transaction.commit();
     }
 }

@@ -17,6 +17,7 @@ import org.hibernate.query.Query;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.taxidriverhk.hkadbus2.model.domain.EntityOptionType;
+import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.provider.EntityOptionsProvider;
 
@@ -38,6 +39,9 @@ public class EntityOptionsProviderImpl implements EntityOptionsProvider {
     @Override
     public Map<String, String> getEntityOptions(final EntityOptionType entityType, final String language) {
         final Session session = sessionFactory.openSession();
+        if (entityType.equals(EntityOptionType.LOCATION)) {
+            return getEntityOptionsForLocations(session, language);
+        }
 
         final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         final CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
@@ -58,11 +62,40 @@ public class EntityOptionsProviderImpl implements EntityOptionsProvider {
         final Query<Tuple> selectionQuery = session.createQuery(criteriaQueryWithPredicate);
         final List<Tuple> tupleResults = selectionQuery.getResultList();
 
+        session.close();
+
         return tupleResults.stream()
                 .collect(Collectors.toMap(
                         tuple -> tuple.get(0).toString(),
                         tuple -> tuple.get(1).toString(),
                         (key1, key2) -> key1
                 ));
+    }
+
+    private Map<String, String> getEntityOptionsForLocations(final Session session, final String langauge) {
+        final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        final CriteriaQuery<BusRouteEntity> criteriaQuery = criteriaBuilder.createQuery(BusRouteEntity.class);
+        final Root<BusRouteEntity> root = criteriaQuery.from(BusRouteEntity.class);
+
+        final CriteriaQuery<BusRouteEntity> criteriaQueryWithColumns = criteriaQuery.select(root);
+        final Query<BusRouteEntity> selectionQuery = session.createQuery(criteriaQueryWithColumns);
+        final List<BusRouteEntity> entityResults = selectionQuery.getResultList();
+
+        final Map<String, String> locationNames = entityResults.stream()
+                .map((entityResult) -> Lists.newArrayList(
+                        entityResult.getStartLocation(),
+                        entityResult.getEndLocation()
+                ))
+                .flatMap(List::stream)
+                // Always use the English location name as the key
+                .collect(Collectors.toMap(
+                        location -> location.get("en_us"),
+                        location -> location.get(langauge),
+                        (key1, key2) -> key1
+                ));
+
+        session.close();
+
+        return locationNames;
     }
 }
