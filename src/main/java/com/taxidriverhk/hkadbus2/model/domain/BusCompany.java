@@ -1,19 +1,20 @@
 package com.taxidriverhk.hkadbus2.model.domain;
 
+import java.util.Arrays;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.Arrays;
 
 @Getter
 @AllArgsConstructor
 public enum BusCompany {
 
     KMB("kmb"),
-    CTB("ctb"),
-    NWFB("nwfb"),
     CMB("cmb"),
-    NLB("nlb");
+    CTB("ctb"),
+    LWB("lwb"),
+    NLB("nlb"),
+    NWFB("nwfb");
 
     private String text;
 
