@@ -26,6 +26,7 @@ import com.taxidriverhk.hkadbus2.exception.BadRequestException;
 import com.taxidriverhk.hkadbus2.model.domain.BusCompany;
 import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
 import com.taxidriverhk.hkadbus2.model.domain.SearchRecord;
+import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.result.SearchRecordResult;
 import com.taxidriverhk.hkadbus2.repository.impl.SqlRepositoryTestBase;
 
@@ -79,7 +80,7 @@ public class SearchPhotoProviderImplTest extends SqlRepositoryTestBase {
     @Test
     public void GIVEN_searchRecord_WHEN_insert_THEN_shouldBeFoundWithQuery() {
         final SearchRecord searchRecord =  SearchRecord.builder()
-                .photoId(8L)
+                .photoId(8888L)
                 .advertisementId("sprite")
                 .advertisement("Sprite")
                 .categoryId("drink")
@@ -113,53 +114,53 @@ public class SearchPhotoProviderImplTest extends SqlRepositoryTestBase {
 
     public static Stream<Arguments> searchRecordTestCases() {
         return Stream.of(
-                arguments(Collections.emptyList(),
-                        "uploadedDate",
-                        "asc",
+                arguments(Collections.emptyList(),                                      // queryTexts
+                        "uploadedDate",                                                 // orderBy
+                        "asc",                                                          // sort
                         SearchPhotoFilter.builder()
                                 .uploaderNames(Collections.singletonList("admin"))
-                                .build(),
-                        null,
-                        1,
-                        2L,
-                        1,
-                        "12345-1"),
+                                .build(),                                               // filter
+                        null,                                                           // nextSortKey
+                        1,                                                              // limit
+                        2000L,                                                          // expectedTotal
+                        1,                                                              // expectedSize
+                        "0-0"),                                                         // expectedNextPageCursor
                 arguments(Lists.newArrayList("3AV55", "mcdonalds"),
                         "uploadedDate",
                         "asc",
                         SearchPhotoFilter.builder().build(),
                         null,
                         1000,
-                        2L,
-                        2,
-                        null),
+                        2000L,
+                        1000,
+                        "999-999"),
                 arguments(Lists.newArrayList("3AV59"),
                         "uploadedDate",
                         "asc",
                         SearchPhotoFilter.builder().build(),
                         null,
                         1000,
-                        1L,
-                        1,
+                        1000L,
+                        1000,
                         null),
                 arguments(Lists.newArrayList("3AV55", "mcdonalds"),
                         "uploadedDate",
                         "asc",
                         SearchPhotoFilter.builder().build(),
-                        "12345-1",
+                        "499-499",
                         1000,
-                        2L,
-                        1,
-                        "12346-2"),
+                        2000L,
+                        1000,
+                        "1499-1499"),
                 arguments(Lists.newArrayList("3AV55", "mcdonalds"),
                         "uploadedDate",
                         "desc",
                         SearchPhotoFilter.builder().build(),
-                        "12346-2",
+                        "999-999",
                         1000,
-                        2L,
-                        1,
-                        "12345-1"),
+                        2000L,
+                        999,
+                        null),
                 arguments(Collections.emptyList(),
                         "uploadedDate",
                         "desc",
@@ -167,9 +168,9 @@ public class SearchPhotoProviderImplTest extends SqlRepositoryTestBase {
                                 .licensePlateNumbers(Lists.newArrayList("gx4965"))
                                 .build(),
                         null,
+                        1001,
+                        1000L,
                         1000,
-                        1L,
-                        1,
                         null),
                 arguments(Collections.emptyList(),
                         "uploadedDate",
@@ -178,18 +179,29 @@ public class SearchPhotoProviderImplTest extends SqlRepositoryTestBase {
                                 .thumbnails(Lists.newArrayList("http://thumbnail.jpg"))
                                 .build(),
                         null,
-                        1000,
-                        2L,
-                        2,
-                        null)
+                        500,
+                        2000L,
+                        500,
+                        "1500-1500")
         );
     }
 
     @Override
     protected void setupDataForTest(final Session session) {
         final Transaction transaction = session.beginTransaction();
-        session.save(SEARCH_RECORD_ENTITY_1);
-        session.save(SEARCH_RECORD_ENTITY_2);
+        // Insert 2000 records to test pagination
+        for (long i = 0; i < 1000; i++) {
+            final SearchRecordEntity searchRecordEntity1 = SEARCH_RECORD_ENTITY_1.toBuilder()
+                    .photoShortId(i)
+                    .uploadedDate(i)
+                    .build();
+            final SearchRecordEntity searchRecordEntity2 = SEARCH_RECORD_ENTITY_2.toBuilder()
+                    .photoShortId(1000 + i)
+                    .uploadedDate(1000 + i)
+                    .build();
+            session.save(searchRecordEntity1);
+            session.save(searchRecordEntity2);
+        }
         transaction.commit();
     }
 }
