@@ -119,7 +119,7 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
 
         session.close();
 
-        final Optional<String> nextPageCursorOptional = getNextPageCursor(searchRecordEntitiesWithLimit, total, orderBy);
+        final Optional<String> nextPageCursorOptional = getNextPageCursor(searchRecordEntitiesWithLimit, limit, total, orderBy);
         log.info("Returning {} actual search record entities with next page cursor {}", searchRecordEntitiesWithLimit.size(), nextPageCursorOptional);
 
         return SearchRecordResult.builder()
@@ -209,10 +209,13 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
 
     private Optional<String> getNextPageCursor(
             final List<SearchRecordEntity> searchRecordEntities,
+            final int limit,
             final Long total,
             final String orderBy
     ) {
-        if (searchRecordEntities.size() < 1 || total <= searchRecordEntities.size()) {
+        if (searchRecordEntities.size() < 1 ||
+            searchRecordEntities.size() < limit ||
+            total <= searchRecordEntities.size()) {
             return Optional.empty();
         }
 
