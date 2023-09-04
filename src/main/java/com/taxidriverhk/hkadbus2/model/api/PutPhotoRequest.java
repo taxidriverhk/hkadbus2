@@ -34,6 +34,7 @@ public class PutPhotoRequest {
     private String image;
     private String thumbnail;
     private String username;
+    private String additionalTags;
     // If true, then the API will check if a photo with the same
     // thumbnail URL already exists and skips the insertion if one is found
     private Boolean skipInsertionWithSameThumbnail;

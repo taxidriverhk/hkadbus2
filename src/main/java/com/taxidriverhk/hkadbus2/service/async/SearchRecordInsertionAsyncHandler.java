@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.taxidriverhk.hkadbus2.model.api.PutPhotoRequest;
@@ -89,11 +91,15 @@ public class SearchRecordInsertionAsyncHandler {
         tags.add(request.getFleetPrefix().toLowerCase());
         tags.add(request.getFleetPrefix().toLowerCase() + request.getFleetNumber());
         tags.add(request.getUsername().toLowerCase());
+        tags.addAll(lowerCaseAndSplitBySpace(request.getAdditionalTags()));
 
         return tags;
     }
 
     private List<String> lowerCaseAndSplitBySpace(String input) {
+        if (StringUtils.isBlank(input)) {
+            return Arrays.asList();
+        }
         return Arrays.asList(input.toLowerCase().split(" "));
     }
 }
