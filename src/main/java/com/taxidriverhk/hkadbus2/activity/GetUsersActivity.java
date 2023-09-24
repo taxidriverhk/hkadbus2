@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class GetUsersActivity {
 
-    private UserService userService;
+    private final UserService userService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
