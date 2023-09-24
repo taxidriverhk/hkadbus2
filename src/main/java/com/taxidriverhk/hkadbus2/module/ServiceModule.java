@@ -16,11 +16,13 @@ import com.taxidriverhk.hkadbus2.service.AdvertisementService;
 import com.taxidriverhk.hkadbus2.service.BusService;
 import com.taxidriverhk.hkadbus2.service.CategoryService;
 import com.taxidriverhk.hkadbus2.service.PhotoService;
+import com.taxidriverhk.hkadbus2.service.UserService;
 import com.taxidriverhk.hkadbus2.service.async.SearchRecordInsertionAsyncHandler;
 import com.taxidriverhk.hkadbus2.service.impl.AdvertisementServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.BusServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.CategoryServiceImpl;
 import com.taxidriverhk.hkadbus2.service.impl.PhotoServiceImpl;
+import com.taxidriverhk.hkadbus2.service.impl.UserServiceImpl;
 
 public class ServiceModule extends JerseyServletModule {
 
@@ -35,6 +37,7 @@ public class ServiceModule extends JerseyServletModule {
         bind(BusService.class).to(BusServiceImpl.class);
         bind(CategoryService.class).to(CategoryServiceImpl.class);
         bind(PhotoService.class).to(PhotoServiceImpl.class);
+        bind(UserService.class).to(UserServiceImpl.class);
 
         final Map<String, String> serveParams = ImmutableMap.of(
                 PackagesResourceConfig.PROPERTY_PACKAGES, PACKAGE_NAME);

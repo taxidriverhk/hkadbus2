@@ -226,6 +226,14 @@ public final class MockDataHelper {
             .registrationDate(DATE_2020)
             .lastLoggedInDate(DATE_2020)
             .build();
+    public static final UserEntity USER_ENTITY_2 = UserEntity.builder()
+            .id(createNamedUUID("user2"))
+            .username("test-user-2")
+            .passwordHash("test-hash")
+            .group("user")
+            .registrationDate(DATE_2020)
+            .lastLoggedInDate(DATE_2020)
+            .build();
 
     public static final Long PHOTO_SHORT_ID_1 = 12345L;
 

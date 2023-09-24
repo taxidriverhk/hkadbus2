@@ -1,5 +1,6 @@
 package com.taxidriverhk.hkadbus2.repository.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.Session;
@@ -17,6 +18,14 @@ import lombok.extern.log4j.Log4j2;
 public class UserSqlRepository implements UserRepository {
 
     private final SessionFactory sessionFactory;
+
+    @Override
+    public List<UserEntity> getUsers() {
+        final Session session = sessionFactory.openSession();
+        final List<UserEntity> results = SqlQueryUtil.selectAll(session, UserEntity.class);
+        session.close();
+        return results;
+    }
 
     @Override
     public Optional<UserEntity> getUserByUsername(final String username) {
