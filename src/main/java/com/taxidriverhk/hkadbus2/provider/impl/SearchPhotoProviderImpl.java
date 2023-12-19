@@ -57,6 +57,7 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
             .put("routeHashKey", SearchPhotoFilter::getBusRouteIds)
             .put("routeNumber", SearchPhotoFilter::getBusRouteNumbers)
             .put("fleetPrefix", SearchPhotoFilter::getFleetPrefixes)
+            .put("fleetNumber", SearchPhotoFilter::getFleetNumbers)
             .put("licensePlateNumber", SearchPhotoFilter::getLicensePlateNumbers)
             .put("username", SearchPhotoFilter::getUploaderNames)
             .put("thumbnail", SearchPhotoFilter::getThumbnails)

@@ -1,11 +1,6 @@
 package com.taxidriverhk.hkadbus2.activity;
 
-import com.taxidriverhk.hkadbus2.model.api.SearchPhotosResponse;
-import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
-import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
-import com.taxidriverhk.hkadbus2.service.PhotoService;
-import com.taxidriverhk.hkadbus2.util.RequestValidator;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -14,7 +9,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
+
+import com.taxidriverhk.hkadbus2.model.api.SearchPhotosResponse;
+import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
+import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
+import com.taxidriverhk.hkadbus2.service.PhotoService;
+import com.taxidriverhk.hkadbus2.util.RequestValidator;
+
+import lombok.RequiredArgsConstructor;
 
 @Path("photos")
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
@@ -41,6 +43,7 @@ public class SearchPhotosActivity {
             @QueryParam("bus_route_number") final List<String> busRouteNumbers,
             @QueryParam("bus_route_id") final List<String> busRouteIds,
             @QueryParam("fleet_prefix") final List<String> fleetPrefixes,
+            @QueryParam("fleet_numbers") final List<String> fleetNumbers,
             @QueryParam("license_plate_number") final List<String> licensePlateNumbers,
             @QueryParam("uploader_name") final List<String> uploaderNames
     ) {
@@ -60,6 +63,7 @@ public class SearchPhotosActivity {
                 .busRouteNumbers(busRouteNumbers)
                 .busRouteIds(busRouteIds)
                 .fleetPrefixes(fleetPrefixes)
+                .fleetNumbers(fleetNumbers)
                 .licensePlateNumbers(licensePlateNumbers)
                 .uploaderNames(uploaderNames)
                 .language(language)

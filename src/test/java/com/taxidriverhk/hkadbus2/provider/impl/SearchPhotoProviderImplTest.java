@@ -182,7 +182,19 @@ public class SearchPhotoProviderImplTest extends SqlRepositoryTestBase {
                         500,
                         2000L,
                         500,
-                        "1500-1500")
+                        "1500-1500"),
+                arguments(Collections.emptyList(),
+                        "uploadedDate",
+                        "desc",
+                        SearchPhotoFilter.builder()
+                                .fleetPrefixes(Lists.newArrayList("3AV"))
+                                .fleetNumbers(Lists.newArrayList("55"))
+                                .build(),
+                        null,
+                        500,
+                        1000L,
+                        500,
+                        "500-500")
         );
     }
 

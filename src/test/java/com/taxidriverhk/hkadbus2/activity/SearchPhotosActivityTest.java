@@ -1,19 +1,5 @@
 package com.taxidriverhk.hkadbus2.activity;
 
-import com.taxidriverhk.hkadbus2.exception.BadRequestException;
-import com.taxidriverhk.hkadbus2.model.api.SearchPhotosResponse;
-import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
-import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
-import com.taxidriverhk.hkadbus2.service.PhotoService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import javax.ws.rs.core.Response;
-import java.util.Collections;
-
 import static com.taxidriverhk.hkadbus2.util.MockDataHelper.SEARCH_RECORD_1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -22,6 +8,22 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+
+import javax.ws.rs.core.Response;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.taxidriverhk.hkadbus2.exception.BadRequestException;
+import com.taxidriverhk.hkadbus2.model.api.SearchPhotosResponse;
+import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoFilter;
+import com.taxidriverhk.hkadbus2.model.domain.SearchPhotoResult;
+import com.taxidriverhk.hkadbus2.service.PhotoService;
 
 @ExtendWith(MockitoExtension.class)
 public class SearchPhotosActivityTest {
@@ -50,6 +52,7 @@ public class SearchPhotosActivityTest {
                 null,
                 null,
                 Collections.singletonList("mcdonalds"),
+                null,
                 null,
                 null,
                 null,
@@ -98,6 +101,7 @@ public class SearchPhotosActivityTest {
                 null,
                 null,
                 null,
+                null,
                 null));
         assertThrows(BadRequestException.class, () -> activity.search(
                 "query-text",
@@ -106,6 +110,7 @@ public class SearchPhotosActivityTest {
                 null,
                 null,
                 "en_us",
+                null,
                 null,
                 null,
                 null,
@@ -136,6 +141,7 @@ public class SearchPhotosActivityTest {
                 null,
                 null,
                 null,
+                null,
                 null));
         assertThrows(BadRequestException.class, () -> activity.search(
                 "query-text",
@@ -144,6 +150,7 @@ public class SearchPhotosActivityTest {
                 -1,
                 null,
                 "en_us",
+                null,
                 null,
                 null,
                 null,

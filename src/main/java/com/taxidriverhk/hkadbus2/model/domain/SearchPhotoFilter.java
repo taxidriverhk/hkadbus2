@@ -19,6 +19,7 @@ public class SearchPhotoFilter {
     private List<String> busRouteNumbers;
     private List<String> busRouteIds;
     private List<String> fleetPrefixes;
+    private List<String> fleetNumbers;
     private List<String> licensePlateNumbers;
     private List<String> uploaderNames;
     private List<String> thumbnails; 
