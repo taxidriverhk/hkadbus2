@@ -1,10 +1,7 @@
 package com.taxidriverhk.hkadbus2.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
-import java.util.UUID;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder(toBuilder = true)
 @Data
@@ -38,6 +40,9 @@ public class UserEntity {
 
     @Column(name = "group")
     private String group;
+
+    @Column(name = "thumbnail")
+    private String thumbnail;
 
     @Column(name = "last_logged_in_date")
     @Temporal(TemporalType.TIMESTAMP)

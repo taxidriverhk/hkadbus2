@@ -29,7 +29,11 @@ public class UserServiceImplTest {
     @Test
     public void WHEN_getUsers_THEN_shouldReturnUsersWithUsernames() {
         when(userRepository.getUsers()).thenReturn(Lists.newArrayList(USER_ENTITY_1));
+        
         final List<User> users = userService.getUsers();
-        assertThat(users.get(0).getUsername(), equalTo(USER_ENTITY_1.getUsername()));
+        final User user = users.get(0);
+
+        assertThat(user.getUsername(), equalTo(USER_ENTITY_1.getUsername()));
+        assertThat(user.getThumbnail(), equalTo(USER_ENTITY_1.getThumbnail()));
     }
 }

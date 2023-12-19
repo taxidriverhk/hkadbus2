@@ -60,7 +60,6 @@ public interface EntityMapper {
     @Mapping(target = "uploadedDate", expression = "java(photoEntity.getUploadedDate().getTime())")
     Photo photoEntityToPhoto(PhotoEntity photoEntity, String language);
 
-    @Mapping(target = "thumbnail", constant = "")
     @Mapping(target = "registrationDate", expression = "java(userEntity.getRegistrationDate().getTime())")
     User userEntityToUser(UserEntity userEntity);
 

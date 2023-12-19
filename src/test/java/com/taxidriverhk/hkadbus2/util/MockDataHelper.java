@@ -222,6 +222,7 @@ public final class MockDataHelper {
             .id(createNamedUUID("admin"))
             .username("test-user")
             .passwordHash("test-hash")
+            .thumbnail("thumbnail.jpg")
             .group("admin")
             .registrationDate(DATE_2020)
             .lastLoggedInDate(DATE_2020)
