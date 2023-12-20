@@ -1,5 +1,12 @@
 package com.taxidriverhk.hkadbus2.repository.impl;
 
+import java.util.Properties;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.junit.jupiter.api.BeforeEach;
+
 import com.taxidriverhk.hkadbus2.model.entity.AdvertisementEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusBrandEntity;
 import com.taxidriverhk.hkadbus2.model.entity.BusEntity;
@@ -9,12 +16,6 @@ import com.taxidriverhk.hkadbus2.model.entity.CategoryEntity;
 import com.taxidriverhk.hkadbus2.model.entity.PhotoEntity;
 import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.model.entity.UserEntity;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.junit.jupiter.api.BeforeEach;
-
-import java.util.Properties;
 
 public abstract class SqlRepositoryTestBase {
 
@@ -27,7 +28,7 @@ public abstract class SqlRepositoryTestBase {
         properties.setProperty("dialect", "org.hibernate.dialect.H2Dialect");
         properties.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
         properties.setProperty("hibernate.hbm2ddl.auto", "create");
-        properties.setProperty("hibernate.hbm2ddl.show_sql", "true");
+        properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.globally_quoted_identifiers", "true");
 
         sessionFactory = new Configuration()

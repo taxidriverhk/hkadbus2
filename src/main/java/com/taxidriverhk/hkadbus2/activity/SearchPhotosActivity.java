@@ -43,7 +43,7 @@ public class SearchPhotosActivity {
             @QueryParam("bus_route_number") final List<String> busRouteNumbers,
             @QueryParam("bus_route_id") final List<String> busRouteIds,
             @QueryParam("fleet_prefix") final List<String> fleetPrefixes,
-            @QueryParam("fleet_numbers") final List<String> fleetNumbers,
+            @QueryParam("fleet_number") final List<String> fleetNumbers,
             @QueryParam("license_plate_number") final List<String> licensePlateNumbers,
             @QueryParam("uploader_name") final List<String> uploaderNames
     ) {
