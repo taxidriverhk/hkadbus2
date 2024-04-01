@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -83,12 +84,15 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
         final Root<SearchRecordEntity> root = criteriaQuery.from(SearchRecordEntity.class);
 
         log.info("Building search query using query texts {} filter {}", queryTexts, filter);
-        final List<Predicate> filterPredicates = buildSelectQueryFromFilter(criteriaBuilder, root, queryTexts, filter);
-        final Query searchQueryWithoutSortKey = session.createQuery(criteriaQuery
-                .select(root)
+        final CriteriaQuery<Long> countCriteriaQuery = criteriaBuilder.createQuery(Long.class);
+        final Root<SearchRecordEntity> countRoot = countCriteriaQuery.from(SearchRecordEntity.class);
+        final Expression<Long> countExpression = criteriaBuilder.count(countRoot);
+        final List<Predicate> filterPredicates = buildSelectQueryFromFilter(criteriaBuilder, countRoot, queryTexts, filter);
+        final Query countHitsQuery = session.createQuery(countCriteriaQuery
+                .select(countExpression)
                 .where(filterPredicates.toArray(new Predicate[0])));
         log.info("Getting total hits of the query");
-        final Long total = searchQueryWithoutSortKey.getResultStream().count();
+        final Long total = (Long) countHitsQuery.getSingleResult();
         log.info("Total hits of of the query: {}", total);
 
         log.info("The query will be ordered by {}", orderBy);
