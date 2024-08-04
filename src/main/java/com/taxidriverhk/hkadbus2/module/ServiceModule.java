@@ -9,7 +9,6 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.taxidriverhk.hkadbus2.activity.filter.AuthenticationFilter;
-import com.taxidriverhk.hkadbus2.activity.filter.CORSFilter;
 import com.taxidriverhk.hkadbus2.activity.filter.LoggingFilter;
 import com.taxidriverhk.hkadbus2.provider.SearchPhotoProvider;
 import com.taxidriverhk.hkadbus2.service.AdvertisementService;
@@ -43,7 +42,6 @@ public class ServiceModule extends JerseyServletModule {
                 PackagesResourceConfig.PROPERTY_PACKAGES, PACKAGE_NAME);
         filter(API_URI_PATTERN).through(AuthenticationFilter.class);
         filter(API_URI_PATTERN).through(LoggingFilter.class);
-        filter(API_URI_PATTERN).through(CORSFilter.class);
         serve(API_URI_PATTERN).with(GuiceContainer.class, serveParams);
     }
 
