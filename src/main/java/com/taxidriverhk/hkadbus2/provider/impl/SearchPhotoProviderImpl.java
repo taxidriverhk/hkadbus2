@@ -10,18 +10,17 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.hibernate.query.criteria.JpaCriteriaQuery;
+import org.hibernate.query.criteria.JpaExpression;
+import org.hibernate.query.criteria.JpaOrder;
+import org.hibernate.query.criteria.JpaPredicate;
+import org.hibernate.query.criteria.JpaRoot;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -78,26 +77,26 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
             final int limit
     ) {
         final Session session = sessionFactory.openSession();
-
-        final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        final CriteriaQuery<SearchRecordEntity> criteriaQuery = criteriaBuilder.createQuery(SearchRecordEntity.class);
-        final Root<SearchRecordEntity> root = criteriaQuery.from(SearchRecordEntity.class);
+        final HibernateCriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 
         log.info("Building search query using query texts {} filter {}", queryTexts, filter);
-        final CriteriaQuery<Long> countCriteriaQuery = criteriaBuilder.createQuery(Long.class);
-        final Root<SearchRecordEntity> countRoot = countCriteriaQuery.from(SearchRecordEntity.class);
-        final Expression<Long> countExpression = criteriaBuilder.count(countRoot);
-        final List<Predicate> filterPredicates = buildSelectQueryFromFilter(criteriaBuilder, countRoot, queryTexts, filter);
+        final JpaCriteriaQuery<Long> countCriteriaQuery = criteriaBuilder.createQuery(Long.class);
+        final JpaRoot<SearchRecordEntity> countRoot = countCriteriaQuery.from(SearchRecordEntity.class);
+        final JpaExpression<Long> countExpression = criteriaBuilder.count(countRoot);
+        final List<JpaPredicate> countFilterPredicates = buildSelectQueryFromFilter(criteriaBuilder, countRoot, queryTexts, filter);
         final Query countHitsQuery = session.createQuery(countCriteriaQuery
                 .select(countExpression)
-                .where(filterPredicates.toArray(new Predicate[0])));
+                .where(countFilterPredicates.toArray(new JpaPredicate[0])));
         log.info("Getting total hits of the query");
         final Long total = (Long) countHitsQuery.getSingleResult();
         log.info("Total hits of of the query: {}", total);
 
         log.info("The query will be ordered by {}", orderBy);
-        final List<Order> orders = buildOrderByQuery(criteriaBuilder, root, orderBy, sort);
+        final JpaCriteriaQuery<SearchRecordEntity> criteriaQuery = criteriaBuilder.createQuery(SearchRecordEntity.class);
+        final JpaRoot<SearchRecordEntity> root = criteriaQuery.from(SearchRecordEntity.class);
+        final List<JpaOrder> orders = buildOrderByQuery(criteriaBuilder, root, orderBy, sort);
 
+        final List<JpaPredicate> filterPredicates = buildSelectQueryFromFilter(criteriaBuilder, root, queryTexts, filter);
         if (!Strings.isNullOrEmpty(nextPageCursor)) {
             final String[] nextPageCursorTokens = nextPageCursor.split(NEXT_PAGE_CURSOR_SEPARATOR);
             if (nextPageCursorTokens.length != 2) {
@@ -115,8 +114,8 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
         log.info("Getting the actual result set of the query");
         final Query searchQuery = session.createQuery(criteriaQuery
                 .select(root)
-                .where(filterPredicates.toArray(new Predicate[0]))
-                .orderBy(orders.toArray(new Order[0])));
+                .where(filterPredicates.toArray(new JpaPredicate[0]))
+                .orderBy(orders.toArray(new JpaOrder[0])));
         final List<SearchRecordEntity> searchRecordEntities = searchQuery.getResultList();
         final List<SearchRecordEntity> searchRecordEntitiesWithLimit = searchRecordEntities.stream()
                 .limit(limit)
@@ -146,9 +145,9 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
         session.close();
     }
 
-    private List<Order> buildOrderByQuery(
-            final CriteriaBuilder criteriaBuilder,
-            final Root<SearchRecordEntity> root,
+    private List<JpaOrder> buildOrderByQuery(
+            final HibernateCriteriaBuilder criteriaBuilder,
+            final JpaRoot<SearchRecordEntity> root,
             final String orderBy,
             final String sort
     ) {
@@ -159,13 +158,13 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
                 criteriaBuilder.asc(root.get(PHOTO_ID_ATTRIBUTE_NAME)));
     }
 
-    private List<Predicate> buildSelectQueryFromFilter(
-            final CriteriaBuilder criteriaBuilder,
-            final Root<SearchRecordEntity> root,
+    private List<JpaPredicate> buildSelectQueryFromFilter(
+            final HibernateCriteriaBuilder criteriaBuilder,
+            final JpaRoot<SearchRecordEntity> root,
             final List<String> queryTexts,
             final SearchPhotoFilter filter
     ) {
-        final List<Predicate> filterPredicates = FIELD_FILTER_MAPPING.entrySet()
+        final List<JpaPredicate> filterPredicates = FIELD_FILTER_MAPPING.entrySet()
                 .stream()
                 .filter(entry -> CollectionUtils.isNotEmpty(entry.getValue().apply(filter)))
                 .map(entry -> criteriaBuilder.lower(root.get(entry.getKey()))
@@ -176,20 +175,20 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
                 .collect(Collectors.toList());
 
         if (CollectionUtils.isNotEmpty(queryTexts)) {
-            final List<Predicate> queryTextPredicates = queryTexts.stream()
+            final List<JpaPredicate> queryTextPredicates = queryTexts.stream()
                     .map(queryText -> criteriaBuilder.like(
                             criteriaBuilder.lower(root.get(TAGS_ATTRIBUTE_NAME)), "%" + queryText.toLowerCase() + "%"))
                     .collect(Collectors.toList());
-            final Predicate combinedQueryTextPredicate = criteriaBuilder.or(queryTextPredicates.toArray(new Predicate[0]));
+            final JpaPredicate combinedQueryTextPredicate = criteriaBuilder.or(queryTextPredicates.toArray(new JpaPredicate[0]));
             filterPredicates.add(combinedQueryTextPredicate);
         }
 
         return filterPredicates;
     }
 
-    private Predicate buildSortKeyQuery(
-            final CriteriaBuilder criteriaBuilder,
-            final Root<SearchRecordEntity> root,
+    private JpaPredicate buildSortKeyQuery(
+            final HibernateCriteriaBuilder criteriaBuilder,
+            final JpaRoot<SearchRecordEntity> root,
             final String lastSortKey,
             final String orderBy,
             final String sort
@@ -199,9 +198,9 @@ public class SearchPhotoProviderImpl implements SearchPhotoProvider {
                 : criteriaBuilder.lessThan(root.get(orderBy), lastSortKey);
     }
 
-    private Predicate buildTieBreakerQuery(
-            final CriteriaBuilder criteriaBuilder,
-            final Root<SearchRecordEntity> root,
+    private JpaPredicate buildTieBreakerQuery(
+            final HibernateCriteriaBuilder criteriaBuilder,
+            final JpaRoot<SearchRecordEntity> root,
             final String lastSortKey,
             final String orderBy,
             final String lastIdStr

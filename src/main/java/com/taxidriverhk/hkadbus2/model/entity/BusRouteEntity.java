@@ -1,22 +1,24 @@
 package com.taxidriverhk.hkadbus2.model.entity;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.hibernate.annotations.GenericGenerator;
+
 import com.taxidriverhk.hkadbus2.model.entity.converter.LocalizedStringConverter;
 import com.taxidriverhk.hkadbus2.model.entity.converter.StringListConverter;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 @Builder(toBuilder = true)
 @Data

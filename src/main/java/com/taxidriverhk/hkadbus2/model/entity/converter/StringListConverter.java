@@ -1,10 +1,10 @@
 package com.taxidriverhk.hkadbus2.model.entity.converter;
 
-import lombok.NoArgsConstructor;
-
-import javax.persistence.AttributeConverter;
 import java.util.Arrays;
 import java.util.List;
+
+import jakarta.persistence.AttributeConverter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class StringListConverter implements AttributeConverter<List<String>, String> {

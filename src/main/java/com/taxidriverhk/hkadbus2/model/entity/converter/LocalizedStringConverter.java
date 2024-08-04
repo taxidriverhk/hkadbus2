@@ -1,12 +1,13 @@
 package com.taxidriverhk.hkadbus2.model.entity.converter;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.AttributeConverter;
 import java.lang.reflect.Type;
 import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import jakarta.persistence.AttributeConverter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class LocalizedStringConverter implements AttributeConverter<Map<String, String>, String> {

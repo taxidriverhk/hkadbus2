@@ -1,23 +1,18 @@
 package com.taxidriverhk.hkadbus2.util;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-
-import com.taxidriverhk.hkadbus2.exception.InternalErrorException;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.hibernate.query.criteria.JpaCriteriaQuery;
+import org.hibernate.query.criteria.JpaPath;
+import org.hibernate.query.criteria.JpaRoot;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -29,8 +24,8 @@ public final class SqlQueryUtil {
             final Session session,
             final Class<T> entityClass
     ) {
-        final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        final CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(entityClass);
+        final HibernateCriteriaBuilder  criteriaBuilder = session.getCriteriaBuilder();
+        final JpaCriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(entityClass);
         return session.createQuery(criteriaQuery.select(criteriaQuery.from(entityClass))).getResultList();
     }
 
@@ -102,25 +97,20 @@ public final class SqlQueryUtil {
             final Class<T> entityClass,
             final T entity
     ) {
-        final UUID id = (UUID) session.save(entity);
-        try {
-            final Method setIdMethod = entityClass.getMethod("setId", UUID.class);
-            setIdMethod.invoke(entity, id);
-            return entity;
-        } catch (final NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-            throw new InternalErrorException(String.format("Unable to insert entity into database: %s", ex.getMessage()));
-        }
+        session.persist(entity);
+        session.flush();
+        return entity;
     }
 
     private static <T,V> Query<T> createSelectQueryBySingleAttribute(
             final Session session,
             final Class<T> entityClass,
-            final Function<Root<T>, Path<T>> attributeFunc,
+            final Function<JpaRoot<T>, JpaPath<T>> attributeFunc,
             final V value
     ) {
-        final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        final CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(entityClass);
-        final Root<T> root = criteriaQuery.from(entityClass);
+        final HibernateCriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        final JpaCriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(entityClass);
+        final JpaRoot<T> root = criteriaQuery.from(entityClass);
         return session.createQuery(criteriaQuery
                 .select(root)
                 .where(criteriaBuilder

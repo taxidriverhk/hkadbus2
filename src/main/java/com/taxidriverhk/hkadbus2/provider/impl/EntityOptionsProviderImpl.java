@@ -4,15 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.hibernate.query.criteria.JpaCriteriaQuery;
+import org.hibernate.query.criteria.JpaPredicate;
+import org.hibernate.query.criteria.JpaRoot;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -21,6 +19,7 @@ import com.taxidriverhk.hkadbus2.model.entity.BusRouteEntity;
 import com.taxidriverhk.hkadbus2.model.entity.SearchRecordEntity;
 import com.taxidriverhk.hkadbus2.provider.EntityOptionsProvider;
 
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -43,15 +42,15 @@ public class EntityOptionsProviderImpl implements EntityOptionsProvider {
             return getEntityOptionsForLocations(session, language);
         }
 
-        final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        final CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
-        final Root<SearchRecordEntity> root = criteriaQuery.from(SearchRecordEntity.class);
+        final HibernateCriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        final JpaCriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
+        final JpaRoot<SearchRecordEntity> root = criteriaQuery.from(SearchRecordEntity.class);
 
         final String hashKey = ENTITY_ATTRIBUTE_MAPPING.get(entityType).get(0);
         final String name = ENTITY_ATTRIBUTE_MAPPING.get(entityType).get(1);
 
-        final Predicate languagePredicate = criteriaBuilder.equal(root.get("language"), language);
-        final CriteriaQuery<Tuple> criteriaQueryWithPredicate = criteriaQuery
+        final JpaPredicate languagePredicate = criteriaBuilder.equal(root.get("language"), language);
+        final JpaCriteriaQuery<Tuple> criteriaQueryWithPredicate = criteriaQuery
                 .multiselect(
                         root.get(hashKey),
                         root.get(name))
@@ -73,11 +72,11 @@ public class EntityOptionsProviderImpl implements EntityOptionsProvider {
     }
 
     private Map<String, String> getEntityOptionsForLocations(final Session session, final String langauge) {
-        final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        final CriteriaQuery<BusRouteEntity> criteriaQuery = criteriaBuilder.createQuery(BusRouteEntity.class);
-        final Root<BusRouteEntity> root = criteriaQuery.from(BusRouteEntity.class);
+        final HibernateCriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        final JpaCriteriaQuery<BusRouteEntity> criteriaQuery = criteriaBuilder.createQuery(BusRouteEntity.class);
+        final JpaRoot<BusRouteEntity> root = criteriaQuery.from(BusRouteEntity.class);
 
-        final CriteriaQuery<BusRouteEntity> criteriaQueryWithColumns = criteriaQuery.select(root);
+        final JpaCriteriaQuery<BusRouteEntity> criteriaQueryWithColumns = criteriaQuery.select(root);
         final Query<BusRouteEntity> selectionQuery = session.createQuery(criteriaQueryWithColumns);
         final List<BusRouteEntity> entityResults = selectionQuery.getResultList();
 
