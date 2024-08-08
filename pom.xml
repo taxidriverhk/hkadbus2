@@ -377,6 +377,9 @@
                 <configuration>
                     <server>hkadbus2</server>
                     <path>/api</path>
+                    <systemProperties>
+                        <ENCRYPTOR_PASSWORD>SET_YOUR_ENCRYPTOR_PASSWORD_HERE</ENCRYPTOR_PASSWORD>
+                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>

@@ -45,6 +45,6 @@ class AuthenticationFilter : Filter {
 
     private fun verifyAuthenticationToken(request: HttpServletRequest): Boolean {
         val authToken = request.getHeader("Authorization")
-        return if (authToken.isNotBlank()) authenticator.verifyToken(authToken) else false
+        return if (authToken?.isNotBlank() == true) authenticator.verifyToken(authToken) else false
     }
 }

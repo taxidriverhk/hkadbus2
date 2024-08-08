@@ -24,7 +24,7 @@ object RequestValidator {
 
     @JvmStatic
     fun validateSort(sort: String?) {
-        val entries = SortDirection.entries.map { it.name.lowercase() }
+        val entries = SortDirection.values().map { it.name.lowercase() }
         entries.find { it == sort } ?: throw BadRequestException("Invalid sort direction ${sort}")
     }
 
